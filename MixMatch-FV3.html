@@ -103,6 +103,17 @@
             background-color: #f2f2f2;
         }
 
+        #history {
+            margin-top: 20px;
+            text-align: left;
+            width: 100%;
+        }
+
+        #history h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
         #tableToggle {
             width: 100%;
             height: 60px;
@@ -135,18 +146,23 @@
                 <!-- Rows will be added by the script -->
             </tbody>
         </table>
-        <button id="tableToggle" onclick="toggleTable()"><div class="icon">➕</div> Toggle Table</button>
+        <button id="tableToggle" onclick="toggleTable()"><span class="icon">➕</span> Toggle Table</button>
         <div id="timerContainer">
             <div class="icon">&#9202;</div> Duration (in minutes): <input type="number" id="duration" value="10">
             <div id="timer">10:00</div>
         </div>
         <div style="display: flex; justify-content: space-between; width: 100%;">
-            <button onclick="initializeToolsAndStartTimer()" class="large-button"><div class="icon">&#9654;</div> Start</button>
-            <button onclick="getNextTool()" class="large-button" id="nextToolButton" disabled><div class="icon">&#10145;</div> Next Tool</button>
+            <button onclick="initializeToolsAndStartTimer()" class="large-button"><span class="icon">&#9654;</span> Start</button>
+            <button onclick="getNextTool()" class="large-button" id="nextToolButton" disabled><span class="icon">&#10145;</span> Next Tool</button>
+            <button onclick="resetSession()" class="large-button" id="resetButton" disabled><span class="icon">&#8634;</span> Reset</button>
         </div>
         <div id="round"></div>
         <div id="tool"></div>
         <div id="randomResult"></div>
+        <div id="history">
+            <h2>History</h2>
+            <ul id="historyList"></ul>
+        </div>
     </div>
     <script>
         // JavaScript functions for your functionality can go here
@@ -157,17 +173,14 @@
             if (tableVisible) {
                 table.style.display = 'none';
                 tableVisible = false;
-                document.getElementById('tableToggle').innerHTML = '<div class="icon">➖</div> Toggle Table';
+                document.getElementById('tableToggle').innerHTML = '<span class="icon">➖</span> Toggle Table';
             } else {
                 table.style.display = 'table';
                 tableVisible = true;
-                document.getElementById('tableToggle').innerHTML = '<div class="icon">➕</div> Toggle Table';
+                document.getElementById('tableToggle').innerHTML = '<span class="icon">➕</span> Toggle Table';
             }
         }
     </script>
-</body>
-</html>
-
 
 <script>
         const tools = [
@@ -221,8 +234,11 @@
         const duration = parseInt(document.getElementById('duration').value);
         endTime = Date.now() + duration * 60 * 1000; // Convert to milliseconds
         timer = setInterval(updateTimer, 1000);
-
+        updateTimer();
         document.getElementById("nextToolButton").disabled = false;
+        document.getElementById("resetButton").disabled = false;
+        document.getElementById('historyList').innerHTML = '';
+        usedTools = [];
     }
 
     function resetCurrentTools() {
@@ -257,7 +273,23 @@
         const nextTool = currentTools.pop();
         usedTools.push(nextTool);
 
+        const li = document.createElement('li');
+        li.textContent = nextTool.name;
+        document.getElementById('historyList').appendChild(li);
+
         displayTool(nextTool);
+    }
+
+    function resetSession() {
+        clearInterval(timer);
+        timer = null;
+        document.getElementById('timer').textContent = '00:00';
+        document.getElementById('tool').innerHTML = '';
+        document.getElementById('historyList').innerHTML = '';
+        currentTools = [];
+        usedTools = [];
+        document.getElementById("nextToolButton").disabled = true;
+        document.getElementById("resetButton").disabled = true;
     }
 
     function displayTool(tool) {
