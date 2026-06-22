@@ -2,289 +2,1610 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Negotiation Tools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>NOD-ify — MixMatch FV4</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #1a1a2e;
+            --table: #2d2440;
+            --felt: #1e5a3a;
+            --felt-dark: #14452c;
+            --felt-border: #16653d;
+            --card-bg: #fefcf3;
+            --card-shadow: rgba(0,0,0,0.4);
+            --text: #2c2c2c;
+            --text-dim: #7a7a7a;
+            --accent: #d4a853;
+            --accent-glow: rgba(212,168,83,0.4);
+            --green: #43a047;
+            --red: #e53935;
+            --blue: #1e88e5;
+            --purple: #8e24aa;
+            --orange: #fb8c00;
+            --teal: #00897b;
+            --pink: #d81b60;
+            --joy: #fdd835;
+            --trust: #66bb6a;
+            --fear: #42a5f5;
+            --surprise: #ffa726;
+            --sadness: #42a5f5;
+            --disgust: #ab47bc;
+            --anger: #ef5350;
+            --anticipation: #ff7043;
+        }
         body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f7f9fc;
-            color: #333;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .table-surface {
+            width: 100%;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at center, var(--felt) 0%, var(--felt-dark) 100%);
+            border: 8px solid var(--felt-border);
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
-        }
-
-        #container {
-            width: 90%;
-            max-width: 800px;
-            padding: 40px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        h1 {
-            color: #4CAF50;
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        th, td {
-            border: 2px solid #ddd;
             padding: 16px;
-            text-align: left;
-            font-size: 18px;
+            position: relative;
+        }
+        .table-surface::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px);
+            pointer-events: none;
         }
 
-        th {
-            background-color: #f2f2f2;
+        /* ─── Header ─── */
+        .header {
+            width: 100%; max-width: 1100px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 0 12px; position: relative; z-index: 10;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-icon {
+            width: 36px; height: 36px;
+            background: var(--accent); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 18px; color: #1a1a2e;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .logo h1 { color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+        .logo span { color: var(--accent); font-weight: 300; font-size: 13px; display: block; }
+        .header-controls { display: flex; gap: 8px; align-items: center; }
+        .btn-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08); color: #fff; font-size: 16px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s; backdrop-filter: blur(8px);
+        }
+        .btn-icon:hover { background: rgba(255,255,255,0.18); transform: scale(1.08); }
+        .btn-icon.active { background: var(--accent); color: #1a1a2e; border-color: var(--accent); }
+
+        /* ─── Nav tabs ─── */
+        .nav-tabs {
+            width: 100%; max-width: 1100px;
+            display: flex; gap: 4px; padding: 4px 0 10px;
+            position: relative; z-index: 10;
+        }
+        .nav-tab {
+            padding: 7px 18px; border-radius: 10px 10px 0 0;
+            border: none; font-family: 'Inter', sans-serif;
+            font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+            background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.4);
+        }
+        .nav-tab:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.08); }
+        .nav-tab.active {
+            background: rgba(255,255,255,0.1); color: #fff;
+            box-shadow: 0 -1px 0 var(--accent) inset;
+        }
+        .nav-tab .badge {
+            display: inline-block; margin-left: 5px;
+            padding: 1px 7px; border-radius: 8px;
+            font-size: 10px; background: rgba(255,255,255,0.1); color: var(--accent);
         }
 
-        .large-button {
-            width: 45%;
-            height: 60px;
-            font-size: 18px;
-            margin: 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            color: #fff;
-            background-color: #4CAF50;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s ease;
+        /* ─── View container ─── */
+        .view-container {
+            width: 100%; max-width: 1100px;
+            position: relative; z-index: 5;
+            display: none; animation: fade-up 0.35s ease;
         }
+        .view-container.active { display: block; }
+        @keyframes fade-up { 0%{opacity:0;transform:translateY(12px)} 100%{opacity:1;transform:translateY(0)} }
 
-        .large-button:last-child {
-            background-color: #008CBA;
+        /* ─── Cards (Tools view) ─── */
+        .cards-area {
+            width: 100%;
+            display: flex; flex-wrap: wrap; gap: 14px;
+            justify-content: center; align-items: flex-start; align-content: flex-start;
+            perspective: 1200px; min-height: 300px;
+            padding: 6px 0;
         }
-
-        .large-button:hover {
-            background-color: #45a049;
+        .tool-card {
+            width: 195px; min-height: 180px;
+            background: var(--card-bg); border-radius: 12px;
+            padding: 16px 14px 12px;
+            box-shadow: 0 4px 12px var(--card-shadow), 0 0 0 1px rgba(255,255,255,0.05);
+            cursor: pointer; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            position: relative; display: flex; flex-direction: column;
+            animation: card-deal 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+            transform-style: preserve-3d; user-select: none;
         }
-
-        .icon {
-            margin-right: 10px;
+        .tool-card:nth-child(1) { animation-delay: 0.02s; }
+        .tool-card:nth-child(2) { animation-delay: 0.06s; }
+        .tool-card:nth-child(3) { animation-delay: 0.10s; }
+        .tool-card:nth-child(4) { animation-delay: 0.14s; }
+        .tool-card:nth-child(5) { animation-delay: 0.18s; }
+        .tool-card:nth-child(6) { animation-delay: 0.22s; }
+        .tool-card:nth-child(7) { animation-delay: 0.26s; }
+        .tool-card:nth-child(8) { animation-delay: 0.30s; }
+        .tool-card:nth-child(9) { animation-delay: 0.34s; }
+        .tool-card:nth-child(10) { animation-delay: 0.38s; }
+        .tool-card:nth-child(11) { animation-delay: 0.42s; }
+        .tool-card:nth-child(12) { animation-delay: 0.46s; }
+        .tool-card:nth-child(13) { animation-delay: 0.50s; }
+        .tool-card:nth-child(14) { animation-delay: 0.54s; }
+        .tool-card:nth-child(15) { animation-delay: 0.58s; }
+        .tool-card:nth-child(16) { animation-delay: 0.62s; }
+        .tool-card:nth-child(17) { animation-delay: 0.66s; }
+        .tool-card:nth-child(18) { animation-delay: 0.70s; }
+        .tool-card:nth-child(19) { animation-delay: 0.74s; }
+        .tool-card:nth-child(20) { animation-delay: 0.78s; }
+        .tool-card:nth-child(21) { animation-delay: 0.82s; }
+        .tool-card:nth-child(22) { animation-delay: 0.86s; }
+        .tool-card:nth-child(23) { animation-delay: 0.90s; }
+        .tool-card:nth-child(24) { animation-delay: 0.94s; }
+        .tool-card:nth-child(25) { animation-delay: 0.98s; }
+        .tool-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 30px var(--card-shadow), 0 0 0 1px var(--accent), 0 0 30px var(--accent-glow);
+            z-index: 20;
         }
+        .tool-card.active-card {
+            transform: translateY(-10px) scale(1.06);
+            box-shadow: 0 16px 40px var(--card-shadow), 0 0 0 2px var(--accent), 0 0 40px var(--accent-glow);
+            z-index: 30;
+        }
+        .tool-card.used {
+            opacity: 0.45; filter: grayscale(0.6);
+            transform: scale(0.92); pointer-events: none;
+        }
+        .tool-card.used:hover { transform: scale(0.92); box-shadow: 0 4px 12px var(--card-shadow); }
+        .tool-card.skipped {
+            opacity: 0.55; filter: grayscale(0.4);
+            border-left: 3px solid var(--orange) !important;
+        }
+        .tool-card.current-focus {
+            box-shadow: 0 0 0 2px var(--accent), 0 0 25px var(--accent-glow);
+            transform: translateY(-4px) scale(1.02);
+            z-index: 15;
+        }
+        @keyframes card-deal {
+            0% { opacity:0; transform:translateY(-20px) rotateX(40deg) scale(0.85); }
+            100% { opacity:1; transform:translateY(0) rotateX(0deg) scale(1); }
+        }
+        .tool-card .cat-badge {
+            font-size: 9px; padding: 2px 7px; border-radius: 10px;
+            background: rgba(0,0,0,0.05); color: var(--text-dim);
+            display: inline-block; margin-bottom: 5px;
+            font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+        }
+        .tool-card .card-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 5px; line-height: 1.3; }
+        .tool-card .card-desc { font-size: 11px; line-height: 1.5; color: var(--text-dim); flex: 1; }
+        .tool-card .card-count {
+            font-size: 10px; color: var(--text-dim); margin-top: 6px;
+            display: flex; align-items: center; gap: 3px;
+        }
+        .tool-card .card-count .num { font-weight: 700; color: var(--accent); font-size: 13px; }
+        .tool-card .card-check {
+            position: absolute; top: -6px; right: -6px;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: var(--green); color: #fff; display: none;
+            align-items: center; justify-content: center;
+            font-size: 11px; box-shadow: 0 2px 8px rgba(67,160,71,0.4);
+        }
+        .tool-card.used .card-check { display: flex; }
 
-        #timerContainer {
-            font-size: 20px;
-            margin-bottom: 20px;
+        /* ─── Toolbar ─── */
+        .toolbar {
+            width: 100%; max-width: 1100px;
+            display: flex; gap: 10px; flex-wrap: wrap;
+            align-items: center; padding: 4px 0 10px;
+            position: relative; z-index: 10;
+        }
+        .toolbar .btn {
+            padding: 8px 18px; border-radius: 10px; border: none;
+            font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px;
+        }
+        .btn-primary { background: var(--accent); color: #1a1a2e; box-shadow: 0 4px 15px var(--accent-glow); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px var(--accent-glow); }
+        .btn-primary:disabled { opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none; }
+        .btn-ghost { background: rgba(255,255,255,0.08); color: #fff; border:1px solid rgba(255,255,255,0.15); backdrop-filter:blur(8px); }
+        .btn-ghost:hover { background: rgba(255,255,255,0.18); transform:translateY(-1px); }
+        .btn-sm { padding:5px 12px; font-size:11px; border-radius:8px; }
+        .timer-display {
+            display:flex; align-items:center; gap:10px; margin-left:auto;
+            background:rgba(0,0,0,0.3); padding:6px 14px 6px 12px;
+            border-radius:10px; border:1px solid rgba(255,255,255,0.1);
+        }
+        .timer-display .time {
+            font-size:24px; font-weight:700; color:#fff;
+            font-variant-numeric:tabular-nums; min-width:70px; text-align:center;
+        }
+        .timer-display .time.warning { color: var(--orange); }
+        .timer-display .time.danger { color: var(--red); animation: pulse-danger 1s infinite; }
+        .timer-display .timer-label { color:rgba(255,255,255,0.4); font-size:10px; text-transform:uppercase; letter-spacing:1px; }
+        .timer-display input {
+            width:42px; padding:3px 6px; border-radius:6px;
+            border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.3);
+            color:#fff; font-size:13px; font-family:'Inter',sans-serif; text-align:center;
+        }
+        .stats-bar {
+            width:100%; max-width:1100px;
+            display:flex; gap:16px; padding:4px 0;
+            flex-wrap:wrap; position:relative; z-index:10;
+        }
+        .stat-item { color:rgba(255,255,255,0.45); font-size:11px; display:flex; align-items:center; gap:3px; }
+        .stat-item strong { color:#fff; font-size:13px; }
+        .category-filters {
+            display:flex; gap:5px; flex-wrap:wrap;
+            padding:0 0 6px; width:100%; max-width:1100px;
+            position:relative; z-index:10;
+        }
+        .cat-pill {
+            padding:4px 12px; border-radius:16px;
+            border:1px solid rgba(255,255,255,0.1);
+            background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.5);
+            font-size:11px; font-weight:500; cursor:pointer;
+            transition:all 0.3s; font-family:'Inter',sans-serif;
+        }
+        .cat-pill:hover { background:rgba(255,255,255,0.12); color:#fff; }
+        .cat-pill.active { background:var(--accent); color:#1a1a2e; border-color:var(--accent); }
+        .session-panel {
+            width:100%; max-width:1100px;
+            background:rgba(0,0,0,0.3); backdrop-filter:blur(8px);
+            border-radius:10px; padding:12px 16px; margin:4px 0 8px;
+            border:1px solid rgba(255,255,255,0.06); display:none;
+        }
+        .session-panel.open { display:block; }
+        .session-panel .sp-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+        .session-panel .sp-title { color:rgba(255,255,255,0.5); font-size:11px; text-transform:uppercase; letter-spacing:1px; font-weight:600; }
+        .session-panel .sp-list { display:flex; flex-wrap:wrap; gap:4px; }
+        .session-panel .sp-item {
+            padding:3px 10px; background:rgba(255,255,255,0.05); border-radius:5px;
+            color:rgba(255,255,255,0.6); font-size:11px; border:1px solid rgba(255,255,255,0.06);
+        }
+        .session-panel .sp-item:last-child { color:var(--accent); border-color:var(--accent); background:rgba(212,168,83,0.1); }
+        .session-panel .sp-item.sp-skipped { color:var(--orange); border-color:var(--orange); background:rgba(251,140,0,0.08); text-decoration:line-through; }
+        .session-panel .sp-empty { color:rgba(255,255,255,0.2); font-size:12px; font-style:italic; }
+        .current-tool-banner {
+            width:100%; max-width:1100px;
+            background:rgba(0,0,0,0.35); backdrop-filter:blur(12px);
+            border-radius:14px; padding:18px 24px; margin:4px 0 8px;
+            border:1px solid rgba(255,255,255,0.1); display:none;
+        }
+        .current-tool-banner.show { display:block; animation:fade-up 0.4s; }
+        .current-tool-banner .ct-label { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent); font-weight:600; }
+        .current-tool-banner .ct-name { font-size:24px; font-weight:800; color:#fff; margin:3px 0 6px; }
+        .current-tool-banner .ct-desc { font-size:14px; color:rgba(255,255,255,0.7); line-height:1.6; max-width:700px; }
+        .current-tool-banner .ct-actions { display:flex; gap:8px; margin-top:10px; }
+        .empty-state { width:100%; text-align:center; padding:50px 20px; color:rgba(255,255,255,0.25); }
+
+        /* ─── BEHAVIORAL CHANGE STAIR (Machiavelli Model) ─── */
+        .stair-container {
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 10px 0;
+        }
+        .stair-header { text-align:center; margin-bottom: 10px; }
+        .stair-header h2 { color:#fff; font-size:20px; font-weight:700; margin-bottom:2px; }
+        .stair-header p { color:rgba(255,255,255,0.4); font-size:12px; }
+
+        .rapport-bar {
+            width: 100%; max-width: 900px;
+            text-align: center;
+            padding: 6px 0;
+            margin-bottom: 12px;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 1px dashed rgba(212,168,83,0.3);
+            border-top: 1px dashed rgba(212,168,83,0.3);
         }
 
-        #timer {
-            width: 120px;
-            height: 40px;
-            background-color: #4CAF50;
-            border: 2px solid #388E3C;
-            border-radius: 5px;
+        .stair-grid {
+            width: 100%; max-width: 900px;
             display: flex;
+            gap: 0;
+            flex-wrap: wrap;
             justify-content: center;
+            position: relative;
+        }
+
+        /* Arrow connectors between stages */
+        .stage-connector {
+            display: flex;
             align-items: center;
-            color: #fff;
-            margin-top: 10px;
+            justify-content: center;
+            width: 28px;
+            flex-shrink: 0;
+        }
+        .stage-connector .arrow {
+            color: rgba(255,255,255,0.2);
+            font-size: 22px;
+            animation: arrow-pulse 2s infinite;
+        }
+        @keyframes arrow-pulse {
+            0%,100%{opacity:0.3;transform:translateX(0)}
+            50%{opacity:0.8;transform:translateX(4px)}
         }
 
-        #toolsTableBody tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        #tableToggle {
-            width: 100%;
-            height: 60px;
-            font-size: 18px;
-            margin: 10px;
-            border: none;
+        .stage-card {
+            flex: 1;
+            min-width: 180px;
+            max-width: 240px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
             cursor: pointer;
-            border-radius: 5px;
-            color: #fff;
-            background-color: #4CAF50;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            opacity: 0;
+            transform: translateY(20px);
+            position: relative;
         }
+        .stage-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .stage-card:nth-child(1) { animation-delay:0.05s; }
+        .stage-card:nth-child(3) { animation-delay:0.15s; }
+        .stage-card:nth-child(5) { animation-delay:0.25s; }
+        .stage-card:nth-child(7) { animation-delay:0.35s; }
+
+        .stage-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.35),
+                        0 0 0 1px var(--accent),
+                        0 0 20px var(--accent-glow);
+            z-index: 10;
+        }
+        .stage-card.active-stage {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4),
+                        0 0 0 2px var(--accent),
+                        0 0 30px var(--accent-glow);
+            z-index: 20;
+        }
+
+        .stage-card .stage-header {
+            background: #2c5f8a;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stage-card .stage-header .stage-num {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 11px; font-weight: 700;
+        }
+        .stage-card .stage-header .stage-name {
+            color: #fff; font-size: 13px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .stage-card .stage-body {
+            padding: 10px 14px 12px;
+        }
+        .stage-card .stage-subtitle {
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .stage-card .stage-items {
+            list-style: none;
+            padding: 0; margin: 0;
+        }
+        .stage-card .stage-items li {
+            font-size: 11.5px;
+            color: var(--text);
+            padding: 3px 0 3px 14px;
+            position: relative;
+            line-height: 1.5;
+        }
+        .stage-card .stage-items li::before {
+            content: '\25A0';
+            position: absolute; left: 0;
+            color: #2c5f8a; font-size: 8px;
+            top: 5px;
+        }
+        .stage-card .stage-items li.sep::before {
+            content: '';
+        }
+        .stage-card .stage-items li.sep {
+            border-top: 1px solid rgba(0,0,0,0.06);
+            margin: 3px 0;
+            padding-top: 6px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: var(--text-dim);
+        }
+
+        .stage-card .stage-desc {
+            display: none;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--text-dim);
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+        .stage-card .stage-desc.open { display: block; }
+
+        @media (max-width: 700px) {
+            .stage-card { min-width: 140px; max-width: 180px; }
+            .stage-card .stage-items li { font-size: 10.5px; }
+            .stage-connector { width: 18px; }
+            .stage-connector .arrow { font-size: 16px; }
+        }
+
+        /* ─── WHEEL OF EMOTIONS — mobile-first ─── */
+                .wheel-container {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 4px 0;
+                }
+                .wheel-header { text-align:center; margin-bottom: 10px; }
+                .wheel-header h2 { color:#fff; font-size:20px; font-weight:700; margin-bottom:2px; }
+                .wheel-header p { color:rgba(255,255,255,0.45); font-size:12px; }
+
+                .wheel-layout {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    width: 100%;
+                    max-width: 100%;
+                    padding: 0 4px;
+                }
+                .wheel-canvas-wrap {
+                    position: relative;
+                    flex: 1;
+                    max-width: 480px;
+                    touch-action: none;
+                }
+                .wheel-canvas-wrap svg {
+                    width: 100%;
+                    height: auto;
+                    display: block;
+                    filter: drop-shadow(0 6px 24px rgba(0,0,0,0.35));
+                    -webkit-user-select: none;
+                    user-select: none;
+                }
+
+                .wheel-pointer {
+                    position: absolute;
+                    top: -4px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    z-index: 20;
+                    width: 0; height: 0;
+                    border-left: 10px solid transparent;
+                    border-right: 10px solid transparent;
+                    border-top: 18px solid #e53935;
+                    filter: drop-shadow(0 2px 6px rgba(229,57,53,0.6));
+                }
+                .wheel-pointer::after {
+                    content: ''; position: absolute;
+                    top: -20px; left: 50%;
+                    transform: translateX(-50%);
+                    width: 8px; height: 8px;
+                    background: radial-gradient(circle, #ff1744, #b71c1c);
+                    border-radius: 50%;
+                    box-shadow: 0 0 10px rgba(255,23,68,0.7), 0 0 20px rgba(255,23,68,0.3);
+                    animation: pointer-glow 1.2s ease-in-out infinite;
+                }
+                @keyframes pointer-glow {
+                    0%,100%{box-shadow:0 0 6px #ff1744,0 0 12px rgba(255,23,68,0.2)}
+                    50%{box-shadow:0 0 14px #ff1744,0 0 28px rgba(255,23,68,0.5)}
+                }
+
+                .wheel-slider-wrap {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 4px;
+                    flex-shrink: 0;
+                    width: 36px;
+                }
+                .wheel-slider-wrap .slider-label {
+                    font-size: 8px;
+                    color: rgba(255,255,255,0.35);
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+                .wheel-slider-wrap input[type="range"] {
+                    writing-mode: bt-lr;
+                    -webkit-appearance: slider-vertical;
+                    appearance: slider-vertical;
+                    width: 100px;
+                    height: 4px;
+                    background: transparent;
+                    cursor: pointer;
+                    opacity: 0.6;
+                    touch-action: none;
+                }
+                .wheel-slider-wrap input[type="range"]::-webkit-slider-runnable-track {
+                    height: 4px;
+                    background: linear-gradient(to top, rgba(212,168,83,0.5), rgba(212,168,83,0.12));
+                    border-radius: 2px; border: none;
+                }
+                .wheel-slider-wrap input[type="range"]::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    width: 16px; height: 16px; border-radius: 50%;
+                    background: radial-gradient(circle at 35% 35%, #ffd740, #d4a853);
+                    border: 2px solid rgba(255,255,255,0.4);
+                    box-shadow: 0 0 10px rgba(212,168,83,0.4);
+                    cursor: pointer;
+                    margin-top: -6px;
+                }
+
+                .wheel-emotion-slice {
+                    cursor: pointer;
+                    transition: filter 0.3s;
+                }
+                .wheel-emotion-slice:hover { filter: brightness(1.25); }
+                .wheel-emotion-slice.active-slice {
+                    filter: brightness(1.5) drop-shadow(0 0 18px rgba(255,255,255,0.5));
+                }
+                .wheel-rim-dot { pointer-events: none; }
+
+                .wheel-label {
+                    fill: #fff; text-anchor: middle; dominant-baseline: central;
+                    pointer-events: none; font-weight: 600;
+                    paint-order: stroke; stroke: rgba(0,0,0,0.35); stroke-width: 0.6px;
+                }
+                .wheel-label-primary {
+                                    font-size: 13px; font-weight: 800; letter-spacing: 0.5px;
+                                    stroke-width: 0.3px; stroke: rgba(0,0,0,0.15);
+                                }
+                                .wheel-label-secondary {
+                                    font-size: 8px; font-weight: 600;
+                                }
+                                .wheel-label-tertiary {
+                                    font-size: 7px; font-weight: 400; opacity: 0.85;
+                                }
+                                /* Enlarged text when emotion selected */
+                                .wheel-emotion-slice.active-slice ~ text,
+                                .wheel-emotion-slice.active-slice + text {
+                                    font-size: 1.2em;
+                                }
+
+                /* Legend — full word list below wheel */
+                .wheel-legend {
+                    width: 100%; max-width: 520px;
+                    margin: 10px auto 0;
+                    display: none;
+                    flex-wrap: wrap;
+                    gap: 4px;
+                    justify-content: center;
+                }
+                .wheel-legend.open { display: flex; }
+                .wheel-legend .lg-group {
+                    display: flex; flex-direction: column; gap: 1px;
+                    padding: 5px 8px; border-radius: 8px;
+                    background: rgba(0,0,0,0.2);
+                    min-width: 90px;
+                    flex: 1;
+                    max-width: 170px;
+                }
+                .wheel-legend .lg-primary {
+                    font-size: 12px; font-weight: 700; color: #fff;
+                    margin-bottom: 2px;
+                }
+                .wheel-legend .lg-sec {
+                    font-size: 9px; font-weight: 500;
+                    padding: 1px 0;
+                }
+                .wheel-legend .lg-ter {
+                    font-size: 8px; font-weight: 300; opacity: 0.65;
+                    padding-left: 6px;
+                }
+
+        /* Emotion detail panel */
+        .emotion-detail {
+            width: 100%;
+            max-width: 500px;
+            margin: 14px auto 0;
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 20px 24px;
+            display: none;
+            animation: fade-up 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .emotion-detail.open { display: block; }
+        .emotion-detail .ed-name {
+            font-size: 22px; font-weight: 800; margin-bottom: 2px;
+        }
+        .emotion-detail .ed-opposite {
+            font-size: 12px; color: var(--text-dim); margin-bottom: 10px;
+        }
+        .emotion-detail .ed-intensities {
+            display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
+        }
+        .emotion-detail .ed-int {
+            padding: 3px 10px; border-radius: 6px;
+            font-size: 11px; font-weight: 500; color: #fff;
+        }
+        .emotion-detail .ed-desc {
+            font-size: 13px; line-height: 1.6; color: var(--text-dim);
+        }
+        .emotion-detail .ed-combos {
+            margin-top: 10px; padding-top: 10px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+        .emotion-detail .ed-combos h4 {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--text-dim); margin-bottom: 4px;
+        }
+        .emotion-detail .ed-combo-item {
+            display: inline-block;
+            padding: 2px 8px; margin: 2px 3px;
+            background: rgba(0,0,0,0.04); border-radius: 8px;
+            font-size: 11px; font-weight: 500;
+        }
+        .emotion-detail .ed-sec {
+            font-size: 12px; line-height: 1.6; color: var(--text-dim);
+            padding: 2px 0;
+        }
+        .emotion-detail .ed-sec strong {
+            color: var(--text);
+        }
+        .emotion-detail .ed-close {
+            margin-top: 14px; padding: 8px 20px;
+            border: none; border-radius: 8px;
+            background: var(--accent); color: #1a1a2e;
+            font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+        }
+
+        /* ─── Modal ─── */
+        .modal-overlay {
+            display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,0.7); backdrop-filter:blur(4px);
+            z-index:1000; align-items:center; justify-content:center;
+        }
+        .modal-overlay.open { display:flex; }
+        .modal {
+            background:#1e1e32; border-radius:14px; padding:24px;
+            width:90%; max-width:400px; border:1px solid rgba(255,255,255,0.1);
+        }
+        .modal h2 { color:#fff; font-size:18px; margin-bottom:14px; }
+        .modal label { display:block; color:rgba(255,255,255,0.5); font-size:11px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px; margin-top:10px; }
+        .modal input,.modal select,.modal textarea {
+            width:100%; padding:8px 12px; border-radius:7px;
+            border:1px solid rgba(255,255,255,0.12); background:rgba(0,0,0,0.3);
+            color:#fff; font-family:'Inter',sans-serif; font-size:13px; outline:none;
+        }
+        .modal input:focus,.modal select:focus,.modal textarea:focus { border-color:var(--accent); }
+        .modal textarea { min-height:50px; resize:vertical; }
+        .modal .modal-actions { display:flex; gap:8px; margin-top:16px; justify-content:flex-end; }
+        .detail-popover {
+            display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
+            z-index:100; align-items:center; justify-content:center;
+        }
+        .detail-popover.open { display:flex; }
+        .detail-content {
+            background:var(--card-bg); border-radius:14px; padding:28px;
+            width:90%; max-width:460px;
+        }
+        .detail-content .dc-name { font-size:22px; font-weight:700; margin-bottom:6px; }
+        .detail-content .dc-cat { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-dim); margin-bottom:10px; }
+        .detail-content .dc-desc { font-size:14px; line-height:1.7; color:var(--text); }
+        .detail-content .dc-close { margin-top:16px; padding:8px 20px; border:none; border-radius:8px; background:var(--accent); color:#1a1a2e; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; }
+
+        @keyframes pulse-danger { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+        @media (max-width: 768px) {
+                    .table-surface { padding: 8px 6px; border-width: 4px; }
+                    .header { flex-wrap: wrap; gap: 6px; padding: 4px 0 6px; }
+                    .logo h1 { font-size: 16px; }
+                    .logo span { font-size: 10px; }
+                    .nav-tabs { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+                    .nav-tab { white-space: nowrap; font-size: 11px; padding: 5px 10px; }
+                    .toolbar { flex-wrap: wrap; gap: 6px; }
+                    .toolbar .btn { font-size: 11px; padding: 8px 12px; min-height: 40px; }
+                    .toolbar .btn-sm { padding: 7px 10px; font-size: 10px; min-height: 36px; }
+                    .timer-display { margin-left: 0; padding: 5px 10px; gap: 6px; flex-wrap: wrap; }
+                    .timer-display .time { font-size: 20px; min-width: 55px; }
+                    .timer-display input { width: 36px; font-size: 11px; }
+                    .stats-bar { gap: 8px; font-size: 10px; }
+                    .stat-item strong { font-size: 12px; }
+                    .category-filters { gap: 3px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 3px; -webkit-overflow-scrolling: touch; }
+                    .cat-pill { font-size: 10px; padding: 3px 9px; white-space: nowrap; }
+
+                    /* Cards — 2-column grid on phones */
+                    .cards-area { gap: 8px; justify-content: center; }
+                    .tool-card { width: calc(50% - 6px); max-width: 170px; min-height: 145px; padding: 10px 8px; }
+                    .tool-card .card-name { font-size: 12px; }
+                    .tool-card .card-desc { font-size: 10px; line-height: 1.4; }
+                    .tool-card .cat-badge { font-size: 8px; }
+                    .tool-card .card-count { font-size: 9px; }
+
+                    /* Banners */
+                    .current-tool-banner { padding: 12px 16px; border-radius: 10px; }
+                    .current-tool-banner .ct-name { font-size: 18px; }
+                    .current-tool-banner .ct-desc { font-size: 12px; }
+
+                    /* Stair */
+                    .stair-grid { gap: 2px; }
+                    .stage-card { min-width: 130px; max-width: 160px; }
+                    .stage-card .stage-header { padding: 6px 10px; }
+                    .stage-card .stage-name { font-size: 10px; }
+                    .stage-card .stage-items li { font-size: 9px; }
+                    .stage-connector { width: 14px; }
+                    .stage-connector .arrow { font-size: 14px; }
+
+                    /* Emotion wheel */
+                    .wheel-layout { flex-direction: column; gap: 4px; }
+                    .wheel-canvas-wrap { max-width: 100%; }
+                    .wheel-slider-wrap { flex-direction: row; width: 100%; gap: 8px; }
+                    .wheel-slider-wrap input[type="range"] { writing-mode: horizontal-tb; -webkit-appearance: auto; appearance: auto; width: 120px; height: 20px; }
+                    .emotion-detail { padding: 14px 16px; }
+                    .emotion-detail .ed-name { font-size: 18px; }
+                    .emotion-detail .ed-int { font-size: 10px; }
+
+                    /* Session panel */
+                    .session-panel { padding: 8px 12px; }
+                    .session-panel .sp-item { font-size: 10px; padding: 2px 8px; }
+
+                    /* Modal / Popover */
+                    .modal { width: 95%; padding: 16px; }
+                    .detail-content { width: 95%; padding: 18px; }
+                    .detail-content .dc-name { font-size: 18px; }
+
+                    /* Summary grid — single column */
+                    #ctDesc > div[style*="grid"] { grid-template-columns: 1fr 1fr !important; }
+                }
     </style>
 </head>
 <body>
-    <div id="container">
-        <h1>Negotiation Tools</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Tool</th>
-                    <th>Description</th>
-                    <th>Usage</th>
-                </tr>
-            </thead>
-            <tbody id="toolsTableBody">
-                <!-- Rows will be added by the script -->
-            </tbody>
-        </table>
-        <button id="tableToggle" onclick="toggleTable()"><div class="icon">➕</div> Toggle Table</button>
-        <div id="timerContainer">
-            <div class="icon">&#9202;</div> Duration (in minutes): <input type="number" id="duration" value="10">
-            <div id="timer">10:00</div>
+<div class="table-surface">
+
+    <!-- ██ Header ██ -->
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">N</div>
+            <div>
+                <h1>NOD-ify</h1>
+                <span>MixMatch · FV4</span>
+            </div>
         </div>
-        <div style="display: flex; justify-content: space-between; width: 100%;">
-            <button onclick="initializeToolsAndStartTimer()" class="large-button"><div class="icon">&#9654;</div> Start</button>
-            <button onclick="getNextTool()" class="large-button" id="nextToolButton" disabled><div class="icon">&#10145;</div> Next Tool</button>
+        <div class="header-controls">
+            <button class="btn-icon" onclick="toggleSessionLog()" id="slBtn" title="Session log">&#128203;</button>
+            <button class="btn-icon" onclick="toggleInfo()" id="infoBtn" title="About">?</button>
+            <button class="btn-icon" onclick="showAddToolModal()" title="Add custom tool">+</button>
         </div>
-        <div id="round"></div>
-        <div id="tool"></div>
-        <div id="randomResult"></div>
     </div>
-    <script>
-        // JavaScript functions for your functionality can go here
-        let tableVisible = true;
 
-        function toggleTable() {
-            const table = document.querySelector('table');
-            if (tableVisible) {
-                table.style.display = 'none';
-                tableVisible = false;
-                document.getElementById('tableToggle').innerHTML = '<div class="icon">➖</div> Toggle Table';
-            } else {
-                table.style.display = 'table';
-                tableVisible = true;
-                document.getElementById('tableToggle').innerHTML = '<div class="icon">➕</div> Toggle Table';
-            }
-        }
-    </script>
-</body>
-</html>
+    <!-- ██ Nav Tabs ██ -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="switchView('tools',this)">&#127183; Tool Deck <span class="badge" id="toolCountBadge">23</span></button>
+        <button class="nav-tab" onclick="switchView('stair',this)">&#127970; Change Stair</button>
+        <button class="nav-tab" onclick="switchView('wheel',this)">&#127804; Emotion Wheel</button>
+    </div>
 
+    <!-- ██ VIEW: Tools ██ -->
+    <div class="view-container active" id="view-tools">
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-item">Available: <strong id="statAvailable">0</strong></div>
+            <div class="stat-item">Used: <strong id="statUsed">0</strong></div>
+            <div class="stat-item">Round: <strong id="statRound">0</strong></div>
+            <div class="stat-item">ID: <strong id="statSession">—</strong></div>
+        </div>
+        <div class="category-filters" id="categoryFilters"></div>
+        <div class="toolbar">
+                    <button class="btn btn-primary" id="startBtn" onclick="startSession()">▶ Start</button>
+                    <button class="btn btn-ghost" id="nextBtn" onclick="getNextTool()" disabled>→ Next</button>
+                    <button class="btn btn-ghost btn-sm" id="skipBtn" onclick="skipTool()" style="display:none;">⏭ Skip</button>
+                    <button class="btn btn-ghost btn-sm" id="stopBtn" onclick="stopSession()" style="display:none;color:var(--red);">⏹ Stop</button>
+                    <button class="btn btn-ghost btn-sm" onclick="resetSession()">↺ Reset</button>
+                    <button class="btn btn-ghost btn-sm" onclick="shuffleTools()">🔀 Shuffle</button>
+            <div class="timer-display">
+                <span class="timer-label">Timer</span>
+                <input type="number" id="durationInput" value="10" min="1" max="120">
+                <span style="color:rgba(255,255,255,0.3);font-size:11px;">min</span>
+                <div class="time" id="timerDisplay">00:00</div>
+            </div>
+        </div>
+        <div class="current-tool-banner" id="currentBanner">
+            <div class="ct-label">&#9654; Current Tool</div>
+            <div class="ct-name" id="ctName">—</div>
+            <div class="ct-desc" id="ctDesc">—</div>
+            <div class="ct-actions">
+                <button class="btn btn-primary btn-sm" onclick="getNextTool()">Next &#10145;</button>
+                <button class="btn btn-ghost btn-sm" onclick="hideBanner()">Dismiss</button>
+            </div>
+        </div>
+        <div class="session-panel" id="sessionPanel">
+            <div class="sp-header">
+                <span class="sp-title">&#128203; Session Log</span>
+                <button class="btn btn-ghost btn-sm" onclick="clearLog()">Clear</button>
+            </div>
+            <div class="sp-list" id="sessionLogList"><span class="sp-empty">No tools used yet.</span></div>
+        </div>
+        <div class="cards-area" id="cardsArea"></div>
+    </div>
+
+    <!-- ██ VIEW: Behavioral Change Stair ██ -->
+    <div class="view-container" id="view-stair">
+        <div class="stair-container">
+            <div class="stair-header">
+                <h2>&#127970; Machiavelli Behaviour Change</h2>
+                <p style="color:rgba(255,255,255,0.4);font-size:12px;">Bid around the table <span style="color:var(--accent);font-weight:600;">· Rapport flows across all stages</span></p>
+            </div>
+            <div class="rapport-bar">Rapport <span style="font-weight:300;font-size:11px;opacity:0.6;">&#8594; builds across every stage</span></div>
+            <div class="stair-grid" id="stairGrid"></div>
+        </div>
+    </div>
+
+    <!-- ██ VIEW: Wheel of Emotions ██ -->
+    <div class="view-container" id="view-wheel">
+        <div class="wheel-container">
+            <div class="wheel-header">
+                <h2>&#127804; Wheel of Emotions</h2>
+                <p>6 primary · tap any sector for full breakdown</p>
+            </div>
+            <div class="wheel-layout">
+                <div class="wheel-canvas-wrap" id="wheelCanvas">
+                    <div class="wheel-pointer"></div>
+                </div>
+                <div class="wheel-slider-wrap">
+                    <span class="slider-label">&#9650;</span>
+                    <input type="range" id="wheelSlider" orient="vertical"
+                           min="-180" max="180" value="0" step="1"
+                           oninput="sliderRotate(this.value)">
+                    <span class="slider-label">&#9660;</span>
+                </div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="toggleLegend()" style="margin-top: 8px;">&#128196; Show all words</button>
+            <div class="wheel-legend" id="wheelLegend"></div>
+            <div class="emotion-detail" id="emotionDetail"></div>
+        </div>
+    </div>
+
+    <!-- ██ Info panel ██ -->
+    <div class="session-panel" id="infoPanel">
+        <div class="sp-header">
+            <span class="sp-title">About NOD-ify FV4</span>
+            <button class="btn btn-ghost btn-sm" onclick="toggleInfo()">Close</button>
+        </div>
+        <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">
+            <p><strong style="color:var(--accent);">Tool Deck</strong> — 23+ negotiation tactics across 5 categories. Start a timed session and draw tools at random.</p>
+            <p><strong style="color:var(--accent);">Change Stair</strong> — The Machiavelli Behaviour Change model: GET INFORMATION → EMPATHY → TRUST → COLLABORATION. Rapport flows across all stages. Click any stage card to expand.</p>
+            <p><strong style="color:var(--accent);">Emotion Wheel</strong> — 6 primary emotions (ANGER, DISGUST, SAD, HAPPY, SURPRISE, FEAR) in a 3-ring concentric wheel. Tap any sector to see secondary and tertiary feelings. Spin it with the slider or drag.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal / Popover (same) -->
+<div class="modal-overlay" id="addToolModal">
+    <div class="modal">
+        <h2>Add Custom Tool</h2>
+        <label>Tool Name</label>
+        <input type="text" id="ntName" placeholder="e.g. Empathy Statement">
+        <label>Description</label>
+        <textarea id="ntDesc" placeholder="How to use this tool..."></textarea>
+        <label>Category</label>
+        <select id="ntCat">
+            <option>Rapport</option>
+            <option>Information</option>
+            <option>Emotion</option>
+            <option>Strategy</option>
+            <option>Closure</option>
+            <option>Custom</option>
+        </select>
+        <label>Count</label>
+        <input type="number" id="ntCount" value="1" min="1" max="20">
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="closeModal('addToolModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="addCustomTool()">Add</button>
+        </div>
+    </div>
+</div>
+
+<div class="detail-popover" id="detailPopover">
+    <div class="detail-content">
+        <div class="dc-name" id="dcName"></div>
+        <div class="dc-cat" id="dcCat"></div>
+        <div class="dc-desc" id="dcDesc"></div>
+        <button class="dc-close" onclick="closeDetail()">Close</button>
+    </div>
+</div>
 
 <script>
-        const tools = [
-            { name: 'Mirror', description: 'Repeat last 1 to 3 words. Repeat 1 to 3 words of the core concept.' },
-            { name: 'Label', description: '"It seems like ..." "It sounds like ..." "It looks like ..." "It feels like ..."' },
-            { name: 'Clean Language', description: 'What kind of X is that X? Is anything else about that X?' },
-            { name: 'Summary', description: 'Use a summary to trigger a "that\'s right." The building blocks of a good summary are a label combined with paraphrasing. Identify, rearticulate, and emotionally affirm "the world according to ..."' },
-            { name: 'Calibrated Questions', description: 'What, How, and sometimes reverse why questions. Eg: How does this fit? What makes you ask? How do we know your team is on board? Why would you want do business with me?' },
-            { name: 'Loss Aversion', description: 'Losses lead to more extreme emotional responses than gains. The pain of losing is psychologically twice as powerful as the pleasure of gaining.' },
-            { name: 'Dynamic Silence', description: 'Silence is uncomfortable. It\'s awkward. Plan on being silent for 3+ seconds. Counterpart will usually break silence in 7 seconds. Try counting in your head to help pass the time. Use any tool afterward.' },
-            { name: 'Paraphrase', description: 'Express the meaning using different words, especially to achieve greater clarity.' },
-            { name: 'Miss Label', description: 'Label something incorrectly or falsely.' },
-            { name: 'Trigger', description: 'Cause a strong emotional reaction of fear, shock, anger, or worry in someone, especially because they are made to remember something bad that has happened in the past.' },
-            { name: 'No Oriented Question', description: 'Have you given up on ...? Is it ridiculous ...? Would it be horrible ...? Is it a bad idea ...?' },
-            { name: 'Accusation Audit', description: 'Instead of denying it - you call it out. "It probably seems like..." whatever it may be.' }
-        ];
+// ═══════════════════════════════════════════════════════════════════════
+// TOOLS DATA
+// ═══════════════════════════════════════════════════════════════════════
+const CAT_COLORS = {
+    Rapport:['#43a047','#2e7d32'], Information:['#1e88e5','#1565c0'],
+    Emotion:['#e53935','#c62828'], Strategy:['#8e24aa','#6a1b9a'],
+    Closure:['#fb8c00','#ef6c00'], Custom:['#00897b','#00695c'],
+};
 
-    function displayToolsInTable() {
-        const tbody = document.getElementById('toolsTableBody');
-        tools.forEach(tool => {
-            const row = document.createElement('tr');
-            const nameCell = document.createElement('td');
-            const descCell = document.createElement('td');
-            const countCell = document.createElement('td');
-            const input = document.createElement('input');
+const BASE_TOOLS = [
+    // Rapport
+    {name:'Mirror',desc:'Repeat the last 1–3 words your counterpart says. Repeat 1–3 words of the core concept to encourage elaboration.',cat:'Rapport',count:2},
+    {name:'Label',desc:'"It seems like…" "It sounds like…" "It looks like…" "It feels like…" Name the emotion to diffuse it.',cat:'Rapport',count:2},
+    {name:'Dynamic Silence',desc:'Stay silent for 3+ seconds. Silence is uncomfortable — your counterpart will usually break it within 7 seconds. Count in your head to stay calm.',cat:'Rapport',count:3},
+    {name:'Paraphrase',desc:'Restate what they said in your own words for clarity and to show you\'re listening.',cat:'Rapport',count:1},
+    {name:'Mirror & Label Combo',desc:'Mirror their last few words, then add a label. "…frustrating? It sounds like this has been really difficult for you."',cat:'Rapport',count:1},
+    {name:'Empathy Statement',desc:'"I understand how that could feel." Validate without agreeing. Lowers defenses and builds trust.',cat:'Rapport',count:2},
+    {name:'Late-Night FM DJ Voice',desc:'Use a calm, slow, downward-inflected voice. Lowers emotional temperature and signals authority without aggression.',cat:'Rapport',count:1},
+    // Information
+    {name:'Calibrated Questions',desc:'Ask What, How, and sometimes reverse-Why questions. "How does this fit?" "What makes you ask?" "How do we know your team is on board?"',cat:'Information',count:2},
+    {name:'Clean Language',desc:'"What kind of X is that X?" "Is there anything else about that X?" Uncover their mental model without leading.',cat:'Information',count:1},
+    {name:'Accusation Audit',desc:'Call out the worst thing they could think about you before they do. "It probably seems like I\'m just trying to…"',cat:'Emotion',count:2},
+    {name:'Miss Label',desc:'Label something incorrectly or falsely on purpose to provoke a correction — which reveals the truth.',cat:'Information',count:1},
+    {name:'Summary',desc:'Trigger a "That\'s right." Combine a label + paraphrasing. Identify, rearticulate, and emotionally affirm "the world according to…" them.',cat:'Information',count:2},
+    // Emotion
+    {name:'Loss Aversion',desc:'The pain of losing is psychologically ~2× as powerful as the pleasure of gaining. Frame choices around what they\'ll lose, not what they\'ll gain.',cat:'Emotion',count:1},
+    {name:'Trigger',desc:'Intentionally provoke a strong emotional reaction (fear, shock, anger) by referencing something painful or charged. Use with care.',cat:'Emotion',count:1},
+    {name:'No-Oriented Question',desc:'"Have you given up on…?" "Is it ridiculous…?" "Would it be horrible…?" "Is it a bad idea…?" The brain skips the "no" and engages.',cat:'Emotion',count:1},
+    // Strategy
+    {name:'Bargaining Chip',desc:'Identify something you give up that costs you little but means a lot to them. Trade concessions strategically.',cat:'Strategy',count:1},
+    {name:'Bracket',desc:'Set the range before anchoring. "If I could wave a magic wand, anything between X and Y is fair. Does that match your range?"',cat:'Strategy',count:1},
+    {name:'Ackerman Model',desc:'Set target price. Offer 65%, then 85%, then 95%, then 100% — each time getting a reluctant concession. Increases their satisfaction with the deal.',cat:'Strategy',count:1},
+    {name:'How Am I Supposed To Do That?',desc:'A calibrated question that forces the other side to solve their own objection. "How am I supposed to do that given our constraints?"',cat:'Strategy',count:2},
+    {name:'Deadline Pressure',desc:'Use time constraints artfully. "Our team needs a decision by Friday." Creates healthy urgency without ultimatums.',cat:'Strategy',count:1},
+    // Closure
+    {name:'Fairness Framing',desc:'"I want you to walk away thinking you got a fair deal. Help me figure out what that looks like." Resets adversarial dynamics.',cat:'Closure',count:1},
+    {name:'"That\'s Right" Trigger',desc:'Summarize their position so accurately that they say "That\'s right." The signal they feel fully heard — and the deal can close.',cat:'Closure',count:1},
+    {name:'Post-Settlement Settlement',desc:'After agreement, ask: "What did I miss that would make this better for you?" Often yields last-minute improvements.',cat:'Closure',count:1},
+    // Change Stair tools (available in deck)
+    {name:'Stage ID — Precontemplation',desc:'They don\'t see a problem. Use mirroring + calibrated questions to surface it. "How would things need to change for you to consider this?"',cat:'Strategy',count:1},
+    {name:'Stage ID — Contemplation',desc:'They see a problem but are ambivalent. Use label + summary to validate the conflict. "It sounds like you\'re torn between two options."',cat:'Rapport',count:1},
+    {name:'Stage ID — Action Phase',desc:'They\'re making changes. Use the Ackerman Model and clear deadlines. Support the momentum with positive reinforcement.',cat:'Closure',count:1},
+];
 
-            input.type = 'number';
-            input.value = tool.name === 'Dynamic Silence' ? 3 : 1;
-            input.id = tool.name.replace(/ /g, '_');
+// ═══════════════════════════════════════════════════════════════════════
+// CHANGE STAIR DATA
+// ═══════════════════════════════════════════════════════════════════════
+const STAIR_STEPS = [
+    {
+        id:'info', name:'GET INFORMATION', color:'#2c5f8a', num:1,
+        subtitle:'Open the conversation',
+        items:[
+            'Min Open Question','Minimal Encourager','Mirroring / Inflection',
+            'Mis-label','Dynamics Silence','Indirect Question / 3+','Elicitation'
+        ],
+        desc:'Before you can influence anyone, you must first gather information. Open the conversation with minimal prompts — don\'t chase, let them reveal. Use mirroring to encourage elaboration, minimal encouragers to keep them talking, and silence to create space. Mis-label to provoke correction. Elicitation draws out what they wouldn\'t otherwise share.'
+    },
+    {
+        id:'empathy', name:'EMPATHY', color:'#2c5f8a', num:2,
+        subtitle:'Listen for 7L → Show understanding',
+        items:[
+            'Fact & Emotion','Motivators &','Fear','Need & Want','Values & Beliefs',
+            '—','Labels & Reflect','Paraphrase','Nurture / Reverse'
+        ],
+        desc:'Listen beyond words — for facts, emotions, motivators, fears, needs, wants, values, and beliefs (the 7L framework). Show you understand by labeling their emotions, reflecting back what you hear, paraphrasing their position, and nurturing the space. Empathy is not agreement — it\'s accurate understanding.'
+    },
+    {
+        id:'trust', name:'TRUST', color:'#2c5f8a', num:3,
+        subtitle:'Summary → Reframing',
+        items:[
+            'Summary','Minimize problem','Save face',
+            'Min difference','Common ground','Victim of Circumstance'
+        ],
+        desc:'Trust is built through accurate summary and reframing. Summarize their position until they say "that\'s right." Then reframe — minimize the problem, give them a way to save face, highlight minimum difference and common ground. The "victim of circumstance" frame lets them change position without losing dignity.'
+    },
+    {
+        id:'collab', name:'COLLABORATION', color:'#2c5f8a', num:4,
+        subtitle:'Problem solving',
+        items:[
+            'Ask Big and More','A.A.','Define the problem',
+            'Brainstorming','Eliminate option','Acceptable solution',
+            'Making a plan','Implement solution'
+        ],
+        desc:'The summit of the staircase. Now you collaborate — not compromise. Ask big and more, then use the Ackerman model (A.A.). Define the problem together, brainstorm options, eliminate what won\'t work, find the acceptable solution, make a plan, and implement. This is where behavioral change happens.'
+    }
+];
 
-            nameCell.textContent = tool.name;
-            descCell.textContent = tool.description;
-            countCell.appendChild(input);
+// ═══════════════════════════════════════════════════════════════════════
+// EMOTION WHEEL DATA — 6-sector concentric wheel
+// ═══════════════════════════════════════════════════════════════════════
+const EMOTIONS = [
+    {
+        name:'ANGER', color:'#4A78B8',
+        secondary: ['Hurt','Threatened','Hateful','Mad'],
+        tertiary: { 'Hurt':['Devastated','Embarrassed'], 'Threatened':['Hurt','Insecure','Jealous','Resentful','Violated'], 'Hateful':['Mad','Aggressive','Frustrated','Distant','Critical'], 'Mad':['Enraged','Furious'] },
+    },
+    {
+        name:'DISGUST', color:'#6DBB75',
+        secondary: ['Disapproving','Disappointed','Awful','Avoidance','Guilty'],
+        tertiary: { 'Disapproving':['Judgmental','Loathing','Revolted'], 'Disappointed':['Repugnant','Awful'], 'Awful':['Detestable'], 'Avoidance':['Aversion','Hesitant'], 'Guilty':['Remorseful','Ashamed'] },
+    },
+    {
+        name:'SAD', color:'#5DA9D6',
+        secondary: ['Abandoned','Despair','Depressed','Lonely','Bored'],
+        tertiary: { 'Abandoned':['Ignored','Victimized'], 'Despair':['Powerless','Vulnerable'], 'Depressed':['Inferior','Empty'], 'Lonely':['Abandoned','Isolated'], 'Bored':['Apathetic','Indifferent'] },
+    },
+    {
+        name:'HAPPY', color:'#3FB8E5',
+        secondary: ['Optimistic','Intimate','Peaceful','Powerful','Accepted','Proud','Interested','Joyful'],
+        tertiary: { 'Optimistic':['Inspired','Open'], 'Intimate':['Playful','Sensitive'], 'Peaceful':['Hopeful','Loving'], 'Powerful':['Provocative','Courageous'], 'Accepted':['Fulfilled','Respected'], 'Proud':['Confident','Important'], 'Interested':['Inquisitive','Curious'], 'Joyful':['Amazed','Excited'] },
+    },
+    {
+        name:'SURPRISE', color:'#F4D03F',
+        secondary: ['Startled','Confused','Amazed','Excited'],
+        tertiary: { 'Startled':['Shocked','Dismayed'], 'Confused':['Disillusioned','Perplexed'], 'Amazed':['Astonished'], 'Excited':['Eager','Energetic'] },
+    },
+    {
+        name:'FEAR', color:'#F39C34',
+        secondary: ['Humiliated','Rejected','Submissive','Insecure','Anxious','Scared'],
+        tertiary: { 'Humiliated':['Ridiculed','Disrespected'], 'Rejected':['Alienated','Inadequate'], 'Submissive':['Insignificant','Worthless'], 'Insecure':['Inferior','Incompetent'], 'Anxious':['Worried','Overwhelmed'], 'Scared':['Frightened','Terrified'] },
+    },
+];
 
-            row.appendChild(nameCell);
-            row.appendChild(descCell);
-            row.appendChild(countCell);
+// ═══════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════
+let state = {
+    tools: JSON.parse(JSON.stringify(BASE_TOOLS)),
+    currentDeck: [],
+    usedTools: [],
+    skippedTools: [],
+    currentTool: null,
+    timer: null,
+    endTime: null,
+    sessionStartTime: null,
+    sessionActive: false,
+    round: 0,
+    sessionId: null,
+    activeFilter: 'All',
+    sessionLogOpen: false,
+    currentView: 'tools',
+    lastUsedEmotion: null,
+};
 
-            tbody.appendChild(row);
-        });
+function freshId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+
+// ═══════════════════════════════════════════════════════════════════════
+// VIEW SWITCHING
+// ═══════════════════════════════════════════════════════════════════════
+function switchView(name,btn){
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.view-container').forEach(v=>v.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    state.currentView = name;
+    document.getElementById('view-'+name).classList.add('active');
+    document.getElementById('toolCountBadge').textContent = state.tools.length;
+
+    if(name==='stair') renderStair();
+    if(name==='wheel') renderWheel();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// TOOLS VIEW — RENDER
+// ═══════════════════════════════════════════════════════════════════════
+function renderToolsView(){
+    renderCategoryFilters();
+    renderCards();
+    renderStats();
+    document.getElementById('statSession').textContent = state.sessionId ? state.sessionId.slice(0,8)+'…' : '—';
+    document.getElementById('toolCountBadge').textContent = state.tools.length;
+    // Update button states
+    document.getElementById('startBtn').disabled = state.sessionActive;
+    document.getElementById('startBtn').innerHTML = state.sessionActive ? '▶ Running…' : '▶ Start';
+    document.getElementById('nextBtn').disabled = !state.sessionActive;
+    document.getElementById('stopBtn').style.display = state.sessionActive ? '' : 'none';
+    document.getElementById('skipBtn').style.display = (state.sessionActive && state.currentTool) ? '' : 'none';
+}
+
+function renderCategoryFilters(){
+    const cats = ['All',...new Set(state.tools.map(t=>t.cat))];
+    document.getElementById('categoryFilters').innerHTML =
+        cats.map(c=>`<button class="cat-pill ${c===state.activeFilter?'active':''}" onclick="setFilter('${c}')">${c}</button>`).join('');
+}
+function setFilter(cat){state.activeFilter=cat; renderCards();}
+
+function renderCards(){
+    const area = document.getElementById('cardsArea');
+    const filtered = state.activeFilter==='All' ? state.tools : state.tools.filter(t=>t.cat===state.activeFilter);
+    if(!filtered.length){
+        area.innerHTML='<div class="empty-state"><div style="font-size:48px;opacity:0.3;margin-bottom:10px;">&#128220;</div><h3>No tools in this category</h3></div>';
+        area._cache = null;
+        return;
+    }
+    const deckCounts={};
+    state.currentDeck.forEach(t=>{deckCounts[t.name]=(deckCounts[t.name]||0)+1});
+    const usedNames=new Set(state.usedTools.map(t=>t.name));
+    const skippedNames=new Set(state.skippedTools.map(t=>t.name));
+
+    // Build fresh if filter changed or first render
+    const filterKey = state.activeFilter;
+    if (!area._cache || area._cacheFilter !== filterKey || area._cache.length !== filtered.length) {
+        area.innerHTML = filtered.map(tool => {
+            const colors = CAT_COLORS[tool.cat]||['#666','#444'];
+            return `<div class="tool-card" data-tool="${tool.name.replace(/"/g,'&quot;')}" style="border-top:3px solid ${colors[0]};">
+                <span class="cat-badge" style="color:${colors[0]};">${tool.cat}</span>
+                <div class="card-name">${tool.name}</div>
+                <div class="card-desc">${tool.desc}</div>
+                <div class="card-count"></div>
+                <div class="card-check">&#10003;</div>
+            </div>`;
+        }).join('');
+        area._cache = area.querySelectorAll('.tool-card');
+        area._cacheFilter = filterKey;
     }
 
-    let currentTools = [];
-    let usedTools = [];
-    let timer = null;
-    let endTime = null;
-
-    function initializeToolsAndStartTimer() {
-        resetCurrentTools();
-
-        const duration = parseInt(document.getElementById('duration').value);
-        endTime = Date.now() + duration * 60 * 1000; // Convert to milliseconds
-        timer = setInterval(updateTimer, 1000);
-
-        document.getElementById("nextToolButton").disabled = false;
-    }
-
-    function resetCurrentTools() {
-        currentTools = [];
-        tools.forEach(tool => {
-            const toolCount = parseInt(document.getElementById(tool.name.replace(/ /g, '_')).value);
-            for (let i = 0; i < toolCount; i++) {
-                currentTools.push(tool);
-            }
-        });
-
-        // Shuffle currentTools array for randomness
-        for (let i = currentTools.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [currentTools[i], currentTools[j]] = [currentTools[j], currentTools[i]];
+    // Update cards in-place — no DOM destruction
+    filtered.forEach((tool, i) => {
+        const card = area._cache[i];
+        if (!card) return;
+        const remaining = deckCounts[tool.name]||0;
+        const isUsed = usedNames.has(tool.name) && remaining===0;
+        const isSkipped = skippedNames.has(tool.name);
+        const isCurrent = state.currentTool && state.currentTool.name === tool.name;
+        card.classList.toggle('used', isUsed && !isCurrent);
+        card.classList.toggle('skipped', isSkipped && !isUsed && !isCurrent);
+        card.classList.toggle('current-focus', isCurrent);
+        // No need to replace inner text — cards don't change content, only state
+        if (state.sessionActive) {
+            card.querySelector('.card-count').innerHTML = `<span class="num">${remaining}</span> left`;
+        } else {
+            card.querySelector('.card-count').innerHTML = `<span class="num">${tool.count}</span> in rotation`;
         }
+    });
+}
+
+function renderStats(){
+    const total=state.tools.reduce((s,t)=>s+t.count,0);
+    document.getElementById('statAvailable').textContent=state.sessionActive?state.currentDeck.length:total;
+    document.getElementById('statUsed').textContent=state.usedTools.length;
+    document.getElementById('statRound').textContent=state.round;
+}
+
+function renderLog(){
+    const list=document.getElementById('sessionLogList');
+    const allItems = [...state.usedTools];
+    if(!allItems.length){list.innerHTML='<span class="sp-empty">No tools used yet.</span>';return;}
+    list.innerHTML=allItems.map((t,i)=>{
+        const skipped = state.skippedTools.includes(t);
+        return `<span class="sp-item${skipped?' sp-skipped':''}">${i+1}. ${t.name}${skipped?' ⏭':''}</span>`;
+    }).join('')+`<span class="sp-item" style="opacity:0.6;">${state.currentDeck.length} remaining</span>`;
+}
+
+function toggleSessionLog(){
+    state.sessionLogOpen=!state.sessionLogOpen;
+    document.getElementById('sessionPanel').classList.toggle('open',state.sessionLogOpen);
+    document.getElementById('slBtn').classList.toggle('active',state.sessionLogOpen);
+}
+function toggleInfo(){
+    document.getElementById('infoPanel').classList.toggle('open');
+}
+
+// Event delegation for card clicks (no inline onclick — prevents re-render flicker)
+document.addEventListener('click', function(e) {
+    const card = e.target.closest('.tool-card');
+    if (card) {
+        const name = card.getAttribute('data-tool');
+        if (name) onCardClick(name);
     }
+});
 
-    function getNextTool() {
-        if (currentTools.length === 0) {
-            resetCurrentTools();
-        }
+function buildDeck(){
+    state.currentDeck=[];
+    state.tools.forEach(t=>{for(let i=0;i<t.count;i++)state.currentDeck.push({...t})});
+    shuffleArray(state.currentDeck);
+}
 
-        if (Date.now() > endTime) {
-            clearInterval(timer);
-            document.getElementById('tool').innerHTML = '<h2>Session complete!</h2>';
-            document.getElementById('timer').innerHTML = 'Time left: 00:00';
-            document.getElementById("nextToolButton").disabled = true;
-            return;
-        }
+// ═══════════════════════════════════════════════════════════════════════
+// SESSION
+// ═══════════════════════════════════════════════════════════════════════
+function startSession(){
+    if(state.sessionActive) return;
+    const dur=parseInt(document.getElementById('durationInput').value)||10;
+    state.endTime=Date.now()+dur*60*1000;
+    state.sessionStartTime=Date.now();
+    state.sessionActive=true; state.round=0;
+    state.usedTools=[]; state.skippedTools=[]; state.currentTool=null;
+    state.sessionId=freshId();
+    document.getElementById('statSession').textContent=state.sessionId.slice(0,8)+'…';
+    buildDeck();
+    state.timer=setInterval(tick,1000);
+    hideBanner();
+    renderToolsView(); renderLog();
+    document.getElementById('currentBanner').classList.add('show');
+    document.getElementById('ctName').textContent='Session Started!';
+    document.getElementById('ctDesc').textContent=`${dur} min · ${state.currentDeck.length} tools loaded. Press Next to draw.`;
+}
 
-        const nextTool = currentTools.pop();
-        usedTools.push(nextTool);
-
-        displayTool(nextTool);
+function getNextTool(){
+    if(!state.sessionActive) return;
+    if(Date.now()>state.endTime){endSession();return;}
+    if(!state.currentDeck.length){
+        if(state.usedTools.length||state.skippedTools.length){buildDeck();state.round++;}
+        else{endSession();return}
     }
+    const tool=state.currentDeck.pop();
+    state.currentTool=tool;
+    state.usedTools.push(tool);
+    document.getElementById('currentBanner').classList.add('show');
+    document.getElementById('ctName').textContent=tool.name;
+    document.getElementById('ctDesc').textContent=tool.desc;
+    document.getElementById('skipBtn').style.display='';
+    animateCard(tool.name);
+    renderToolsView(); renderLog();
+}
 
-    function displayTool(tool) {
-        document.getElementById('tool').innerHTML = `
-            <h2>${tool.name}</h2>
-            <p>${tool.description}</p>
+function skipTool(){
+    if(!state.sessionActive || !state.currentTool) return;
+    state.skippedTools.push(state.currentTool);
+    state.currentTool=null;
+    document.getElementById('skipBtn').style.display='none';
+    document.getElementById('currentBanner').classList.add('show');
+    document.getElementById('ctName').textContent='Skipped';
+    document.getElementById('ctDesc').textContent='Draw next tool or continue.';
+    renderToolsView(); renderLog();
+}
+
+function stopSession(){
+    if(!state.sessionActive) return;
+    showSessionSummary();
+    cleanupSession();
+}
+
+function cleanupSession(){
+    if(state.timer) clearInterval(state.timer);
+    state.sessionActive=false; state.timer=null; state.currentTool=null;
+    renderToolsView();
+}
+
+function endSession(){
+    if(!state.sessionActive) return;
+    if(state.timer) clearInterval(state.timer);
+    state.sessionActive=false; state.timer=null;
+    showSessionSummary();
+    state.currentTool=null;
+    renderToolsView();
+}
+
+function showSessionSummary(){
+    const totalMs = Date.now() - (state.sessionStartTime||Date.now());
+    const totalSec = Math.floor(totalMs/1000);
+    const mins = Math.floor(totalSec/60); const secs = totalSec%60;
+    const completed = state.usedTools.filter(t=>!state.skippedTools.includes(t));
+    const skipped = state.skippedTools;
+    const uniqueCards = [...new Set(completed.map(t=>t.name))];
+    const categories = [...new Set(completed.map(t=>t.cat))];
+
+    const emotionHint = state.lastUsedEmotion ?
+        `<div style="margin-top:8px;padding:6px 10px;background:rgba(212,168,83,0.1);border-radius:6px;border-left:3px solid var(--accent);">
+            🎯 <strong>Last emotion:</strong> ${state.lastUsedEmotion}
+        </div>` : '';
+
+    document.getElementById('currentBanner').classList.add('show');
+    document.getElementById('ctName').innerHTML = '🏁 <span style="color:var(--accent);">Session Summary</span>';
+    document.getElementById('ctDesc').innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0;">
+            <div><strong style="color:var(--accent);">${completed.length}</strong><br><small>tools drawn</small></div>
+            <div><strong style="color:var(--accent);">${skipped.length}</strong><br><small>skipped</small></div>
+            <div><strong style="color:var(--accent);">${uniqueCards.length}</strong><br><small>unique frames</small></div>
+            <div><strong style="color:var(--accent);">${mins}:${String(secs).padStart(2,'0')}</strong><br><small>total time</small></div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:6px;">
+            Rounds: ${state.round+1} · Categories: ${categories.join(', ')}
+        </div>
+        ${emotionHint}
+        ${completed.length ? `<div style="margin-top:6px;font-size:10px;color:rgba(255,255,255,0.3);max-height:60px;overflow-y:auto;">${completed.map(t=>t.name).join(' → ')}</div>` : ''}
+    `;
+    document.getElementById('stopBtn').style.display='none';
+    document.getElementById('skipBtn').style.display='none';
+    document.getElementById('nextBtn').disabled=true;
+}
+
+function resetSession(){
+    if(state.timer) clearInterval(state.timer);
+    state.sessionActive=false; state.timer=null; state.currentDeck=[];
+    state.usedTools=[]; state.skippedTools=[]; state.currentTool=null;
+    state.round=0; state.sessionStartTime=null;
+    document.getElementById('startBtn').disabled=false;
+    document.getElementById('startBtn').innerHTML='▶ Start';
+    document.getElementById('nextBtn').disabled=true;
+    document.getElementById('stopBtn').style.display='none';
+    document.getElementById('skipBtn').style.display='none';
+    hideBanner(); renderToolsView(); renderLog();
+    document.getElementById('timerDisplay').textContent='00:00';
+}
+
+function shuffleTools(){if(state.sessionActive){shuffleArray(state.currentDeck);renderCards();}}
+function hideBanner(){document.getElementById('currentBanner').classList.remove('show');}
+function clearLog(){state.usedTools=[];state.skippedTools=[];state.currentDeck=[];state.currentTool=null;state.round=0;renderLog();renderToolsView();}
+
+function animateCard(name){
+    document.querySelectorAll('.tool-card').forEach(c=>{
+        if(c.getAttribute('data-tool')===name){
+            c.classList.add('active-card');
+            setTimeout(()=>c.classList.remove('active-card'),800);
+        }
+    });
+}
+
+function tick(){
+    const left=state.endTime-Date.now();
+    if(left<=0){endSession();document.getElementById('timerDisplay').textContent='00:00';return;}
+    updateTimerDisplay(left);
+}
+function updateTimerDisplay(ms){
+    const el=document.getElementById('timerDisplay');
+    const s=Math.max(0,Math.floor(ms/1000));
+    const m=Math.floor(s/60); const sec=s%60;
+    el.textContent=`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    el.className='time'+(sec<=30?' danger':s<=120?' warning':'');
+}
+
+function onCardClick(name){
+    const tool=state.tools.find(t=>t.name===name);
+    if(!tool) return;
+    document.getElementById('dcName').textContent=tool.name;
+    document.getElementById('dcCat').textContent=tool.cat;
+    document.getElementById('dcDesc').textContent=tool.desc;
+    document.getElementById('detailPopover').classList.add('open');
+}
+function closeDetail(){document.getElementById('detailPopover').classList.remove('open');}
+
+// Custom tools
+function showAddToolModal(){document.getElementById('addToolModal').classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function addCustomTool(){
+    const n=document.getElementById('ntName').value.trim();
+    const d=document.getElementById('ntDesc').value.trim();
+    const c=document.getElementById('ntCat').value;
+    const cnt=parseInt(document.getElementById('ntCount').value)||1;
+    if(!n)return;
+    if(!CAT_COLORS[c])CAT_COLORS[c]=['#666','#444'];
+    state.tools.push({name:n,desc:d,cat:c,count:cnt});
+    closeModal('addToolModal');
+    renderToolsView();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CHANGE STAIR (Machiavelli Behaviour Change Model)
+// ═══════════════════════════════════════════════════════════════════════
+function renderStair(){
+    const container = document.getElementById('stairGrid');
+    let html = '';
+    STAIR_STEPS.forEach((s,i)=>{
+        const itemsHtml = s.items.map(item => {
+            if(item === '—') return '<li class="sep">Show understanding</li>';
+            return `<li>${item}</li>`;
+        }).join('');
+        html += `
+            <div class="stage-card" id="stage-${i}" onclick="toggleStage(${i})">
+                <div class="stage-header">
+                    <div class="stage-num">${s.num}</div>
+                    <div class="stage-name">${s.name}</div>
+                </div>
+                <div class="stage-body">
+                    <div class="stage-subtitle">${s.subtitle}</div>
+                    <ul class="stage-items">${itemsHtml}</ul>
+                    <div class="stage-desc" id="stageDesc-${i}">${s.desc}</div>
+                </div>
+            </div>
         `;
-    }
-
-    function updateTimer() {
-        const timeLeft = endTime - Date.now();
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            document.getElementById('tool').innerHTML = '<h2>Session complete!</h2>';
-            document.getElementById('timer').innerHTML = 'Time left: 00:00';
-            document.getElementById("nextToolButton").disabled = true;
-            return;
+        if(i < STAIR_STEPS.length - 1){
+            html += `<div class="stage-connector"><div class="arrow">&#9654;</div></div>`;
         }
+    });
+    container.innerHTML = html;
 
-        const minutesLeft = Math.floor(timeLeft / (60 * 1000));
-        const secondsLeft = Math.floor((timeLeft % (60 * 1000)) / 1000);
+    // Staggered reveal
+    setTimeout(()=>{
+        document.querySelectorAll('.stage-card').forEach((el,i)=>{
+            setTimeout(()=>el.classList.add('visible'), i*160);
+        });
+    }, 80);
+}
 
-        document.getElementById('timer').textContent = `Time left: ${String(minutesLeft).padStart(2, '0')}:${String(secondsLeft).padStart(2, '0')}`;
+function toggleStage(i){
+    const desc = document.getElementById(`stageDesc-${i}`);
+    const card = document.getElementById(`stage-${i}`);
+    const wasOpen = desc.classList.contains('open');
+    document.querySelectorAll('.stage-card').forEach(c=>c.classList.remove('active-stage'));
+    document.querySelectorAll('.stage-desc').forEach(d=>d.classList.remove('open'));
+    if(!wasOpen){ desc.classList.add('open'); card.classList.add('active-stage'); }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// EMOTION WHEEL — 6-sector 3-ring concentric wheel
+// ═══════════════════════════════════════════════════════════════════════
+let wheelRotation = 0;
+let isDragging = false;
+let dragStartX = 0;
+
+function renderWheel(){
+    const container = document.getElementById('wheelCanvas');
+    const cx=250, cy=250, sectors=6, sectorAngle=360/sectors;
+    const R=210, rMid=145, rInner=108, rCenter=55;
+
+    let svg = `<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="cursor:grab;touch-action:none;">
+        <g id="wheelGroup" transform="rotate(${wheelRotation},250,250)">`;
+
+    // Gold outer rim
+    svg += `<circle cx="${cx}" cy="${cy}" r="${R+4}" fill="none" stroke="#d4a853" stroke-width="3" opacity="0.5"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${R+1}" fill="none" stroke="#d4a853" stroke-width="1" opacity="0.3"/>`;
+
+    const rad=d=>d*Math.PI/180;
+    const pt=(ri,a)=>[cx+ri*Math.cos(rad(a)),cy+ri*Math.sin(rad(a))];
+    const arcPath=(r1,r2,a1,a2)=>{
+        const[x1,y1]=pt(r2,a1),[x2,y2]=pt(r2,a2);
+        const[x3,y3]=pt(r1,a2),[x4,y4]=pt(r1,a1);
+        return `M${x1},${y1} A${r2},${r2} 0 0 1 ${x2},${y2} L${x3},${y3} A${r1},${r1} 0 0 0 ${x4},${y4} Z`;
+    };
+
+    // Draw radial dividers between sectors
+    for(let i=0;i<sectors;i++){
+        const a=i*sectorAngle;
+        const[x1,y1]=pt(rCenter,a);
+        const[x2,y2]=pt(R+2,a);
+        svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(0,0,0,0.2)" stroke-width="0.8"/>`;
     }
 
-    displayToolsInTable();
-</script>
+    EMOTIONS.forEach((em, idx) => {
+        const startA=idx*sectorAngle, endA=(idx+1)*sectorAngle, midA=startA+sectorAngle/2;
 
+        // 3 rings
+        svg+=`<path d="${arcPath(rMid,R,startA,endA)}" fill="${em.color}" opacity="0.35" class="wheel-emotion-slice" data-emotion="${idx}" onclick="selectEmotion(${idx})"/>`;
+        svg+=`<path d="${arcPath(rInner,rMid,startA,endA)}" fill="${em.color}" opacity="0.6" class="wheel-emotion-slice" data-emotion="${idx}" onclick="selectEmotion(${idx})"/>`;
+        svg+=`<path d="${arcPath(rCenter,rInner,startA,endA)}" fill="${em.color}" opacity="0.85" class="wheel-emotion-slice" data-emotion="${idx}" onclick="selectEmotion(${idx})"/>`;
+
+        // Primary label in center
+        const lr=rCenter*0.6;
+        const[lx,ly]=pt(lr,midA);
+        const r1=midA>90&&midA<270?midA+180:midA;
+        svg+=`<text x="${lx}" y="${ly}" transform="rotate(${r1},${lx},${ly})" class="wheel-label wheel-label-primary">${em.name}</text>`;
+
+        // Secondary labels (middle ring)
+        const secs=em.secondary, sStep=sectorAngle/(secs.length+0.5);
+        secs.forEach((s,si)=>{
+            const a=startA+sStep*(si+0.6);
+            const[sx,sy]=pt((rInner+rMid)/2,a);
+            const rot=a>90&&a<270?a+180:a;
+            svg+=`<text x="${sx}" y="${sy}" transform="rotate(${rot},${sx},${sy})" class="wheel-label wheel-label-secondary">${s.toUpperCase()}</text>`;
+        });
+
+        // Tertiary labels (outer ring) — using smaller font, spread evenly
+        const allT = [];
+        Object.values(em.tertiary).forEach(arr=>arr.forEach(w=>allT.push(w)));
+        const tStep=sectorAngle/(allT.length+1);
+        allT.forEach((t,ti)=>{
+            const a=startA+tStep*(ti+1);
+            const[tx,ty]=pt((rMid+R)/2,a);
+            const rot=a>90&&a<270?a+180:a;
+            svg+=`<text x="${tx}" y="${ty}" transform="rotate(${rot},${tx},${ty})" class="wheel-label wheel-label-tertiary">${t.toUpperCase()}</text>`;
+        });
+
+        // Gold rim dot
+        const[dx,dy]=pt(R+6,startA);
+        svg+=`<circle cx="${dx}" cy="${dy}" r="3" fill="#d4a853" opacity="0.7" class="wheel-rim-dot"/>`;
+        const[dx2,dy2]=pt(R+6,startA+1.5);
+        svg+=`<circle cx="${dx2}" cy="${dy2}" r="1.5" fill="#fff" opacity="0.12" class="wheel-rim-dot"/>`;
+    });
+
+    // Center hub
+    svg+=`<circle cx="${cx}" cy="${cy}" r="${rCenter-2}" fill="#1a1a2e" stroke="rgba(212,168,83,0.25)" stroke-width="1.5"/>`;
+
+    svg+=`</g></svg>`;
+    container.innerHTML = svg;
+
+    // Touch-optimized drag-to-rotate
+    const svgEl = container.querySelector('svg');
+    if(svgEl){
+        svgEl.addEventListener('mousedown', startDrag);
+        svgEl.addEventListener('touchstart', startDragTouch, {passive:false});
+        // Prevent scroll while dragging on touch
+        svgEl.addEventListener('touchmove', e=>{if(isDragging)e.preventDefault();}, {passive:false});
+    }
+    // Use document-level events for smooth drag tracking
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchmove', onDragTouch, {passive:false});
+    document.addEventListener('touchend', stopDrag);
+    document.addEventListener('touchcancel', stopDrag);
+
+    // Build legend
+    buildLegend();
+    // Sync slider
+    const slider=document.getElementById('wheelSlider');
+    if(slider) slider.value=Math.max(-180,Math.min(180,wheelRotation));
+}
+
+function startDrag(e){isDragging=true;dragStartX=e.clientX;const s=document.querySelector('#wheelCanvas svg');if(s)s.style.cursor='grabbing';}
+function startDragTouch(e){isDragging=true;dragStartX=e.touches[0].clientX;}
+function onDrag(e){if(!isDragging)return;const dx=e.clientX-dragStartX;if(Math.abs(dx)>3){wheelRotation+=dx*0.3;dragStartX=e.clientX;requestAnimationFrame(updateWheelRotation);}}
+function onDragTouch(e){if(!isDragging)return;const dx=e.touches[0].clientX-dragStartX;if(Math.abs(dx)>3){wheelRotation+=dx*0.3;dragStartX=e.touches[0].clientX;requestAnimationFrame(updateWheelRotation);}}
+function stopDrag(){isDragging=false;const s=document.querySelector('#wheelCanvas svg');if(s)s.style.cursor='grab';}
+function updateWheelRotation(){const g=document.querySelector('#wheelGroup');if(g)g.setAttribute('transform',`rotate(${wheelRotation},250,250)`);const s=document.getElementById('wheelSlider');if(s)s.value=Math.max(-180,Math.min(180,wheelRotation));}
+function sliderRotate(val){wheelRotation=parseFloat(val);updateWheelRotation();}
+
+function buildLegend(){
+    const legend=document.getElementById('wheelLegend');
+    legend.innerHTML=EMOTIONS.map(em=>`
+        <div class="lg-group" style="border-left:3px solid ${em.color};">
+            <div class="lg-primary" style="color:${em.color};">${em.name}</div>
+            ${Object.entries(em.tertiary).map(([sec,ters])=>`
+                <div class="lg-sec">${sec}</div>
+                ${ters.map(t=>`<div class="lg-ter">${t}</div>`).join('')}
+            `).join('')}
+        </div>
+    `).join('');
+}
+
+function toggleLegend(){
+    const legend=document.getElementById('wheelLegend');
+    legend.classList.toggle('open');
+    const btn=legend.previousElementSibling;
+    if(btn && btn.tagName==='BUTTON'){
+        btn.innerHTML=legend.classList.contains('open')?'&#128196; Hide words':'&#128196; Show all words';
+    }
+}
+
+function selectEmotion(idx){
+    const em=EMOTIONS[idx];
+    state.lastUsedEmotion=em.name;
+    document.querySelectorAll('.wheel-emotion-slice').forEach(p=>p.classList.remove('active-slice'));
+    document.querySelectorAll(`.wheel-emotion-slice[data-emotion="${idx}"]`).forEach(p=>p.classList.add('active-slice'));
+    let secHtml='';
+    Object.entries(em.tertiary).forEach(([sec,ters])=>{
+        secHtml+=`<div class="ed-sec"><strong>${sec}</strong>: ${ters.join(', ')}</div>`;
+    });
+    const d=document.getElementById('emotionDetail');
+    d.innerHTML=`
+        <div class="ed-name" style="color:${em.color};">${em.name}</div>
+        <div class="ed-intensities">${em.secondary.map(s=>`<span class="ed-int" style="background:${em.color};">${s}</span>`).join('')}</div>
+        <div class="ed-combos"><h4>Feelings</h4>${secHtml}</div>
+        <button class="ed-close" onclick="closeEmotion()">Close</button>
+    `;
+    d.classList.add('open');
+}
+function closeEmotion(){document.getElementById('emotionDetail').classList.remove('open');document.querySelectorAll('.wheel-emotion-slice').forEach(p=>p.classList.remove('active-slice'));}
+
+// ═══════════════════════════════════════════════════════════════════════
+// UTILITY
+// ═══════════════════════════════════════════════════════════════════════
+function shuffleArray(arr){
+    for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════
+renderToolsView();
+</script>
 </body>
 </html>
