@@ -540,44 +540,36 @@
                     50%{box-shadow:0 0 14px #ff1744,0 0 28px rgba(255,23,68,0.5)}
                 }
 
-                .wheel-slider-wrap {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 4px;
-                    flex-shrink: 0;
-                    width: 36px;
+                .wheel-rotate-bar {
+                    display: flex; align-items: center; gap: 10px;
+                    width: 100%; max-width: 420px;
+                    margin: 8px auto 0; padding: 8px 14px;
+                    background: rgba(0,0,0,0.25); border-radius: 12px;
+                    border: 1px solid rgba(255,255,255,0.08);
                 }
-                .wheel-slider-wrap .slider-label {
-                    font-size: 8px;
-                    color: rgba(255,255,255,0.35);
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
+                .wheel-rotate-bar .rotate-icon {
+                    font-size: 22px; color: var(--accent); flex-shrink: 0;
+                    text-shadow: 0 0 8px var(--accent-glow);
                 }
-                .wheel-slider-wrap input[type="range"] {
-                    writing-mode: bt-lr;
-                    -webkit-appearance: slider-vertical;
-                    appearance: slider-vertical;
-                    width: 100px;
-                    height: 4px;
-                    background: transparent;
-                    cursor: pointer;
-                    opacity: 0.6;
-                    touch-action: none;
+                .wheel-rotate-bar input[type="range"] {
+                    flex: 1; height: 36px;
+                    -webkit-appearance: auto; appearance: auto;
+                    cursor: pointer; touch-action: none;
                 }
-                .wheel-slider-wrap input[type="range"]::-webkit-slider-runnable-track {
-                    height: 4px;
-                    background: linear-gradient(to top, rgba(212,168,83,0.5), rgba(212,168,83,0.12));
-                    border-radius: 2px; border: none;
+                .wheel-rotate-bar input[type="range"]::-webkit-slider-runnable-track {
+                    height: 6px; border-radius: 3px;
+                    background: linear-gradient(to right, rgba(212,168,83,0.2), var(--accent), rgba(212,168,83,0.2));
                 }
-                .wheel-slider-wrap input[type="range"]::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    width: 16px; height: 16px; border-radius: 50%;
+                .wheel-rotate-bar input[type="range"]::-webkit-slider-thumb {
+                    -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
                     background: radial-gradient(circle at 35% 35%, #ffd740, #d4a853);
-                    border: 2px solid rgba(255,255,255,0.4);
-                    box-shadow: 0 0 10px rgba(212,168,83,0.4);
-                    cursor: pointer;
-                    margin-top: -6px;
+                    border: 2px solid rgba(255,255,255,0.5);
+                    box-shadow: 0 0 12px rgba(212,168,83,0.5); margin-top: -9px; cursor: pointer;
+                }
+                .wheel-rotate-bar .rotate-val {
+                    font-size: 13px; font-weight: 700; color: var(--accent);
+                    min-width: 42px; text-align: right; flex-shrink: 0;
+                    font-variant-numeric: tabular-nums;
                 }
 
                 .wheel-emotion-slice {
@@ -621,24 +613,24 @@
                 }
                 .wheel-legend.open { display: flex; }
                 .wheel-legend .lg-group {
-                    display: flex; flex-direction: column; gap: 1px;
-                    padding: 5px 8px; border-radius: 8px;
-                    background: rgba(0,0,0,0.2);
-                    min-width: 90px;
+                    display: flex; flex-direction: column; gap: 2px;
+                    padding: 6px 10px; border-radius: 8px;
+                    background: rgba(0,0,0,0.35);
+                    min-width: 100px;
                     flex: 1;
-                    max-width: 170px;
+                    max-width: 180px;
                 }
                 .wheel-legend .lg-primary {
-                    font-size: 12px; font-weight: 700; color: #fff;
-                    margin-bottom: 2px;
+                    font-size: 13px; font-weight: 800; color: #fff;
+                    margin-bottom: 3px; letter-spacing: 0.3px;
                 }
                 .wheel-legend .lg-sec {
-                    font-size: 9px; font-weight: 500;
-                    padding: 1px 0;
+                    font-size: 11px; font-weight: 600; color: #e8e8e8;
+                    padding: 2px 0;
                 }
                 .wheel-legend .lg-ter {
-                    font-size: 8px; font-weight: 300; opacity: 0.65;
-                    padding-left: 6px;
+                    font-size: 10px; font-weight: 400; color: #b0b0b0;
+                    padding-left: 8px;
                 }
 
         /* Emotion detail panel */
@@ -779,9 +771,7 @@
                     /* Emotion wheel */
                     .wheel-layout { flex-direction: column; gap: 4px; }
                     .wheel-canvas-wrap { max-width: 100%; padding: 0 4px; }
-                    .wheel-slider-wrap { flex-direction: row; width: 100%; gap: 6px; justify-content: center; }
-                    .wheel-slider-wrap input[type="range"] { writing-mode: horizontal-tb; -webkit-appearance: auto; appearance: auto; width: 140px; height: 24px; }
-                    .wheel-slider-wrap .slider-label { font-size: 10px; }
+                    .wheel-rotate-bar { max-width: 100%; margin-top: 6px; }
                     .emotion-detail { padding: 14px 16px; margin: 8px 4px 0; }
                     .emotion-detail .ed-name { font-size: 18px; }
                     .emotion-detail .ed-int { font-size: 10px; }
@@ -804,7 +794,8 @@
     .wheel-canvas-wrap svg { max-height: 80vh; }
     .emotion-detail .ed-name { font-size: 16px; }
     .emotion-detail .ed-int { font-size: 9px; padding: 2px 7px; }
-    .wheel-slider-wrap input[type="range"] { width: 100px; }
+    .wheel-rotate-bar { padding: 6px 10px; }
+    .wheel-rotate-bar input[type="range"] { height: 32px; }
 }
     </style>
 </head>
@@ -899,13 +890,13 @@
                 <div class="wheel-canvas-wrap" id="wheelCanvas">
                     <div class="wheel-pointer"></div>
                 </div>
-                <div class="wheel-slider-wrap">
-                    <span class="slider-label">&#9650;</span>
-                    <input type="range" id="wheelSlider" orient="vertical"
-                           min="-180" max="180" value="0" step="1"
-                           oninput="sliderRotate(this.value)">
-                    <span class="slider-label">&#9660;</span>
-                </div>
+            </div>
+            <div class="wheel-rotate-bar">
+                <span class="rotate-icon">&#8634;</span>
+                <input type="range" id="wheelSlider"
+                       min="-180" max="180" value="0" step="1"
+                       oninput="sliderRotate(this.value)">
+                <span class="rotate-val" id="rotateVal">0&deg;</span>
             </div>
             <button class="btn btn-ghost btn-sm" onclick="toggleLegend()" style="margin-top: 8px;">&#128196; Show all words</button>
             <div class="wheel-legend" id="wheelLegend"></div>
@@ -1462,7 +1453,8 @@ let dragStartX = 0;
 function renderWheel(){
     const container = document.getElementById('wheelCanvas');
     const cx=250, cy=250, sectors=6, sectorAngle=360/sectors;
-    const R=210, rMid=145, rInner=108, rCenter=55;
+    // ponytail: enlarged radii ~25% from R=210,rMid=145,rInner=108,rCenter=55
+    const R=232, rMid=162, rInner=120, rCenter=62;
 
     let svg = `<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="cursor:grab;touch-action:none;">
         <g id="wheelGroup" transform="rotate(${wheelRotation},250,250)">`;
@@ -1510,7 +1502,7 @@ function renderWheel(){
             svg+=`<text x="${sx}" y="${sy}" transform="rotate(${rot},${sx},${sy})" class="wheel-label wheel-label-secondary">${s.toUpperCase()}</text>`;
         });
 
-        // Tertiary labels (outer ring) — using smaller font, spread evenly
+        // Tertiary labels (outer ring)
         const allT = [];
         Object.values(em.tertiary).forEach(arr=>arr.forEach(w=>allT.push(w)));
         const tStep=sectorAngle/(allT.length+1);
@@ -1539,15 +1531,9 @@ function renderWheel(){
     if(svgEl){
         svgEl.addEventListener('mousedown', startDrag);
         svgEl.addEventListener('touchstart', startDragTouch, {passive:false});
-        // Prevent scroll while dragging on touch
         svgEl.addEventListener('touchmove', e=>{if(isDragging)e.preventDefault();}, {passive:false});
-        // Don't let mouse click through if we dragged — stop propagation on click events
-        svgEl.addEventListener('click', e=>{
-            // If we're actively dragging, suppress the click
-            if(isDragging){e.stopPropagation();}
-        });
+        svgEl.addEventListener('click', e=>{ if(isDragging){e.stopPropagation();} });
     }
-    // Use document-level events for smooth drag tracking — remove old first to avoid duplicates
     document.removeEventListener('mousemove', onDrag);
     document.removeEventListener('mouseup', stopDrag);
     document.removeEventListener('touchmove', onDragTouch);
@@ -1559,9 +1545,7 @@ function renderWheel(){
     document.addEventListener('touchend', stopDrag);
     document.addEventListener('touchcancel', stopDrag);
 
-    // Build legend
     buildLegend();
-    // Sync slider
     const slider=document.getElementById('wheelSlider');
     if(slider) slider.value=Math.max(-180,Math.min(180,wheelRotation));
 }
@@ -1571,7 +1555,14 @@ function startDragTouch(e){isDragging=true;dragStartX=e.touches[0].clientX;}
 function onDrag(e){if(!isDragging)return;const dx=e.clientX-dragStartX;if(Math.abs(dx)>3){wheelRotation+=dx*0.3;dragStartX=e.clientX;requestAnimationFrame(updateWheelRotation);}else if(Math.abs(dx)<2&&e.type!=='touchmove'){stopDrag();}}
 function onDragTouch(e){if(!isDragging)return;const dx=e.touches[0].clientX-dragStartX;if(Math.abs(dx)>3){wheelRotation+=dx*0.3;dragStartX=e.touches[0].clientX;requestAnimationFrame(updateWheelRotation);}}
 function stopDrag(){isDragging=false;const s=document.querySelector('#wheelCanvas svg');if(s)s.style.cursor='grab';}
-function updateWheelRotation(){const g=document.querySelector('#wheelGroup');if(g)g.setAttribute('transform',`rotate(${wheelRotation},250,250)`);const s=document.getElementById('wheelSlider');if(s)s.value=Math.max(-180,Math.min(180,wheelRotation));}
+function updateWheelRotation(){
+    const g=document.querySelector('#wheelGroup');
+    if(g)g.setAttribute('transform',`rotate(${wheelRotation},250,250)`);
+    const s=document.getElementById('wheelSlider');
+    if(s)s.value=Math.max(-180,Math.min(180,wheelRotation));
+    const rv=document.getElementById('rotateVal');
+    if(rv)rv.textContent=Math.round(wheelRotation)+'\u00b0';
+}
 function sliderRotate(val){wheelRotation=parseFloat(val);updateWheelRotation();}
 
 function buildLegend(){
