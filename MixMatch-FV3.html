@@ -506,12 +506,9 @@
                 }
                 @media (min-width: 769px) {
                     .wheel-canvas-wrap { max-width: 600px; }
-                    .wheel-label-primary { font-size: 26px; }
-                    .wheel-label-secondary { font-size: 17px; }
-                    .wheel-label-tertiary { font-size: 14px; }
-                    .wheel-label.active-label.wheel-label-primary { font-size: 32px; }
-                    .wheel-label.active-label.wheel-label-secondary { font-size: 20px; }
-                    .wheel-label.active-label.wheel-label-tertiary { font-size: 16px; }
+                    .wheel-label-primary { font-size: 28px; }
+                    .wheel-label.active-label { font-size: 36px; }
+                    .wheel-label-secondary, .wheel-label-tertiary { display: none; }
                 }
                 .wheel-canvas-wrap svg {
                     width: 100%;
@@ -608,27 +605,12 @@
                     paint-order: stroke; stroke: rgba(0,0,0,0.35); stroke-width: 0.6px;
                 }
                 .wheel-label-primary {
-                                    font-size: 20px; font-weight: 800; letter-spacing: 0.5px;
-                                    stroke-width: 0.4px; stroke: rgba(0,0,0,0.2);
-                                    transition: font-size 0.25s ease;
-                                }
-                                .wheel-label-secondary {
-                                    font-size: 14px; font-weight: 600;
-                                    transition: font-size 0.25s ease;
-                                }
-                                .wheel-label-tertiary {
-                                    font-size: 12px; font-weight: 500; opacity: 0.9;
-                                    transition: font-size 0.25s ease;
-                                }
-                                /* Enlarged text when emotion selected */
-                                .wheel-label.active-label.wheel-label-primary { font-size: 24px; }
-                                .wheel-label.active-label.wheel-label-secondary { font-size: 16px; }
-                                .wheel-label.active-label.wheel-label-tertiary { font-size: 13px; opacity: 1; }
-                                /* Dim non-active labels when an emotion is selected */
-                                #wheelGroup.has-selection .wheel-label:not(.active-label) { opacity: 0.12; }
-                                /* Focus mode: hide non-active labels entirely */
-                                #wheelGroup.focus-mode .wheel-label:not(.active-label) { display: none; }
-                                #wheelGroup.focus-mode .wheel-emotion-slice:not(.active-slice) { opacity: 0.15; }
+                    font-size: 24px; font-weight: 900; letter-spacing: 1px;
+                    stroke-width: 0.5px; stroke: rgba(0,0,0,0.25);
+                    transition: font-size 0.25s ease;
+                }
+                .wheel-label.active-label { font-size: 30px; }
+                /* Secondary + Tertiary removed from wheel — in detail panel + legend */
 
                 /* Legend — full word list below wheel */
                 .wheel-legend {
@@ -874,12 +856,9 @@
                     .wheel-layout { flex-direction: column; gap: 4px; }
                     .wheel-canvas-wrap { max-width: 100%; padding: 0 4px; }
                     .wheel-rotate-bar { max-width: 100%; margin-top: 6px; }
-                    .wheel-label-primary { font-size: 16px; }
-                    .wheel-label-secondary { font-size: 11px; }
-                    .wheel-label-tertiary { font-size: 9.5px; }
-                    .wheel-label.active-label.wheel-label-primary { font-size: 19px; }
-                    .wheel-label.active-label.wheel-label-secondary { font-size: 13px; }
-                    .wheel-label.active-label.wheel-label-tertiary { font-size: 11px; }
+                    .wheel-label-primary { font-size: 22px; }
+                                        .wheel-label.active-label { font-size: 28px; }
+                                        .wheel-label-secondary, .wheel-label-tertiary { display: none; }
                     .emotion-detail { padding: 14px 16px; margin: 8px 4px 0; }
                     .emotion-detail .ed-name { font-size: 18px; }
                     .emotion-detail .ed-int { font-size: 10px; }
@@ -1606,31 +1585,13 @@ function renderWheel(){
         svg+=`<path d="${arcPath(rInner,rMid,startA,endA)}" fill="${em.color}" opacity="0.6" class="wheel-emotion-slice" data-emotion="${idx}" onclick="selectEmotion(${idx})"/>`;
         svg+=`<path d="${arcPath(rCenter,rInner,startA,endA)}" fill="${em.color}" opacity="0.85" class="wheel-emotion-slice" data-emotion="${idx}" onclick="selectEmotion(${idx})"/>`;
 
-        // Primary label in center
-        const lr=rCenter*0.6;
+        // ponytail: Only primary labels on the wheel — secondary + tertiary
+        // caused text overlap in narrow sectors. Tap for detail panel or
+        // "Show all words" for the full legend.
+        const lr=rCenter*0.7;
         const[lx,ly]=pt(lr,midA);
         const r1=midA>90&&midA<270?midA+180:midA;
         svg+=`<text x="${lx}" y="${ly}" transform="rotate(${r1},${lx},${ly})" class="wheel-label wheel-label-primary">${em.name}</text>`;
-
-        // Secondary labels (middle ring)
-        const secs=em.secondary, sStep=sectorAngle/(secs.length+0.5);
-        secs.forEach((s,si)=>{
-            const a=startA+sStep*(si+0.6);
-            const[sx,sy]=pt((rInner+rMid)/2,a);
-            const rot=a>90&&a<270?a+180:a;
-            svg+=`<text x="${sx}" y="${sy}" transform="rotate(${rot},${sx},${sy})" class="wheel-label wheel-label-secondary">${s.toUpperCase()}</text>`;
-        });
-
-        // Tertiary labels (outer ring)
-        const allT = [];
-        Object.values(em.tertiary).forEach(arr=>arr.forEach(w=>allT.push(w)));
-        const tStep=sectorAngle/(allT.length+1);
-        allT.forEach((t,ti)=>{
-            const a=startA+tStep*(ti+1);
-            const tR=ti%2===0?(rMid+R)/2:(rMid*0.35+R*0.65);const[tx,ty]=pt(tR,a);
-            const rot=a>90&&a<270?a+180:a;
-            svg+=`<text x="${tx}" y="${ty}" transform="rotate(${rot},${tx},${ty})" class="wheel-label wheel-label-tertiary">${t.toUpperCase()}</text>`;
-        });
 
         // Gold rim dot
         const[dx,dy]=pt(R+6,startA);
@@ -1728,15 +1689,12 @@ function selectEmotion(idx){
     document.querySelectorAll('.wheel-emotion-slice').forEach(p=>p.classList.remove('active-slice'));
     document.querySelectorAll('.wheel-label').forEach(l=>l.classList.remove('active-label'));
     document.querySelectorAll(`.wheel-emotion-slice[data-emotion="${idx}"]`).forEach(p=>p.classList.add('active-slice'));
-    // Dim non-active labels so active ones don't overlap
+    // Highlight only the primary label for this sector
     const wg=document.querySelector('#wheelGroup');
     if(wg) wg.classList.add('has-selection');
-    // Highlight labels matching this emotion
     document.querySelectorAll('#wheelGroup text').forEach(t=>{
         const txt=t.textContent.trim().toLowerCase();
-        const match=em.name.toLowerCase()===txt||em.secondary.some(s=>s.toLowerCase()===txt)||
-            Object.values(em.tertiary).flat().some(w=>w.toLowerCase()===txt);
-        if(match) t.classList.add('active-label');
+        if(em.name.toLowerCase()===txt) t.classList.add('active-label');
     });
     let secHtml='';
     Object.entries(em.tertiary).forEach(([sec,ters])=>{
