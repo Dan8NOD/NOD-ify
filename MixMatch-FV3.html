@@ -615,6 +615,11 @@
                                 .wheel-label.active-label.wheel-label-primary { font-size: 24px; }
                                 .wheel-label.active-label.wheel-label-secondary { font-size: 16px; }
                                 .wheel-label.active-label.wheel-label-tertiary { font-size: 13px; opacity: 1; }
+                                /* Dim non-active labels when an emotion is selected */
+                                #wheelGroup.has-selection .wheel-label:not(.active-label) { opacity: 0.12; }
+                                /* Focus mode: hide non-active labels entirely */
+                                #wheelGroup.focus-mode .wheel-label:not(.active-label) { display: none; }
+                                #wheelGroup.focus-mode .wheel-emotion-slice:not(.active-slice) { opacity: 0.15; }
 
                 /* Legend — full word list below wheel */
                 .wheel-legend {
@@ -993,6 +998,7 @@
                 <span class="rotate-val" id="rotateVal">0&deg;</span>
             </div>
             <button class="btn btn-ghost btn-sm" onclick="toggleLegend()" style="margin-top: 8px;">&#128196; Show all words</button>
+            <button class="btn btn-ghost btn-sm" id="focusBtn" onclick="toggleFocus()" style="margin-top: 8px; margin-left: 4px;">&#128065; Focus</button>
             <div class="wheel-legend" id="wheelLegend"></div>
             <div class="emotion-detail" id="emotionDetail"></div>
 
@@ -1713,6 +1719,9 @@ function selectEmotion(idx){
     document.querySelectorAll('.wheel-emotion-slice').forEach(p=>p.classList.remove('active-slice'));
     document.querySelectorAll('.wheel-label').forEach(l=>l.classList.remove('active-label'));
     document.querySelectorAll(`.wheel-emotion-slice[data-emotion="${idx}"]`).forEach(p=>p.classList.add('active-slice'));
+    // Dim non-active labels so active ones don't overlap
+    const wg=document.querySelector('#wheelGroup');
+    if(wg) wg.classList.add('has-selection');
     // Highlight labels matching this emotion
     document.querySelectorAll('#wheelGroup text').forEach(t=>{
         const txt=t.textContent.trim().toLowerCase();
@@ -1738,6 +1747,21 @@ function closeEmotion(){
     document.getElementById('emotionDetail').classList.remove('open');
     document.querySelectorAll('.wheel-label').forEach(l=>l.classList.remove('active-label'));
     document.querySelectorAll('.wheel-emotion-slice').forEach(p=>p.classList.remove('active-slice'));
+    const wg=document.querySelector('#wheelGroup');
+    if(wg){wg.classList.remove('has-selection');wg.classList.remove('focus-mode');}
+    const fbtn=document.getElementById('focusBtn');if(fbtn)fbtn.textContent='\u{1F441} Focus';
+}
+function toggleFocus(){
+    const wg=document.querySelector('#wheelGroup');
+    if(!wg) return;
+    const btn=document.getElementById('focusBtn');
+    if(wg.classList.contains('focus-mode')){
+        wg.classList.remove('focus-mode');
+        if(btn) btn.textContent='\u{1F441} Focus';
+    } else {
+        wg.classList.add('focus-mode');
+        if(btn) btn.textContent='\u{1F441} Focus ON';
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════
