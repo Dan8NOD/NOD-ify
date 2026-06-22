@@ -704,6 +704,80 @@
             font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
         }
 
+        /* ─── Emotion Accordion ─── */
+        .emo-accordion {
+            width: 100%; max-width: 520px; margin: 12px auto 0;
+        }
+        .emo-depth-bar {
+            display: flex; align-items: center; gap: 10px;
+            width: 100%; max-width: 420px; margin: 0 auto 10px;
+            padding: 8px 14px; background: rgba(0,0,0,0.25);
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);
+        }
+        .emo-depth-bar label {
+            font-size: 11px; color: rgba(255,255,255,0.5);
+            text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;
+        }
+        .emo-depth-bar input[type="range"] {
+            flex: 1; height: 36px; -webkit-appearance: auto; appearance: auto;
+            cursor: pointer;
+        }
+        .emo-depth-bar .depth-val {
+            font-size: 13px; font-weight: 700; color: var(--accent);
+            min-width: 60px; text-align: right; flex-shrink: 0;
+        }
+        .emo-item {
+            margin-bottom: 4px; border-radius: 10px; overflow: hidden;
+            background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.06);
+            transition: border-color 0.2s;
+        }
+        .emo-item.open { border-color: rgba(255,255,255,0.15); }
+        .emo-item-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 16px; cursor: pointer; user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .emo-item-header .emo-dot {
+            width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+            box-shadow: 0 0 8px currentColor;
+        }
+        .emo-item-header .emo-name {
+            font-size: 16px; font-weight: 700; color: #fff; flex: 1;
+        }
+        .emo-item-header .emo-chevron {
+            font-size: 12px; color: rgba(255,255,255,0.3);
+            transition: transform 0.25s;
+        }
+        .emo-item.open .emo-chevron { transform: rotate(90deg); }
+        .emo-item-body {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .emo-item.open .emo-item-body { max-height: 1200px; }
+        .emo-sec {
+            padding: 8px 16px 8px 40px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .emo-sec-header {
+            font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7);
+            padding: 4px 0; cursor: pointer; display: flex; align-items: center; gap: 6px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .emo-sec-header .sec-chevron {
+            font-size: 10px; color: rgba(255,255,255,0.25); transition: transform 0.2s;
+        }
+        .emo-sec.open .sec-chevron { transform: rotate(90deg); }
+        .emo-sec-words {
+            max-height: 0; overflow: hidden; transition: max-height 0.25s ease;
+            display: flex; flex-wrap: wrap; gap: 4px; padding: 0 0 4px 16px;
+        }
+        .emo-sec.open .emo-sec-words { max-height: 200px; padding-bottom: 8px; }
+        .emo-word {
+            font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6);
+            padding: 3px 10px; border-radius: 8px;
+            background: rgba(255,255,255,0.06);
+        }
+
         /* ─── Modal ─── */
         .modal-overlay {
             display:none; position:fixed; inset:0;
@@ -921,6 +995,16 @@
             <button class="btn btn-ghost btn-sm" onclick="toggleLegend()" style="margin-top: 8px;">&#128196; Show all words</button>
             <div class="wheel-legend" id="wheelLegend"></div>
             <div class="emotion-detail" id="emotionDetail"></div>
+
+            <!-- Emotion Accordion with depth dial -->
+            <div class="emo-accordion" id="emoAccordion">
+                <div class="emo-depth-bar">
+                    <label>Depth</label>
+                    <input type="range" id="emoDepth" min="0" max="2" value="0" step="1"
+                           oninput="setEmoDepth(this.value)">
+                    <span class="depth-val" id="emoDepthLabel">Names only</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1131,7 +1215,7 @@ function switchView(name,btn){
     document.getElementById('toolCountBadge').textContent = state.tools.length;
 
     if(name==='stair') renderStair();
-    if(name==='wheel') renderWheel();
+    if(name==='wheel'){ renderWheel(); buildEmoAccordion(); }
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -1654,6 +1738,72 @@ function closeEmotion(){
     document.getElementById('emotionDetail').classList.remove('open');
     document.querySelectorAll('.wheel-label').forEach(l=>l.classList.remove('active-label'));
     document.querySelectorAll('.wheel-emotion-slice').forEach(p=>p.classList.remove('active-slice'));
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// EMOTION ACCORDION
+// ═══════════════════════════════════════════════════════════════════════
+let emoDepth = 0; // 0=names, 1=+secondaries, 2=+tertiaries
+const DEPTH_LABELS = ['Names only', '+ Feelings', '+ Deep words'];
+
+function buildEmoAccordion(){
+    const container = document.getElementById('emoAccordion');
+    // ponytail: rebuild items but keep depth bar
+    const existing = container.querySelectorAll('.emo-item');
+    existing.forEach(e=>e.remove());
+
+    EMOTIONS.forEach((em, idx) => {
+        const item = document.createElement('div');
+        item.className = 'emo-item';
+        item.innerHTML = `
+            <div class="emo-item-header" onclick="this.parentElement.classList.toggle('open')">
+                <span class="emo-dot" style="background:${em.color};color:${em.color};"></span>
+                <span class="emo-name">${em.name}</span>
+                <span class="emo-chevron">&#9654;</span>
+            </div>
+            <div class="emo-item-body" id="emoBody_${idx}"></div>
+        `;
+        container.appendChild(item);
+    });
+    applyEmoDepth();
+}
+
+function applyEmoDepth(){
+    EMOTIONS.forEach((em, idx) => {
+        const body = document.getElementById('emoBody_'+idx);
+        if(!body) return;
+        let html = '';
+        if(emoDepth >= 1){
+            em.secondary.forEach(sec => {
+                const ters = em.tertiary[sec] || [];
+                const showTert = emoDepth >= 2 && ters.length;
+                html += `<div class="emo-sec" id="emoSec_${idx}_${sec.replace(/\s/g,'')}">
+                    <div class="emo-sec-header" onclick="this.parentElement.classList.toggle('open')">
+                        <span class="sec-chevron">&#9654;</span> ${sec}
+                    </div>
+                    <div class="emo-sec-words">`;
+                if(showTert){
+                    ters.forEach(t => html += `<span class="emo-word">${t}</span>`);
+                }
+                html += `</div></div>`;
+            });
+        }
+        body.innerHTML = html;
+    });
+    // Auto-expand all to match depth
+    document.querySelectorAll('.emo-item').forEach(item => {
+        if(emoDepth >= 1) item.classList.add('open');
+        else item.classList.remove('open');
+    });
+    if(emoDepth >= 2){
+        document.querySelectorAll('.emo-sec').forEach(s => s.classList.add('open'));
+    }
+    document.getElementById('emoDepthLabel').textContent = DEPTH_LABELS[emoDepth];
+}
+
+function setEmoDepth(val){
+    emoDepth = parseInt(val);
+    applyEmoDepth();
 }
 
 // ═══════════════════════════════════════════════════════════════════════
