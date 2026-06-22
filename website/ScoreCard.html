@@ -70,6 +70,7 @@
 
         function displayToolsInTable() {
             const tbody = document.getElementById('toolsTableBody');
+            tools.sort((a, b) => a.name.localeCompare(b.name)); // ponytail: issue #16 — keep "DID NOT USE A TOOL" sorted naturally (starts with D)
             tools.forEach(tool => {
                 const row = document.createElement('tr');
                 const nameCell = document.createElement('td');
