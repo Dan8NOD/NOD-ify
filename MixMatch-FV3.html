@@ -504,6 +504,15 @@
                     max-width: 480px;
                     touch-action: none;
                 }
+                @media (min-width: 769px) {
+                    .wheel-canvas-wrap { max-width: 600px; }
+                    .wheel-label-primary { font-size: 26px; }
+                    .wheel-label-secondary { font-size: 17px; }
+                    .wheel-label-tertiary { font-size: 14px; }
+                    .wheel-label.active-label.wheel-label-primary { font-size: 32px; }
+                    .wheel-label.active-label.wheel-label-secondary { font-size: 20px; }
+                    .wheel-label.active-label.wheel-label-tertiary { font-size: 16px; }
+                }
                 .wheel-canvas-wrap svg {
                     width: 100%;
                     height: auto;
@@ -1618,7 +1627,7 @@ function renderWheel(){
         const tStep=sectorAngle/(allT.length+1);
         allT.forEach((t,ti)=>{
             const a=startA+tStep*(ti+1);
-            const[tx,ty]=pt((rMid+R)/2,a);
+            const tR=ti%2===0?(rMid+R)/2:(rMid*0.35+R*0.65);const[tx,ty]=pt(tR,a);
             const rot=a>90&&a<270?a+180:a;
             svg+=`<text x="${tx}" y="${ty}" transform="rotate(${rot},${tx},${ty})" class="wheel-label wheel-label-tertiary">${t.toUpperCase()}</text>`;
         });
