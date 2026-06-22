@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
     <title>NOD-ify — MixMatch FV4</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -588,19 +588,18 @@
                     paint-order: stroke; stroke: rgba(0,0,0,0.35); stroke-width: 0.6px;
                 }
                 .wheel-label-primary {
-                                    font-size: 13px; font-weight: 800; letter-spacing: 0.5px;
+                                    font-size: 14px; font-weight: 800; letter-spacing: 0.5px;
                                     stroke-width: 0.3px; stroke: rgba(0,0,0,0.15);
                                 }
                                 .wheel-label-secondary {
-                                    font-size: 8px; font-weight: 600;
+                                    font-size: 10px; font-weight: 600;
                                 }
                                 .wheel-label-tertiary {
-                                    font-size: 7px; font-weight: 400; opacity: 0.85;
+                                    font-size: 9px; font-weight: 400; opacity: 0.85;
                                 }
                                 /* Enlarged text when emotion selected */
-                                .wheel-emotion-slice.active-slice ~ text,
-                                .wheel-emotion-slice.active-slice + text {
-                                    font-size: 1.2em;
+                                .wheel-label.active-label {
+                                    font-size: 1.15em;
                                 }
 
                 /* Legend — full word list below wheel */
@@ -771,10 +770,11 @@
 
                     /* Emotion wheel */
                     .wheel-layout { flex-direction: column; gap: 4px; }
-                    .wheel-canvas-wrap { max-width: 100%; }
-                    .wheel-slider-wrap { flex-direction: row; width: 100%; gap: 8px; }
-                    .wheel-slider-wrap input[type="range"] { writing-mode: horizontal-tb; -webkit-appearance: auto; appearance: auto; width: 120px; height: 20px; }
-                    .emotion-detail { padding: 14px 16px; }
+                    .wheel-canvas-wrap { max-width: 100%; padding: 0 4px; }
+                    .wheel-slider-wrap { flex-direction: row; width: 100%; gap: 6px; justify-content: center; }
+                    .wheel-slider-wrap input[type="range"] { writing-mode: horizontal-tb; -webkit-appearance: auto; appearance: auto; width: 140px; height: 24px; }
+                    .wheel-slider-wrap .slider-label { font-size: 10px; }
+                    .emotion-detail { padding: 14px 16px; margin: 8px 4px 0; }
                     .emotion-detail .ed-name { font-size: 18px; }
                     .emotion-detail .ed-int { font-size: 10px; }
 
@@ -790,6 +790,14 @@
                     /* Summary grid — single column */
                     #ctDesc > div[style*="grid"] { grid-template-columns: 1fr 1fr !important; }
                 }
+
+/* ─── Extra-small screens (< 400px) ─── */
+@media (max-width: 399px) {
+    .wheel-canvas-wrap svg { max-height: 80vh; }
+    .emotion-detail .ed-name { font-size: 16px; }
+    .emotion-detail .ed-int { font-size: 9px; padding: 2px 7px; }
+    .wheel-slider-wrap input[type="range"] { width: 100px; }
+}
     </style>
 </head>
 <body>
@@ -1525,8 +1533,18 @@ function renderWheel(){
         svgEl.addEventListener('touchstart', startDragTouch, {passive:false});
         // Prevent scroll while dragging on touch
         svgEl.addEventListener('touchmove', e=>{if(isDragging)e.preventDefault();}, {passive:false});
+        // Don't let mouse click through if we dragged — stop propagation on click events
+        svgEl.addEventListener('click', e=>{
+            // If we're actively dragging, suppress the click
+            if(isDragging){e.stopPropagation();}
+        });
     }
-    // Use document-level events for smooth drag tracking
+    // Use document-level events for smooth drag tracking — remove old first to avoid duplicates
+    document.removeEventListener('mousemove', onDrag);
+    document.removeEventListener('mouseup', stopDrag);
+    document.removeEventListener('touchmove', onDragTouch);
+    document.removeEventListener('touchend', stopDrag);
+    document.removeEventListener('touchcancel', stopDrag);
     document.addEventListener('mousemove', onDrag);
     document.addEventListener('mouseup', stopDrag);
     document.addEventListener('touchmove', onDragTouch, {passive:false});
@@ -1542,7 +1560,7 @@ function renderWheel(){
 
 function startDrag(e){isDragging=true;dragStartX=e.clientX;const s=document.querySelector('#wheelCanvas svg');if(s)s.style.cursor='grabbing';}
 function startDragTouch(e){isDragging=true;dragStartX=e.touches[0].clientX;}
-function onDrag(e){if(!isDragging)return;const dx=e.clientX-dragStartX;if(Math.abs(dx)>3){wheelRotation+=dx*0.3;dragStartX=e.clientX;requestAnimationFrame(updateWheelRotation);}}
+function onDrag(e){if(!isDragging)return;const dx=e.clientX-dragStartX;if(Math.abs(dx)>3){wheelRotation+=dx*0.3;dragStartX=e.clientX;requestAnimationFrame(updateWheelRotation);}else if(Math.abs(dx)<2&&e.type!=='touchmove'){stopDrag();}}
 function onDragTouch(e){if(!isDragging)return;const dx=e.touches[0].clientX-dragStartX;if(Math.abs(dx)>3){wheelRotation+=dx*0.3;dragStartX=e.touches[0].clientX;requestAnimationFrame(updateWheelRotation);}}
 function stopDrag(){isDragging=false;const s=document.querySelector('#wheelCanvas svg');if(s)s.style.cursor='grab';}
 function updateWheelRotation(){const g=document.querySelector('#wheelGroup');if(g)g.setAttribute('transform',`rotate(${wheelRotation},250,250)`);const s=document.getElementById('wheelSlider');if(s)s.value=Math.max(-180,Math.min(180,wheelRotation));}
@@ -1564,8 +1582,8 @@ function buildLegend(){
 function toggleLegend(){
     const legend=document.getElementById('wheelLegend');
     legend.classList.toggle('open');
-    const btn=legend.previousElementSibling;
-    if(btn && btn.tagName==='BUTTON'){
+    const btn=document.querySelector('#view-wheel button');
+    if(btn){
         btn.innerHTML=legend.classList.contains('open')?'&#128196; Hide words':'&#128196; Show all words';
     }
 }
@@ -1574,7 +1592,15 @@ function selectEmotion(idx){
     const em=EMOTIONS[idx];
     state.lastUsedEmotion=em.name;
     document.querySelectorAll('.wheel-emotion-slice').forEach(p=>p.classList.remove('active-slice'));
+    document.querySelectorAll('.wheel-label').forEach(l=>l.classList.remove('active-label'));
     document.querySelectorAll(`.wheel-emotion-slice[data-emotion="${idx}"]`).forEach(p=>p.classList.add('active-slice'));
+    // Highlight labels matching this emotion
+    document.querySelectorAll('#wheelGroup text').forEach(t=>{
+        const txt=t.textContent.trim().toLowerCase();
+        const match=em.name.toLowerCase()===txt||em.secondary.some(s=>s.toLowerCase()===txt)||
+            Object.values(em.tertiary).flat().some(w=>w.toLowerCase()===txt);
+        if(match) t.classList.add('active-label');
+    });
     let secHtml='';
     Object.entries(em.tertiary).forEach(([sec,ters])=>{
         secHtml+=`<div class="ed-sec"><strong>${sec}</strong>: ${ters.join(', ')}</div>`;
@@ -1587,8 +1613,13 @@ function selectEmotion(idx){
         <button class="ed-close" onclick="closeEmotion()">Close</button>
     `;
     d.classList.add('open');
+    setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
 }
-function closeEmotion(){document.getElementById('emotionDetail').classList.remove('open');document.querySelectorAll('.wheel-emotion-slice').forEach(p=>p.classList.remove('active-slice'));}
+function closeEmotion(){
+    document.getElementById('emotionDetail').classList.remove('open');
+    document.querySelectorAll('.wheel-label').forEach(l=>l.classList.remove('active-label'));
+    document.querySelectorAll('.wheel-emotion-slice').forEach(p=>p.classList.remove('active-slice'));
+}
 
 // ═══════════════════════════════════════════════════════════════════════
 // UTILITY
