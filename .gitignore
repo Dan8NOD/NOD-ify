@@ -2,3 +2,6 @@
 *.psd
 NOD Logo flattened.jpg
 double-dragon-victory.png
+
+# Local-only symlinks to NOD-Workspace
+/AGENTS.md
