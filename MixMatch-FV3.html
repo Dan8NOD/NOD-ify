@@ -130,6 +130,96 @@
         .view-container.active { display: block; }
         @keyframes fade-up { 0%{opacity:0;transform:translateY(12px)} 100%{opacity:1;transform:translateY(0)} }
 
+        /* ─── 90's Mode Effects ─── */
+        #modeTransition {
+            position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+            display: none; align-items: center; justify-content: center; background: #000;
+        }
+        #modeTransition.active { display: flex; animation: mtfade 1.2s ease forwards; }
+        @keyframes mtfade { 0%{opacity:1} 80%{opacity:1} 100%{opacity:0} }
+        #modeTransition .mtc {
+            text-align: center; font-family: 'Press Start 2P', monospace;
+            color: var(--accent); text-shadow: 4px 4px 0 #000, 0 0 30px var(--accent-glow);
+            animation: mtzoom 1.2s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        #modeTransition .mtc .mt-title { font-size: 32px; letter-spacing: 2px; margin-bottom: 16px; }
+        #modeTransition .mtc .mt-sub { font-size: 11px; color: #fff; opacity: 0.7; letter-spacing: 4px; }
+        #modeTransition .mtc .mt-player { font-size: 9px; color: var(--green); margin-top: 22px; animation: blink 0.6s infinite; }
+        @keyframes mtzoom { 0%{transform:scale(0.2) rotate(-15deg);opacity:0} 40%{transform:scale(1.15) rotate(2deg);opacity:1} 60%{transform:scale(1) rotate(0)} 100%{transform:scale(1)} }
+        @keyframes blink { 50%{opacity:0} }
+
+        .table-surface[data-feel="arcade"]::after {
+            content:''; position:absolute; inset:0; pointer-events:none;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);
+            mix-blend-mode: multiply; z-index: 2;
+        }
+        .table-surface[data-feel="arcade"] { animation: crtFlicker 0.15s infinite; }
+        @keyframes crtFlicker { 50%{background:radial-gradient(ellipse at center,#1f5f3c 0%,#14452c 100%)} }
+
+        .mode-wrap { width: 100%; max-width: 1100px; padding: 10px 0; }
+        .mode-header { text-align:center; margin-bottom: 22px; }
+        .mode-header h2 {
+            font-family: 'Press Start 2P', monospace; color: #fff;
+            font-size: 22px; letter-spacing: 2px;
+            text-shadow: 3px 3px 0 #000, 0 0 20px currentColor;
+            margin-bottom: 10px;
+        }
+        .mode-header p { color: rgba(255,255,255,0.6); font-size: 13px; max-width: 640px; margin: 0 auto; }
+        .mode-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 14px; perspective: 1200px;
+        }
+        .mode-card {
+            background: var(--card-bg); border-radius: 14px;
+            padding: 18px 16px; position: relative; overflow: hidden;
+            box-shadow: 0 4px 14px var(--card-shadow);
+            cursor: pointer; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+            border-top: 4px solid var(--accent);
+            animation: card-deal 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+        .mode-card:hover {
+            transform: translateY(-6px) scale(1.04);
+            box-shadow: 0 12px 30px var(--card-shadow), 0 0 20px var(--accent-glow);
+        }
+        .mode-card .mc-tag {
+            font-size: 9px; padding: 2px 8px; border-radius: 10px;
+            background: rgba(0,0,0,0.08); font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase; display: inline-block; margin-bottom: 8px;
+        }
+        .mode-card .mc-name { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+        .mode-card .mc-desc { font-size: 12px; color: var(--text-dim); line-height: 1.55; }
+        .mode-card .mc-hint { font-size: 10px; margin-top: 10px; color: var(--accent); font-weight: 600; font-style: italic; }
+
+        .table-surface[data-feel="haggle"] { background: radial-gradient(ellipse at center, #4a1d3a 0%, #1a0a1a 100%); }
+        .table-surface[data-feel="haggle"] .mode-header h2 { color: #ff5ea8; text-shadow: 3px 3px 0 #000, 0 0 25px #ff5ea8; }
+        .table-surface[data-feel="haggle"] .mode-card { border-top-color: #ff5ea8; }
+
+        .table-surface[data-feel="friend"] { background: radial-gradient(ellipse at center, #2a5a3a 0%, #14352a 100%); }
+        .table-surface[data-feel="friend"] .mode-header h2 { color: #ffd93d; text-shadow: 3px 3px 0 #000, 0 0 25px #ffd93d; }
+        .table-surface[data-feel="friend"] .mode-card { border-top-color: #66bb6a; }
+
+        .table-surface[data-feel="boss"] { background: radial-gradient(ellipse at center, #3a1a1a 0%, #0a0505 100%); }
+        .table-surface[data-feel="boss"] .mode-header h2 { color: #ff3b3b; text-shadow: 3px 3px 0 #000, 0 0 30px #ff3b3b; }
+        .table-surface[data-feel="boss"] .mode-card { border-top-color: #d4a853; }
+
+        .mode-toolbar { display: flex; gap: 8px; justify-content: center; margin: 18px 0; flex-wrap: wrap; }
+        .mode-toolbar .btn {
+            padding: 8px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);
+            font-family: 'Press Start 2P', monospace; font-size: 10px; cursor: pointer;
+            background: rgba(0,0,0,0.4); color: #fff; transition: all 0.2s;
+        }
+        .mode-toolbar .btn:hover { transform: translateY(-2px); background: var(--accent); color: #1a1a2e; }
+
+        .mode-scenario {
+            margin: 14px auto; max-width: 760px; padding: 14px 18px;
+            background: rgba(0,0,0,0.4); border-radius: 12px;
+            border: 1px dashed rgba(255,255,255,0.25); color: #fff;
+            font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.8;
+            text-align: center; display: none;
+        }
+        .mode-scenario.open { display: block; animation: fade-up 0.35s ease; }
+        .mode-scenario .ms-label { color: var(--accent); font-size: 8px; letter-spacing: 2px; display: block; margin-bottom: 6px; }
+
         /* ─── Cards (Tools view) ─── */
         .cards-area {
             width: 100%;
@@ -1005,6 +1095,63 @@
         </div>
     </div>
 
+    <!-- ██ VIEW: Haggle Mode ██ -->
+    <div class="view-container" id="view-haggle">
+        <div class="mode-wrap">
+            <div class="mode-header">
+                <h2>💰 HAGGLE MODE</h2>
+                <p>Price wars, leverage, anchor drops. Tap a card for a scenario.</p>
+            </div>
+            <div class="mode-toolbar">
+                <button class="btn" onclick="renderModeCards('haggle')">⇄ SHUFFLE</button>
+                <button class="btn" onclick="document.querySelectorAll('.mode-scenario').forEach(s=>s.classList.remove('open'))">✕ CLEAR</button>
+            </div>
+            <div class="mode-scenario" id="scenario-haggle"></div>
+            <div class="mode-grid" id="grid-haggle"></div>
+        </div>
+    </div>
+
+    <!-- ██ VIEW: Friend Mode ██ -->
+    <div class="view-container" id="view-friend">
+        <div class="mode-wrap">
+            <div class="mode-header">
+                <h2>🤝 FRIEND MODE</h2>
+                <p>Build rapport fast. Mirror, label, validate. Tap a card for a scenario.</p>
+            </div>
+            <div class="mode-toolbar">
+                <button class="btn" onclick="renderModeCards('friend')">⇄ SHUFFLE</button>
+                <button class="btn" onclick="document.querySelectorAll('.mode-scenario').forEach(s=>s.classList.remove('open'))">✕ CLEAR</button>
+            </div>
+            <div class="mode-scenario" id="scenario-friend"></div>
+            <div class="mode-grid" id="grid-friend"></div>
+        </div>
+    </div>
+
+    <!-- ██ VIEW: Boss Mode ██ -->
+    <div class="view-container" id="view-boss">
+        <div class="mode-wrap">
+            <div class="mode-header">
+                <h2>👔 BOSS MODE</h2>
+                <p>Command the room. Frame, anchor, close. Tap a card for a scenario.</p>
+            </div>
+            <div class="mode-toolbar">
+                <button class="btn" onclick="renderModeCards('boss')">⇄ SHUFFLE</button>
+                <button class="btn" onclick="document.querySelectorAll('.mode-scenario').forEach(s=>s.classList.remove('open'))">✕ CLEAR</button>
+            </div>
+            <div class="mode-scenario" id="scenario-boss"></div>
+            <div class="mode-grid" id="grid-boss"></div>
+        </div>
+    </div>
+
+    <!-- ██ Mode Transition Overlay ██ -->
+    <div id="modeTransition">
+        <div class="mtc">
+            <div class="mt-title" id="mtTitle"></div>
+            <div class="mt-sub" id="mtSub"></div>
+            <div class="mt-player">PRESS START</div>
+        </div>
+    </div>
+
     <!-- ██ Info panel ██ -->
     <div class="session-panel" id="infoPanel">
         <div class="sp-header">
@@ -1211,8 +1358,70 @@ function switchView(name,btn){
     document.getElementById('view-'+name).classList.add('active');
     document.getElementById('toolCountBadge').textContent = state.tools.length;
 
+    // ponytail: 90s mode feel — swap background, trigger arcade overlay
+    const surface = document.querySelector('.table-surface');
+    const feels = {haggle:'haggle',friend:'friend',boss:'boss'};
+    if(feels[name]){ surface.setAttribute('data-feel', feels[name]); triggerModeTransition(name); }
+    else { surface.removeAttribute('data-feel'); }
+
     if(name==='stair') renderStair();
     if(name==='wheel'){ renderWheel(); buildEmoAccordion(); }
+    if(feels[name]) renderModeCards(name);
+}
+
+function triggerModeTransition(mode){
+    const titles = {
+        haggle:['HAGGLE MODE','💰 PRICE WAR'],
+        friend:['FRIEND MODE','🤝 BUILD THE BOND'],
+        boss:['BOSS MODE','👔 COMMAND THE ROOM']
+    };
+    const ov = document.getElementById('modeTransition');
+    const t = titles[mode]; if(!t) return;
+    document.getElementById('mtTitle').textContent = t[0];
+    document.getElementById('mtSub').textContent = t[1];
+    ov.classList.remove('active'); void ov.offsetWidth; ov.classList.add('active');
+    setTimeout(()=>ov.classList.remove('active'), 1300);
+}
+
+// ─── Mode Cards & Scenarios ───
+// ponytail: 90s arcade negotiation scenarios per mode
+const MODE_CARDS = {
+    haggle: [
+        {tag:'LANDLORD', name:'The Rent Hike', desc:'Tenant wants out. You raise rent $200. Flinch + Anchor.', hint:'💡 "I understand $200 feels like a lot. Let me show you the comps..."'},
+        {tag:'TENANT', name:'The Move-Out Bluff', desc:'Tenant threatens to leave. You know they have no deposit budget.', hint:'💡 "How would you handle a $3k move-out with your current savings?"'},
+        {tag:'BUYER AGENT', name:'The Inspection Walk-Back', desc:'Buyer wants $10k credit. Repairs are $2k. Anchor + Fairness Frame.', hint:'💡 "I want this fair. Here are the actual quotes from licensed contractors."'},
+        {tag:'SELLER', name:'The Net Sheet Shock', desc:'Seller sees the net and demands $50k more. Label + "That\'s Right".', hint:'💡 "It sounds like you feel the house is worth more than the comps."'}
+    ],
+    friend: [
+        {tag:'NEW LEAD', name:'The First Call', desc:'Cold Zillow lead talking to 3 agents. Mirror their fear of being rushed.', hint:'💡 "It sounds like you\'ve had bad experiences with agents pushing you."'},
+        {tag:'TENANT', name:'The Maintenance Complaint', desc:'Tenant furious about slow repair. Fix the feeling, not the plumbing.', hint:'💡 "It seems like you feel ignored. I want to make this right with you."'},
+        {tag:'CO-BROKER', name:'The Showing Friction', desc:'Other agent is difficult about showing times. Build the bond first.', hint:'💡 "I want to make your life easy. What does your schedule look like?"'}
+    ],
+    boss: [
+        {tag:'LISTING PRESENTATION', name:'The Room Takeover', desc:'3 sellers interviewing you. 15 minutes. Start with their pain, not your creds.', hint:'💡 "Before I talk about me — what\'s keeping you up at night about this move?"'},
+        {tag:'OFFER NEGOTIATION', name:'The Multi-Offer Leverage', desc:'5 offers. Pick the strongest, anchor high, make the others compete.', hint:'💡 "We have a strong offer at $X. Beat it by Y and you have the house."'},
+        {tag:'EXPIRED LISTING', name:'The Second Chance', desc:'Seller gave up with another agent. You have one shot to re-frame the market.', hint:'💡 "What did they miss? Let me show you where the strategy broke down."'}
+    ]
+};
+
+function renderModeCards(mode){
+    const grid = document.getElementById('grid-'+mode);
+    const cards = MODE_CARDS[mode] || [];
+    grid.innerHTML = cards.map((c,i) => `
+        <div class="mode-card" onclick="showModeScenario('${mode}',${i})" style="animation-delay:${i*0.08}s;">
+            <span class="mc-tag">${c.tag}</span>
+            <div class="mc-name">${c.name}</div>
+            <div class="mc-desc">${c.desc}</div>
+            <div class="mc-hint">TAP FOR SCRIPT →</div>
+        </div>
+    `).join('');
+}
+
+function showModeScenario(mode, idx){
+    const box = document.getElementById('scenario-'+mode);
+    const c = (MODE_CARDS[mode]||[])[idx]; if(!c) return;
+    box.innerHTML = `<span class="ms-label">${c.tag} :: ${c.name}</span>${c.hint}`;
+    box.classList.remove('open'); void box.offsetWidth; box.classList.add('open');
 }
 
 // ═══════════════════════════════════════════════════════════════════════
