@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
-    <title>NOD-ify — MixMatch FV4</title>
+    <title>NOD-ify — MixMatch FV5</title>
     <!-- ponytail: issue #30 — GA4 placeholder, replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
@@ -13,7 +13,7 @@
         gtag('config', 'G-XXXXXXXXXX');
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Press+Start+2P&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg: #1a1a2e;
@@ -895,7 +895,7 @@
             <div class="logo-icon">N</div>
             <div>
                 <h1>NOD-ify</h1>
-                <span>MixMatch · FV4</span>
+                <span>MixMatch · FV5</span>
             </div>
         </div>
         <div class="header-controls">
@@ -910,6 +910,9 @@
         <button class="nav-tab active" onclick="switchView('tools',this)">&#127183; Tool Deck <span class="badge" id="toolCountBadge">23</span></button>
         <button class="nav-tab" onclick="switchView('stair',this)">&#127970; Change Stair</button>
         <button class="nav-tab" onclick="switchView('wheel',this)">&#127804; Emotion Wheel</button>
+        <button class="nav-tab" onclick="switchView('haggle',this)" style="color:#ff5ea8;">&#128176; Haggle</button>
+        <button class="nav-tab" onclick="switchView('friend',this)" style="color:#66bb6a;">&#129309; Friend</button>
+        <button class="nav-tab" onclick="switchView('boss',this)" style="color:#ff3b3b;">&#128081; Boss</button>
     </div>
 
     <!-- ██ VIEW: Tools ██ -->
@@ -1587,11 +1590,11 @@ function renderWheel(){
 
         // ponytail: Only primary labels on the wheel — secondary + tertiary
         // caused text overlap in narrow sectors. Tap for detail panel or
-        // "Show all words" for the full legend.
-        const lr=rCenter*0.7;
-        const[lx,ly]=pt(lr,midA);
-        const r1=midA>90&&midA<270?midA+180:midA;
-        svg+=`<text x="${lx}" y="${ly}" transform="rotate(${r1},${lx},${ly})" class="wheel-label wheel-label-primary">${em.name}</text>`;
+        // Draw emotion label in first ring
+        const lr = (rCenter + rInner) / 2; // ponytail: labels in first ring, not under hub
+        const [lx, ly] = pt(lr, midA);
+        const r1 = midA > 90 && midA < 270 ? midA + 180 : midA;
+        svg += `<text x="${lx}" y="${ly}" transform="rotate(${r1},${lx},${ly})" class="wheel-label wheel-label-primary">${em.name}</text>`;
 
         // Gold rim dot
         const[dx,dy]=pt(R+6,startA);
