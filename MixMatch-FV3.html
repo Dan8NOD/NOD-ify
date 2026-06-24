@@ -1633,6 +1633,37 @@ const EMOTIONS = [
         secondary: ['Humiliated','Rejected','Submissive','Insecure','Anxious','Scared'],
         tertiary: { 'Humiliated':['Ridiculed','Disrespected'], 'Rejected':['Alienated','Inadequate'], 'Submissive':['Insignificant','Worthless'], 'Insecure':['Inferior','Incompetent'], 'Anxious':['Worried','Overwhelmed'], 'Scared':['Frightened','Terrified'] },
     },
+    // Voss labels — ponytail: negotiation-specific emotions
+    {name:'DEFEATED', color:'#8B4789',
+        secondary:['Cornered','Trapped','Hopeless','Broken','Crushed'],
+        tertiary:{'Cornered':['Desperate','Panicked'],'Trapped':['Stuck','Paralyzed'],'Hopeless':['Resigned','Empty'],'Broken':['Shattered','Devastated'],'Crushed':['Overwhelmed','Destroyed']}},
+    {name:'DEFENSIVE', color:'#C0392B',
+        secondary:['Guarded','Wary','Resistant','Hostile','Closed-Off'],
+        tertiary:{'Guarded':['Suspicious','Cautious'],'Wary':['Alert','Tense'],'Resistant':['Stubborn','Digging-In'],'Hostile':['Aggressive','Combative'],'Closed-Off':['Withdrawn','Shut-Down']}},
+    {name:'EMPOWERED', color:'#27AE60',
+        secondary:['Confident','In-Control','Capable','Respected','Heard'],
+        tertiary:{'Confident':['Strong','Assured'],'In-Control':['Driving','Leading'],'Capable':['Competent','Skilled'],'Respected':['Valued','Acknowledged'],'Heard':['Understood','Validated']}},
+    {name:'FRUSTRATED', color:'#E67E22',
+        secondary:['Blocked','Stalled','Misunderstood','Dismissed','Ignored'],
+        tertiary:{'Blocked':['Stuck','No-Exit'],'Stalled':['Slow-Motion','Frozen'],'Misunderstood':['Unheard','Misread'],'Dismissed':['Insignificant','Invisible'],'Ignored':['Neglected','Overlooked']}},
+    {name:'RESENTFUL', color:'#6C3483',
+        secondary:['Bitter','Unfair','Held-Grudge','Disrespected','Undervalued'],
+        tertiary:{'Bitter':['Sour','Poisoned'],'Unfair':['Cheated','Ripped-Off'],'Held-Grudge':['Lingering','Unforgiving'],'Disrespected':[' slighted','Demeaned'],'Undervalued':['Appreciated-Less','Minor']}},
+    {name:'SKEPTICAL', color:'#5D6D7E',
+        secondary:['Doubtful','Guarded','Probing','Testing','Withholding'],
+        tertiary:{'Doubtful':['Unconvinced','Questioning'],'Guarded':['Wary','Cautious'],'Probing':['Digging','Fact-Checking'],'Testing':['Trying-Out','Sizing-Up'],'Withholding':['Holding-Back','Not-Committing']}},
+    {name:'VINDICATED', color:'#1E8449',
+        secondary:['Justified','Right','Proven-Right','Cleared','Exonerated'],
+        tertiary:{'Justified':['Validated','Legitimate'],'Right':['Accurate','Correct'],'Proven-Right':['I-Told-You-So','Confirmed'],'Cleared':['Absolved','Free'],'Exonerated':['Vindicated','Whitewashed']}},
+    {name:'OVERWHELMED', color:'#1A5276',
+        secondary:['Drowning','Too-Much','Paralyzed','Exhausted','Buried'],
+        tertiary:{'Drowning':['Sinking','Suffocating'],'Too-Much':['Overloaded','Maxed-Out'],'Paralyzed':['Frozen','Unable-To-Move'],'Exhausted':['Drained','Spent'],'Buried':['Swamped','In-Over-Head']}},
+    {name:'RELIIEVED', color:'#48C9B0',
+        secondary:['Lighter','Off-Hook','Unburdened','Grateful','Safe'],
+        tertiary:{'Lighter':['Freed','Unloaded'],'Off-Hook':['Pressure-Off','No-Longer-Tense'],'Unburdened':['Weight-Lifted','Unshackled'],'Grateful':['Thankful','Appreciative'],'Safe':['Secure','Protected']}},
+    {name:'CONTEMPTUOUS', color:'#7B241C',
+        secondary:['Superior','Above','Condescending','Disdainful','Mocking'],
+        tertiary:{'Superior':['Better-Than','Over'],'Above':['Beyond','Untouchable'],'Condescending':['Patronizing','Talking-Down'],'Disdainful':['Scornful','Derisive'],'Mocking':['Ridiculing','Sarcastic']}},
 ];
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -2251,8 +2282,8 @@ let dragStartX = 0;
 
 function renderWheel(){
     const container = document.getElementById('wheelCanvas');
-    const cx=250, cy=250, sectors=6, sectorAngle=360/sectors;
-    // ponytail: enlarged radii ~25% from R=210,rMid=145,rInner=108,rCenter=55
+    const cx=250, cy=250, sectors=EMOTIONS.length, sectorAngle=360/sectors;
+    // ponytail: radii scale — sector count determines label/ring density
     const R=232, rMid=162, rInner=120, rCenter=62;
 
     let svg = `<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" style="cursor:grab;touch-action:none;">
@@ -2400,7 +2431,7 @@ function selectEmotion(idx){
     const em=EMOTIONS[idx];
     state.lastUsedEmotion=em.name;
     // Auto-spin: center this emotion under the pointer (top, 0deg)
-    const sectorAngle=360/6;
+    const sectorAngle=360/EMOTIONS.length;
     const emotionCenter=idx*sectorAngle+sectorAngle/2;
     // ponytail: snap to nearest rotation so spin looks natural, not jarring
     const target=-emotionCenter;
