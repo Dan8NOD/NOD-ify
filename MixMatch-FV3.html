@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
-    <title>NOD-ify — MixMatch FV6.2</title>
+    <title>NOD-ify — MixMatch FV6.3</title>
     <!-- ponytail: issue #30 — GA4 placeholder, replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
@@ -1067,6 +1067,10 @@
         .bk-btn-glow:hover { transform:scale(1.03); background:rgba(212,168,83,0.25); }
         .bk-btn-glow.on { background:var(--accent); color:#1a1a2e; box-shadow:0 0 30px var(--accent-glow), inset 0 0 20px rgba(255,255,255,0.2); }
         @keyframes bk-pulse { 0%,100%{box-shadow:0 0 15px var(--accent-glow)} 50%{box-shadow:0 0 30px var(--accent-glow),0 0 50px rgba(212,168,83,0.25)} }
+        
+        /* ponytail: glow active buttons during session */
+        .btn.glow-active { box-shadow:0 0 20px var(--accent-glow), inset 0 0 10px rgba(212,168,83,0.1); animation:btn-glow-pulse 1.5s ease-in-out infinite; }
+        @keyframes btn-glow-pulse { 0%,100%{box-shadow:0 0 15px var(--accent-glow)} 50%{box-shadow:0 0 30px var(--accent-glow)} }
 
         /* ─── BK panel (wheel + label maker) ─── */
         .bk-panel { display:none; width:100%; max-width:1100px; margin:10px 0; }
@@ -1245,7 +1249,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
             <div class="logo-icon">N</div>
             <div>
                 <h1>NOD-ify</h1>
-                <span>MixMatch · FV6.2</span>
+                <span>MixMatch · FV6.3</span>
             </div>
         </div>
         <div class="header-controls">
@@ -1296,6 +1300,19 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
             <div class="ct-actions">
                 <button class="btn btn-primary btn-sm" onclick="getNextTool()">Next &#10145;</button>
                 <button class="btn btn-ghost btn-sm" onclick="hideBanner()">Dismiss</button>
+            </div>
+        </div>
+        <!-- Label Maker — main view, shown on session start -->
+        <div class="label-maker" id="labelMaker" style="display:none; margin:12px 0;">
+            <div class="lm-header">
+                <h3>&#127483;&#8205;&#127987; Label Maker</h3>
+                <span class="lm-badge" id="lmCount">0 ready</span>
+            </div>
+            <div class="lm-cards" id="lmCards">
+                <div class="lm-empty">No labels yet</div>
+            </div>
+            <div class="lm-actions">
+                <button class="btn" onclick="generateLabels()">&#128260; Generate more</button>
             </div>
         </div>
         <div class="session-panel" id="sessionPanel">
@@ -2065,11 +2082,13 @@ function startSession(){
     buildDeck();
     state.timer=setInterval(tick,1000);
     coinBurst(8); SFX.ching(); SFX.spin(); // ponytail: session start celebration
+    generateLabels(); document.getElementById('labelMaker').style.display='block'; // ponytail: show labels + maker
     if(state.currentMode!=='bk') toggleMode('bk'); // ponytail: auto-show wheel on start
     renderWheel();
     hideBanner();
     renderToolsView(); renderLog();
-    document.getElementById('currentBanner').classList.add('show');
+    document.getElementById('startBtn').classList.add('glow-active'); // ponytail: glow while session runs
+    document.getElementById('nextBtn').classList.add('glow-active');
     document.getElementById('ctName').textContent='Session Started!';
     document.getElementById('ctDesc').textContent=`${dur} min · ${state.currentDeck.length} tools loaded. Press Next to draw.`;
 }
@@ -2119,6 +2138,8 @@ function endSession(){
     if(!state.sessionActive) return;
     if(state.timer) clearInterval(state.timer);
     state.sessionActive=false; state.timer=null;
+    document.getElementById('startBtn').classList.remove('glow-active');
+    document.getElementById('nextBtn').classList.remove('glow-active');
     showSessionSummary();
     state.currentTool=null;
     renderToolsView();
