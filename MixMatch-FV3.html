@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
-    <title>NOD-ify — MixMatch FV5</title>
+    <title>NOD-ify — MixMatch FV6.2</title>
     <!-- ponytail: issue #30 — GA4 placeholder, replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
@@ -1245,7 +1245,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
             <div class="logo-icon">N</div>
             <div>
                 <h1>NOD-ify</h1>
-                <span>MixMatch · FV5</span>
+                <span>MixMatch · FV6.2</span>
             </div>
         </div>
         <div class="header-controls">
@@ -2064,6 +2064,9 @@ function startSession(){
     document.getElementById('statSession').textContent=state.sessionId.slice(0,8)+'…';
     buildDeck();
     state.timer=setInterval(tick,1000);
+    coinBurst(8); SFX.ching(); SFX.spin(); // ponytail: session start celebration
+    if(state.currentMode!=='bk') toggleMode('bk'); // ponytail: auto-show wheel on start
+    renderWheel();
     hideBanner();
     renderToolsView(); renderLog();
     document.getElementById('currentBanner').classList.add('show');
@@ -2086,6 +2089,7 @@ function getNextTool(){
     document.getElementById('ctDesc').textContent=tool.desc;
     document.getElementById('skipBtn').style.display='';
     animateCard(tool.name);
+    coinBurst(6); SFX.coin(); // ponytail: tool draw pop
     renderToolsView(); renderLog();
 }
 function skipTool(){
@@ -2633,7 +2637,7 @@ function renderLabels(labels){
 }
 
 function generateLabels(){
-    SFX.ching();coinBurst(6);
+    SFX.ching(); SFX.ching(); coinBurst(12); // ponytail: label explosion
     const count = 2;
     const labels = [];
     for(let i=0; i<count; i++) labels.push(makeLabel());
