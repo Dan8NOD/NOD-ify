@@ -979,6 +979,49 @@
 
         @keyframes pulse-danger { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
+        /* ─── Label Maker ─── */
+        .label-maker { width:100%; max-width:520px; margin:14px auto 0; }
+        .label-maker .lm-header {
+            display:flex; align-items:center; gap:8px; margin-bottom:8px;
+        }
+        .label-maker .lm-header h3 {
+            font-size:13px; color:#fff; font-weight:700;
+            letter-spacing:0.5px;
+        }
+        .label-maker .lm-header .lm-badge {
+            font-size:9px; padding:2px 8px; border-radius:6px;
+            background:var(--accent); color:#1a1a2e; font-weight:700;
+        }
+        .label-maker .lm-cards { display:flex; flex-direction:column; gap:6px; }
+        .label-maker .lm-card {
+            padding:12px 14px; border-radius:10px;
+            background:rgba(0,0,0,0.25);
+            border:1px solid var(--accent);
+            box-shadow:0 0 12px var(--accent-glow);
+            animation:lm-pop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes lm-pop { 0%{opacity:0;transform:scale(0.9) translateY(-6px)} 100%{opacity:1;transform:scale(1) translateY(0)} }
+        .label-maker .lm-phrase {
+            font-size:14px; font-weight:600; color:#fff;
+            margin-bottom:4px; line-height:1.4;
+        }
+        .label-maker .lm-card .lm-emotion {
+            font-size:10px; font-weight:700; text-transform:uppercase;
+            letter-spacing:0.5px;
+        }
+        .label-maker .lm-actions { margin-top:8px; display:flex; gap:6px; }
+        .label-maker .lm-actions .btn {
+            padding:6px 14px; border-radius:8px; border:1px solid var(--accent);
+            background:rgba(212,168,83,0.12); color:var(--accent);
+            font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
+            cursor:pointer; transition:background 0.15s;
+        }
+        .label-maker .lm-actions .btn:hover { background:rgba(212,168,83,0.25); }
+        .label-maker .lm-empty {
+            font-size:12px; color:rgba(255,255,255,0.35);
+            text-align:center; padding:16px;
+        }
+
         @media (max-width: 768px) {
                     .table-surface { padding: 8px 6px; border-width: 4px; }
                     .header { flex-wrap: wrap; gap: 6px; padding: 4px 0 6px; }
@@ -1059,6 +1102,10 @@
 
                     /* Focus mode hint on mobile */
                     .focus-hint { font-size: 10px; }
+
+                    /* Kill tab/view transitions on mobile — causes flicker/position issues */
+                    .nav-tab { transition: none !important; }
+                    .view-container { animation: none !important; }
                 }
 
 /* ─── Extra-small screens (< 400px) ─── */
@@ -1186,6 +1233,20 @@
                     <input type="range" id="emoDepth" min="0" max="2" value="0" step="1"
                            oninput="setEmoDepth(this.value)">
                     <span class="depth-val" id="emoDepthLabel">Names only</span>
+                </div>
+            </div>
+
+            <!-- ─── Label Maker ─── -->
+            <div class="label-maker" id="labelMaker">
+                <div class="lm-header">
+                    <h3>&#127483;&#8205;&#127987; Label Maker</h3>
+                    <span class="lm-badge" id="lmCount">2 ready</span>
+                </div>
+                <div class="lm-cards" id="lmCards">
+                    <div class="lm-empty">Loading labels…</div>
+                </div>
+                <div class="lm-actions">
+                    <button class="btn" onclick="generateLabels()">&#128260; Generate more</button>
                 </div>
             </div>
         </div>
@@ -2023,6 +2084,11 @@ function renderWheel(){
     buildLegend();
     const slider=document.getElementById('wheelSlider');
     if(slider) slider.value=Math.max(-180,Math.min(180,wheelRotation));
+
+    // ponytail: pre-generate 2 labels on view load
+    if(!document.getElementById('lmCards').children.length || document.getElementById('lmCards').querySelector('.lm-empty')){
+        generateLabels();
+    }
 }
 
 function startDrag(e){isDragging=true;dragStartX=e.clientX;const s=document.querySelector('#wheelCanvas svg');if(s)s.style.cursor='grabbing';const g=document.querySelector('#wheelGroup');if(g)g.classList.add('dragging');}
@@ -2199,6 +2265,67 @@ function applyEmoDepth(){
 function setEmoDepth(val){
     emoDepth = parseInt(val);
     applyEmoDepth();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// LABEL MAKER
+// ═══════════════════════════════════════════════════════════════════════
+const LABEL_PATTERNS = [
+    em => `It seems like you're feeling ${em}…`,
+    em => `It sounds like there's some ${em} here…`,
+    em => `It looks like ${em} is really coming up…`,
+    em => `It feels like you're experiencing ${em}…`,
+    em => `I'm sensing a lot of ${em} right now…`,
+    em => `There's some ${em} in the room — let's talk about it…`,
+    em => `That's bringing up ${em}, isn't it…`,
+    em => `I hear the ${em} in what you're saying…`,
+];
+
+if(!window._lmUsed) window._lmUsed = [];
+
+function pickEmotion(){
+    // ponytail: cycle through emotions, prefer un-picked
+    const ems = EMOTIONS.map(e => e.name);
+    const unused = ems.filter(e => !window._lmUsed.includes(e));
+    const pool = unused.length ? unused : ems;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    window._lmUsed.push(pick);
+    // Keep buffer small — trim old picks
+    if(window._lmUsed.length > 12) window._lmUsed = window._lmUsed.slice(-6);
+    const em = EMOTIONS.find(e => e.name === pick);
+    const secondary = em ? em.secondary[Math.floor(Math.random() * em.secondary.length)] : null;
+    return { name: pick, secondary };
+}
+
+function makeLabel(){
+    const em = pickEmotion();
+    const pattern = LABEL_PATTERNS[Math.floor(Math.random() * LABEL_PATTERNS.length)];
+    const phrase = pattern(em.name.toLowerCase());
+    return { phrase, emotion: em.name, secondary: em.secondary };
+}
+
+function renderLabels(labels){
+    const el = document.getElementById('lmCards');
+    const count = document.getElementById('lmCount');
+    if(!labels.length){
+        el.innerHTML = '<div class="lm-empty">Tap Generate to make some labels ✨</div>';
+        count.textContent = '0 ready';
+        return;
+    }
+    el.innerHTML = labels.map(l => `
+        <div class="lm-card">
+            <div class="lm-phrase">${l.phrase}</div>
+            <div class="lm-emotion" style="color:${(EMOTIONS.find(e=>e.name===l.emotion)||{}).color||'var(--accent)'}">${l.emotion} ${l.secondary ? '· ' + l.secondary : ''}</div>
+        </div>
+    `).join('');
+    count.textContent = labels.length + ' ready';
+}
+
+function generateLabels(){
+    const count = 2;
+    const labels = [];
+    for(let i=0; i<count; i++) labels.push(makeLabel());
+    renderLabels(labels);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
