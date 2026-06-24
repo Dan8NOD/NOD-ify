@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
-    <title>NOD-ify — MixMatch FV6.3</title>
+    <title>NOD-ify — MixMatch FV7</title>
     <!-- ponytail: issue #30 — GA4 placeholder, replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
@@ -1068,9 +1068,9 @@
         .bk-btn-glow.on { background:var(--accent); color:#1a1a2e; box-shadow:0 0 30px var(--accent-glow), inset 0 0 20px rgba(255,255,255,0.2); }
         @keyframes bk-pulse { 0%,100%{box-shadow:0 0 15px var(--accent-glow)} 50%{box-shadow:0 0 30px var(--accent-glow),0 0 50px rgba(212,168,83,0.25)} }
         
-        /* ponytail: glow active buttons during session */
-        .btn.glow-active { box-shadow:0 0 20px var(--accent-glow), inset 0 0 10px rgba(212,168,83,0.1); animation:btn-glow-pulse 1.5s ease-in-out infinite; }
-        @keyframes btn-glow-pulse { 0%,100%{box-shadow:0 0 15px var(--accent-glow)} 50%{box-shadow:0 0 30px var(--accent-glow)} }
+        /* ponytail: glow active buttons during session — stronger pulse for mobile */
+        .btn.glow-active { box-shadow:0 0 40px var(--accent-glow), inset 0 0 15px rgba(212,168,83,0.2); animation:btn-glow-pulse 1.2s ease-in-out infinite; transform:translateY(-2px); }
+        @keyframes btn-glow-pulse { 0%,100%{box-shadow:0 0 25px var(--accent-glow), inset 0 0 10px rgba(212,168,83,0.1)} 50%{box-shadow:0 0 50px var(--accent-glow), inset 0 0 20px rgba(212,168,83,0.25)} }
 
         /* ─── BK panel (wheel + label maker) ─── */
         .bk-panel { display:none; width:100%; max-width:1100px; margin:10px 0; }
@@ -1249,7 +1249,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
             <div class="logo-icon">N</div>
             <div>
                 <h1>NOD-ify</h1>
-                <span>MixMatch · FV6.3</span>
+                <span>MixMatch · FV7</span>
             </div>
         </div>
         <div class="header-controls">
@@ -1327,7 +1327,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <div class="bk-panel" id="bkPanel">
             <div class="bk-panel-header"><span class="bk-panel-icon">&#127804;</span> Emotion Check &nbsp;<span class="bk-panel-badge">BK mode</span></div>
             <div class="bk-panel-wheel" id="bkPanelWheel"></div>
-            <div class="bk-panel-labels" id="bkPanelLabels">
+            <div class="bk-panel-labels" id="bkPanelLabels" style="display:none;">
                 <div class="bk-panel-section">&#128172; Label Maker</div>
                 <div class="bk-label-card" id="bkLabelCard">
                     <div class="bk-label-phrase" id="bkLabelPhrase">Tap BK Mode and a label appears here</div>
@@ -2083,8 +2083,7 @@ function startSession(){
     state.timer=setInterval(tick,1000);
     coinBurst(8); SFX.ching(); SFX.spin(); // ponytail: session start celebration
     generateLabels(); document.getElementById('labelMaker').style.display='block'; // ponytail: show labels + maker
-    if(state.currentMode!=='bk') toggleMode('bk'); // ponytail: auto-show wheel on start
-    renderWheel();
+    // ponytail: wheel on BK toggle, not auto-start (reduces clutter)
     hideBanner();
     renderToolsView(); renderLog();
     document.getElementById('startBtn').classList.add('glow-active'); // ponytail: glow while session runs
