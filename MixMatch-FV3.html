@@ -166,7 +166,7 @@
         }
         .mode-header p { color: rgba(255,255,255,0.6); font-size: 13px; max-width: 640px; margin: 0 auto; }
         .mode-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            display: grid; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px;
             gap: 14px; perspective: 1200px;
         }
         .mode-card {
@@ -175,7 +175,8 @@
             box-shadow: 0 4px 14px var(--card-shadow);
             cursor: pointer; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
             border-top: 4px solid var(--accent);
-            animation: card-deal 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+            opacity: 1;
+            animation: card-pop 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
         }
         .mode-card:hover {
             transform: translateY(-6px) scale(1.04);
@@ -211,14 +212,52 @@
         .mode-toolbar .btn:hover { transform: translateY(-2px); background: var(--accent); color: #1a1a2e; }
 
         .mode-scenario {
-            margin: 14px auto; max-width: 760px; padding: 14px 18px;
-            background: rgba(0,0,0,0.4); border-radius: 12px;
-            border: 1px dashed rgba(255,255,255,0.25); color: #fff;
-            font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.8;
-            text-align: center; display: none;
+            margin: 14px auto; max-width: 780px; padding: 20px 24px;
+            background: rgba(0,0,0,0.5); border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.12); color: #fff;
+            display: none; text-align: left;
         }
-        .mode-scenario.open { display: block; animation: fade-up 0.35s ease; }
-        .mode-scenario .ms-label { color: var(--accent); font-size: 8px; letter-spacing: 2px; display: block; margin-bottom: 6px; }
+        .mode-scenario.open { display: block; animation: fade-up 0.3s ease; }
+        .mode-scenario .ms-badge {
+            display: inline-block; padding: 3px 10px; border-radius: 6px;
+            font-size: 10px; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; margin-bottom: 8px;
+        }
+        .mode-scenario .ms-title {
+            font-size: 20px; font-weight: 800; margin-bottom: 2px;
+            color: #fff;
+        }
+        .mode-scenario .ms-tagline {
+            font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 10px;
+        }
+        .mode-scenario .ms-section-label {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--accent); margin: 12px 0 4px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .mode-scenario .ms-section-label::after {
+            content: ''; flex: 1; height: 1px; background: rgba(212,168,83,0.2);
+        }
+        .mode-scenario .ms-approach {
+            font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.75);
+            padding: 10px 14px; background: rgba(255,255,255,0.04);
+            border-radius: 8px; border-left: 3px solid var(--accent);
+        }
+        .mode-scenario .ms-script {
+            font-size: 14px; line-height: 1.7; color: #fff;
+            padding: 12px 16px; background: rgba(0,0,0,0.3);
+            border-radius: 8px; margin: 4px 0 8px;
+        }
+        .mode-scenario .ms-script .say {
+            color: var(--accent); font-weight: 600;
+        }
+        .mode-scenario .ms-close {
+            margin-top: 14px; padding: 8px 20px; border: none;
+            border-radius: 8px; background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;
+            cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
+        }
+        .mode-scenario .ms-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
 
         /* ─── Cards (Tools view) ─── */
         .cards-area {
@@ -290,6 +329,10 @@
         @keyframes card-deal {
             0% { opacity:0; transform:translateY(-20px) rotateX(40deg) scale(0.85); }
             100% { opacity:1; transform:translateY(0) rotateX(0deg) scale(1); }
+        }
+        @keyframes card-pop {
+            0% { transform:scale(0.92) translateY(6px); }
+            100% { transform:scale(1) translateY(0); }
         }
         .tool-card .cat-badge {
             font-size: 9px; padding: 2px 7px; border-radius: 10px;
@@ -635,6 +678,24 @@
                     0%,100%{box-shadow:0 0 6px #ff1744,0 0 12px rgba(255,23,68,0.2)}
                     50%{box-shadow:0 0 14px #ff1744,0 0 28px rgba(255,23,68,0.5)}
                 }
+                /* 90s CRT scanlines + vignette on wheel container */
+                .wheel-canvas-wrap::before {
+                    content: ''; position: absolute; inset: 0; z-index: 5;
+                    pointer-events: none; border-radius: 12px;
+                    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+                }
+                .wheel-canvas-wrap::after {
+                    content: ''; position: absolute; inset: 0; z-index: 4;
+                    pointer-events: none; border-radius: 12px;
+                    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%);
+                }
+                /* Focus mode: purple tinted scanlines + outer glow */
+                .wheel-canvas-wrap.focus-mode::before {
+                    background: repeating-linear-gradient(0deg, rgba(138,43,226,0.08) 0, rgba(138,43,226,0.08) 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+                }
+                .wheel-canvas-wrap.focus-mode {
+                    filter: drop-shadow(0 0 40px rgba(138,43,226,0.35));
+                }
 
                 .wheel-rotate-bar {
                     display: flex; align-items: center; gap: 10px;
@@ -668,6 +729,14 @@
                     font-variant-numeric: tabular-nums;
                 }
 
+                /* Focus mode hint */
+                .focus-hint {
+                    text-align: center; font-size: 11px; color: rgba(138,43,226,0.7);
+                    margin: 6px 0 0; font-weight: 600; display: none;
+                    letter-spacing: 0.5px;
+                }
+                .focus-hint.show { display: block; animation: fade-up 0.3s; }
+
                 .wheel-emotion-slice {
                     cursor: pointer;
                     transition: filter 0.3s;
@@ -686,6 +755,14 @@
                 }
                 #wheelGroup.dragging {
                     transition: none;
+                }
+                /* Focus mode — purple CRT glow */
+                #wheelGroup.focus-mode {
+                    filter: drop-shadow(0 0 30px rgba(138,43,226,0.6)) drop-shadow(0 0 60px rgba(138,43,226,0.2));
+                }
+                /* Has-selection — dim unselected slices */
+                #wheelGroup.has-selection .wheel-emotion-slice:not(.active-slice) {
+                    opacity: 0.4;
                 }
                 .wheel-rim-dot { pointer-events: none; }
 
@@ -964,6 +1041,24 @@
 
                     /* Summary grid — single column */
                     #ctDesc > div[style*="grid"] { grid-template-columns: 1fr 1fr !important; }
+
+                    /* Mode cards — full-width stack on mobile */
+                    .mode-card { flex: 1 1 100%; max-width: 100%; padding: 14px 14px; }
+                    .mode-card .mc-name { font-size: 14px; }
+                    .mode-card .mc-desc { font-size: 11px; }
+                    .mode-card .mc-hint { font-size: 9px; }
+                    .mode-grid { gap: 10px; }
+                    .mode-wrap { padding: 0; }
+                    .mode-header h2 { font-size: 16px; }
+                    .mode-header p { font-size: 11px; }
+                    .mode-toolbar .btn { font-size: 9px; padding: 6px 12px; }
+                    .mode-scenario { padding: 14px 16px; margin: 10px 0; }
+                    .mode-scenario .ms-title { font-size: 17px; }
+                    .mode-scenario .ms-approach { font-size: 12px; }
+                    .mode-scenario .ms-script { font-size: 13px; }
+
+                    /* Focus mode hint on mobile */
+                    .focus-hint { font-size: 10px; }
                 }
 
 /* ─── Extra-small screens (< 400px) ─── */
@@ -1080,6 +1175,7 @@
             </div>
             <button class="btn btn-ghost btn-sm" onclick="toggleLegend()" style="margin-top: 8px;">&#128196; Show all words</button>
             <button class="btn btn-ghost btn-sm" id="focusBtn" onclick="toggleFocus()" style="margin-top: 8px; margin-left: 4px;">&#128065; Focus</button>
+            <div class="focus-hint" id="focusHint">Tap any emotion to focus</div>
             <div class="wheel-legend" id="wheelLegend"></div>
             <div class="emotion-detail" id="emotionDetail"></div>
 
@@ -1100,7 +1196,7 @@
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>💰 HAGGLE MODE</h2>
-                <p>Price wars, leverage, anchor drops. Tap a card for a scenario.</p>
+                <p>4 scenarios · flinch, anchor, fairness frame. Tap a card for the script.</p>
             </div>
             <div class="mode-toolbar">
                 <button class="btn" onclick="renderModeCards('haggle')">⇄ SHUFFLE</button>
@@ -1116,7 +1212,7 @@
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>🤝 FRIEND MODE</h2>
-                <p>Build rapport fast. Mirror, label, validate. Tap a card for a scenario.</p>
+                <p>3 scenarios · mirror, label, validate. Tap a card for the script.</p>
             </div>
             <div class="mode-toolbar">
                 <button class="btn" onclick="renderModeCards('friend')">⇄ SHUFFLE</button>
@@ -1132,7 +1228,7 @@
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>👔 BOSS MODE</h2>
-                <p>Command the room. Frame, anchor, close. Tap a card for a scenario.</p>
+                <p>3 scenarios · accusation audit, anchor, reframe. Tap a card for the script.</p>
             </div>
             <div class="mode-toolbar">
                 <button class="btn" onclick="renderModeCards('boss')">⇄ SHUFFLE</button>
@@ -1377,6 +1473,8 @@ function triggerModeTransition(mode){
     };
     const ov = document.getElementById('modeTransition');
     const t = titles[mode]; if(!t) return;
+    // ponytail: skip overlay on mobile — takes too long, cards flash in underneath
+    if(window.innerWidth < 768){ ov.classList.remove('active'); return; }
     document.getElementById('mtTitle').textContent = t[0];
     document.getElementById('mtSub').textContent = t[1];
     ov.classList.remove('active'); void ov.offsetWidth; ov.classList.add('active');
@@ -1387,20 +1485,90 @@ function triggerModeTransition(mode){
 // ponytail: 90s arcade negotiation scenarios per mode
 const MODE_CARDS = {
     haggle: [
-        {tag:'LANDLORD', name:'The Rent Hike', desc:'Tenant wants out. You raise rent $200. Flinch + Anchor.', hint:'💡 "I understand $200 feels like a lot. Let me show you the comps..."'},
-        {tag:'TENANT', name:'The Move-Out Bluff', desc:'Tenant threatens to leave. You know they have no deposit budget.', hint:'💡 "How would you handle a $3k move-out with your current savings?"'},
-        {tag:'BUYER AGENT', name:'The Inspection Walk-Back', desc:'Buyer wants $10k credit. Repairs are $2k. Anchor + Fairness Frame.', hint:'💡 "I want this fair. Here are the actual quotes from licensed contractors."'},
-        {tag:'SELLER', name:'The Net Sheet Shock', desc:'Seller sees the net and demands $50k more. Label + "That\'s Right".', hint:'💡 "It sounds like you feel the house is worth more than the comps."'}
+        {tag:'LANDLORD', name:'The Rent Hike', label:'Flinch + Anchor', desc:'Tenant pushes back on $200 increase. Flinch at their reaction, then anchor on comps.',
+         approach:'Flinch first to reset their expectations, then drop an anchored price backed by market data. Let them feel heard before you move the frame.',
+         script:[
+            {who:'You', line:'\"I hear you — $200 stings. Let me show you what the comps say.\"'},
+            {who:'You', line:'[Pause. Pull up 3 comparable units.] \"Every renovated 2-bed in this radius is listing at $1,895+. Yours is still $150 under market.\"'},
+            {who:'You', line:'\"I want this to feel fair. What number works so we both walk away good?\"'},
+         ],
+         hint:'💡 Flinch → comps → fairness frame'},
+        {tag:'TENANT', name:'The Move-Out Bluff', label:'Accusation Audit + Calibrated Q', desc:'Tenant threatens to leave over rent. You know they have no deposit budget.',
+         approach:'Call out the threat before they can use it. Use a calibrated question to make them solve their own move-out math.',
+         script:[
+            {who:'You', line:'\"It probably seems like I don\'t care if you stay or go. That\'s fair — let\'s talk about it.\"'},
+            {who:'You', line:'\"How would you handle a $3,000+ move-out cost with your current savings?\"'},
+            {who:'You', line:'[Let silence work.] \"If we can find a number that works for both of us, you don\'t have to go through that.\"'},
+         ],
+         hint:'💡 Accusation audit → calibrated Q → silence'},
+        {tag:'BUYER AGENT', name:'The Inspection Walk-Back', label:'Fairness Frame + Receipts', desc:'Buyer wants $10k credit for $2k in actual repairs.',
+         approach:'Frame around fairness backed by real numbers. Hand them the receipts — hard data derails emotional anchoring.',
+         script:[
+            {who:'You', line:'\"I want you to walk away thinking you got a fair deal. Here are the actual licensed contractor quotes.\"'},
+            {who:'You', line:'[Show receipts.] \"Total wear-and-tear comes to $2,180. I\'m happy to credit that. The $10k ask doesn\'t match what\'s on paper.\"'},
+            {who:'You', line:'\"Help me find the number that feels right based on the facts, not the feelings.\"'},
+         ],
+         hint:'💡 Fairness frame → receipts → partner not opponent'},
+        {tag:'SELLER', name:'The Net Sheet Shock', label:'Label + "That\'s Right" Summary', desc:'Seller sees the net and demands $50k more. Emotional, not rational.',
+         approach:'Label the feeling first — don\'t fight the number, fight the emotion. Then summarize their world until they say "That\'s right."',
+         script:[
+            {who:'You', line:'\"It sounds like you feel this house is worth more than what the offers are saying. Like the market isn\'t seeing what you see.\"'},
+            {who:'You', line:'\"You\'ve put years of work into this home. Of course it feels like it should be valued higher.\"'},
+            {who:'You', line:'[After they nod/agree.] \"Here\'s what the comps actually sold for in the last 30 days. Let\'s look at this together.\"'},
+         ],
+         hint:'💡 Label → validate → "That\'s right"'}
     ],
     friend: [
-        {tag:'NEW LEAD', name:'The First Call', desc:'Cold Zillow lead talking to 3 agents. Mirror their fear of being rushed.', hint:'💡 "It sounds like you\'ve had bad experiences with agents pushing you."'},
-        {tag:'TENANT', name:'The Maintenance Complaint', desc:'Tenant furious about slow repair. Fix the feeling, not the plumbing.', hint:'💡 "It seems like you feel ignored. I want to make this right with you."'},
-        {tag:'CO-BROKER', name:'The Showing Friction', desc:'Other agent is difficult about showing times. Build the bond first.', hint:'💡 "I want to make your life easy. What does your schedule look like?"'}
+        {tag:'NEW LEAD', name:'The First Call', label:'Mirror + Accusation Audit', desc:'Cold lead talking to 3 agents. Mirror their fear of being rushed.',
+         approach:'Call out the pressure before they feel it. Mirror their concern back so they know you get it without selling.',
+         script:[
+            {who:'You', line:'\"It probably seems like I\'m just another agent trying to lock you into a meeting.\"'},
+            {who:'You', line:'\"You\'re talking to a few people. You want to make sure you pick someone who actually listens, not just pitches.\"'},
+            {who:'You', line:'\"I get that. Let\'s skip the pitch. What would you need to hear to know I\'m the right person?\"'},
+         ],
+         hint:'💡 Accusation audit → mirror → open question'},
+        {tag:'TENANT', name:'The Maintenance Complaint', label:'Label + Empathy Statement', desc:'Tenant furious about slow repair. Fix the feeling, not the plumbing.',
+         approach:'The repair is secondary — the feeling of being ignored is primary. Label the frustration before you fix the problem.',
+         script:[
+            {who:'You', line:'\"It sounds like you feel completely ignored. That\'s not acceptable, and I\'m sorry that happened.\"'},
+            {who:'You', line:'\"If I were waiting on a repair this long, I\'d be furious too. You have every right to be upset.\"'},
+            {who:'You', line:'\"Here\'s exactly what I\'m going to do right now. [Outline the plan.] I\'ll text you updates personally.\"'},
+         ],
+         hint:'💡 Label → validate → action plan'},
+        {tag:'CO-BROKER', name:'The Showing Friction', label:'Dynamic Silence + Mirror', desc:'Other agent is difficult about showing times. Build the bond first.',
+         approach:'Stop pushing against the friction. Mirror their energy, use silence to let them fill the gap, then find the real blocker.',
+         script:[
+            {who:'You', line:'\"It seems like coordinating showings has been a headache this week.\"'},
+            {who:'You', line:'[Silence. Let them vent.]'},
+            {who:'You', line:'\"What would make your calendar work better? I want to make your life easy here.\"'},
+         ],
+         hint:'💡 Mirror → silence → partner frame'}
     ],
     boss: [
-        {tag:'LISTING PRESENTATION', name:'The Room Takeover', desc:'3 sellers interviewing you. 15 minutes. Start with their pain, not your creds.', hint:'💡 "Before I talk about me — what\'s keeping you up at night about this move?"'},
-        {tag:'OFFER NEGOTIATION', name:'The Multi-Offer Leverage', desc:'5 offers. Pick the strongest, anchor high, make the others compete.', hint:'💡 "We have a strong offer at $X. Beat it by Y and you have the house."'},
-        {tag:'EXPIRED LISTING', name:'The Second Chance', desc:'Seller gave up with another agent. You have one shot to re-frame the market.', hint:'💡 "What did they miss? Let me show you where the strategy broke down."'}
+        {tag:'LISTING PRESENTATION', name:'The Room Takeover', label:'Accusation Audit + Calibrated Q', desc:'3 sellers interviewing you. 15 minutes. Lead with their pain, not your creds.',
+         approach:'Don\'t lead with your resume — they\'ve heard 5 of those today. Lead with what\'s keeping them up at night and they\'ll lean in.',
+         script:[
+            {who:'You', line:'\"Before I tell you about my track record — what\'s keeping you up at night about this move?\"'},
+            {who:'You', line:'[Listen. Take notes. Mirror what you hear.]'},
+            {who:'You', line:'\"It sounds like you\'re worried about finding the right buyer in this market. How would you know you picked the right agent?\"'},
+         ],
+         hint:'💡 Start with their pain → listen → calibrated Q'},
+        {tag:'OFFER NEGOTIATION', name:'The Multi-Offer Leverage', label:'Anchor + Deadline Pressure', desc:'5 offers. Pick the strongest, anchor high, make others compete.',
+         approach:'Name the strongest offer openly. Give a clear deadline to beat it. Creates urgency without needing to push.',
+         script:[
+            {who:'You', line:'\"We\'ve got a strong offer at $X with solid terms. It\'s not signed yet — and I wanted to give you a chance to put your best foot forward.\"'},
+            {who:'You', line:'\"We\'re asking for best-and-final by 5pm today. That gives everyone time to sharpen their pencil.\"'},
+            {who:'You', line:'\"If you can come in at $Y or better, you\'re in a strong position. What do you need to get there?\"'},
+         ],
+         hint:'💡 Name the anchor → deadline → "What do you need?"'},
+        {tag:'EXPIRED LISTING', name:'The Second Chance', label:'Label + Reframe', desc:'Seller gave up after listing with another agent. One shot to re-frame.',
+         approach:'Don\'t trash the last agent — that\'s expected. Label their disappointment and reframe the market. Show where the strategy broke, not who broke it.',
+         script:[
+            {who:'You', line:'\"That must have been frustrating — putting in months of effort with no result. I can\'t imagine how that felt.\"'},
+            {who:'You', line:'\"The last strategy didn\'t work. That doesn\'t mean the house can\'t sell — it means the approach needs to change.\"'},
+            {who:'You', line:'\"Here\'s exactly what I\'d do differently, and why. [Show data, not opinion.] Does that make sense?\"'},
+         ],
+         hint:'💡 Validate → reframe → data-driven new plan'}
     ]
 };
 
@@ -1410,7 +1578,8 @@ function renderModeCards(mode){
     grid.innerHTML = cards.map((c,i) => `
         <div class="mode-card" onclick="showModeScenario('${mode}',${i})" style="animation-delay:${i*0.08}s;">
             <span class="mc-tag">${c.tag}</span>
-            <div class="mc-name">${c.name}</div>
+            <div class="mc-name" style="font-size:15px;">${c.name}</div>
+            <div style="font-size:10px;color:var(--accent);font-weight:700;margin-bottom:4px;">${c.label}</div>
             <div class="mc-desc">${c.desc}</div>
             <div class="mc-hint">TAP FOR SCRIPT →</div>
         </div>
@@ -1420,7 +1589,21 @@ function renderModeCards(mode){
 function showModeScenario(mode, idx){
     const box = document.getElementById('scenario-'+mode);
     const c = (MODE_CARDS[mode]||[])[idx]; if(!c) return;
-    box.innerHTML = `<span class="ms-label">${c.tag} :: ${c.name}</span>${c.hint}`;
+    const modeColors = {haggle:'#ff5ea8',friend:'#66bb6a',boss:'#ff3b3b'};
+    const color = modeColors[mode] || '#d4a853';
+    const scriptHtml = c.script ? c.script.map(s =>
+        `<div class="ms-script"><span class="say">${s.who}:</span> ${s.line}</div>`
+    ).join('') : `<div class="ms-script">${c.hint}</div>`;
+    box.innerHTML = `
+        <span class="ms-badge" style="background:${color}20;color:${color};border:1px solid ${color}40;">${c.tag}</span>
+        <div class="ms-title">${c.name}</div>
+        <div class="ms-tagline">${c.desc}</div>
+        <div class="ms-section-label">🎯 TACTIC: ${c.label}</div>
+        <div class="ms-approach">${c.approach}</div>
+        <div class="ms-section-label">📝 SCRIPT</div>
+        ${scriptHtml}
+        <button class="ms-close" onclick="this.parentElement.classList.remove('open')">✕ Close</button>
+    `;
     box.classList.remove('open'); void box.offsetWidth; box.classList.add('open');
 }
 
@@ -1928,18 +2111,27 @@ function closeEmotion(){
     document.querySelectorAll('.wheel-emotion-slice').forEach(p=>p.classList.remove('active-slice'));
     const wg=document.querySelector('#wheelGroup');
     if(wg){wg.classList.remove('has-selection');wg.classList.remove('focus-mode');}
+    const wrap=document.querySelector('.wheel-canvas-wrap');
+    if(wrap) wrap.classList.remove('focus-mode');
     const fbtn=document.getElementById('focusBtn');if(fbtn)fbtn.textContent='\u{1F441} Focus';
+    document.getElementById('focusHint').classList.remove('show');
 }
 function toggleFocus(){
     const wg=document.querySelector('#wheelGroup');
-    if(!wg) return;
+    const wrap=document.querySelector('.wheel-canvas-wrap');
+    if(!wg||!wrap) return;
     const btn=document.getElementById('focusBtn');
+    const hint=document.getElementById('focusHint');
     if(wg.classList.contains('focus-mode')){
         wg.classList.remove('focus-mode');
+        wrap.classList.remove('focus-mode');
         if(btn) btn.textContent='\u{1F441} Focus';
+        if(hint) hint.classList.remove('show');
     } else {
         wg.classList.add('focus-mode');
+        wrap.classList.add('focus-mode');
         if(btn) btn.textContent='\u{1F441} Focus ON';
+        if(hint) hint.classList.add('show');
     }
 }
 
