@@ -127,7 +127,7 @@
             position: relative; z-index: 5;
             display: none; animation: fade-up 0.35s ease;
         }
-        .view-container.active { display: block; flex: 1; }
+        .view-container.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
         @keyframes fade-up { 0%{opacity:0;transform:translateY(12px)} 100%{opacity:1;transform:translateY(0)} }
 
         /* ─── 90's Mode Effects ─── */
