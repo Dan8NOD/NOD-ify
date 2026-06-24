@@ -1763,6 +1763,8 @@ let state = {
     currentView: 'tools',
     lastUsedEmotion: null,
     currentMode: null,
+    stairMode: null, // ponytail: stage index when stair-filtered (0-3 for GET INFO/EMPATHY/TRUST/COLLAB)
+};
 };
 
 function freshId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
@@ -2263,6 +2265,8 @@ function renderStair(){
     }, 80);
 }
 
+const STAIR_STAGE_CATS = ['Information','Rapport','Rapport','Closure']; // ponytail: stage 0=INFO tools, 1=EMPATHY/Rapport, 2=TRUST/Rapport, 3=COLLAB/Closure
+
 function toggleStage(i){
     SFX.click();
     const desc = document.getElementById(`stageDesc-${i}`);
@@ -2270,7 +2274,16 @@ function toggleStage(i){
     const wasOpen = desc.classList.contains('open');
     document.querySelectorAll('.stage-card').forEach(c=>c.classList.remove('active-stage'));
     document.querySelectorAll('.stage-desc').forEach(d=>d.classList.remove('open'));
-    if(!wasOpen){ desc.classList.add('open'); card.classList.add('active-stage'); }
+    if(!wasOpen){ 
+        desc.classList.add('open'); 
+        card.classList.add('active-stage'); 
+        // ponytail: switch to tools view, filter by stage
+        state.stairMode = i;
+        state.activeFilter = STAIR_STAGE_CATS[i];
+        switchView('tools', document.querySelector('.nav-tab'));
+    } else {
+        state.stairMode = null;
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════
