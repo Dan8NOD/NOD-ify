@@ -127,7 +127,7 @@
             position: relative; z-index: 5;
             display: none; animation: fade-up 0.35s ease;
         }
-        .view-container.active { display: block; }
+        .view-container.active { display: block; flex: 1; }
         @keyframes fade-up { 0%{opacity:0;transform:translateY(12px)} 100%{opacity:1;transform:translateY(0)} }
 
         /* ─── 90's Mode Effects ─── */
@@ -1047,8 +1047,8 @@
                     .mode-card .mc-name { font-size: 14px; }
                     .mode-card .mc-desc { font-size: 11px; }
                     .mode-card .mc-hint { font-size: 9px; }
-                    .mode-grid { gap: 10px; }
-                    .mode-wrap { padding: 0; }
+                    .mode-grid { gap: 10px; flex: 1; align-content: start; }
+                    .mode-wrap { padding: 0; flex: 1; display: flex; flex-direction: column; }
                     .mode-header h2 { font-size: 16px; }
                     .mode-header p { font-size: 11px; }
                     .mode-toolbar .btn { font-size: 9px; padding: 6px 12px; }
