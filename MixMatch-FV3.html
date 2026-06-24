@@ -1022,6 +1022,82 @@
             text-align:center; padding:16px;
         }
 
+        /* ─── Mode overlays — BK, Haggle, Friend, Boss ─── */
+        .bk-mode::before, .hg-mode::before, .fr-mode::before, .bo-mode::before {
+            content:''; position:fixed; inset:0;
+            pointer-events:none; z-index:1;
+        }
+        .bk-mode::before { background:radial-gradient(ellipse at center, rgba(30,90,58,0.25) 0%, rgba(20,69,44,0.4) 100%); }
+        .hg-mode::before { background:radial-gradient(ellipse at center, rgba(200,50,80,0.2) 0%, rgba(80,10,30,0.35) 100%); }
+        .fr-mode::before { background:radial-gradient(ellipse at center, rgba(102,187,106,0.2) 0%, rgba(30,80,30,0.35) 100%); }
+        .bo-mode::before { background:radial-gradient(ellipse at center, rgba(200,30,30,0.2) 0%, rgba(60,10,10,0.35) 100%); }
+        .bk-mode .view-container.active, .hg-mode .view-container.active,
+        .fr-mode .view-container.active, .bo-mode .view-container.active { position:relative; z-index:2; }
+        .bk-mode .table-surface::after {
+            content:'\u{1F94A} BARE KNUCKLE'; position:fixed; bottom:8px; left:50%;
+            transform:translateX(-50%); font-size:10px; font-weight:800;
+            color:rgba(255,255,255,0.06); letter-spacing:4px; text-transform:uppercase;
+            pointer-events:none; z-index:0;
+        }
+        .hg-mode .table-surface::after {
+            content:'\u{1F4B0} HAGGLE'; position:fixed; bottom:8px; left:50%;
+            transform:translateX(-50%); font-size:10px; font-weight:800;
+            color:rgba(255,255,255,0.06); letter-spacing:4px; text-transform:uppercase;
+            pointer-events:none; z-index:0;
+        }
+        .fr-mode .table-surface::after {
+            content:'\u{1F91D} CONNECTION'; position:fixed; bottom:8px; left:50%;
+            transform:translateX(-50%); font-size:10px; font-weight:800;
+            color:rgba(255,255,255,0.06); letter-spacing:4px; text-transform:uppercase;
+            pointer-events:none; z-index:0;
+        }
+        .bo-mode .table-surface::after {
+            content:'\u{1F451} BOSS'; position:fixed; bottom:8px; left:50%;
+            transform:translateX(-50%); font-size:10px; font-weight:800;
+            color:rgba(255,255,255,0.06); letter-spacing:4px; text-transform:uppercase;
+            pointer-events:none; z-index:0;
+        }
+
+        /* ─── Toast ─── */
+        .toast {
+            position:fixed; bottom:60px; left:50%; transform:translateX(-50%);
+            padding:10px 20px; border-radius:10px;
+            background:rgba(0,0,0,0.85); color:#fff; font-size:13px; font-weight:600;
+            border:1px solid var(--accent); box-shadow:0 4px 20px rgba(0,0,0,0.4);
+            z-index:999; animation:toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            max-width:90%; text-align:center;
+        }
+        @keyframes toast-in { 0%{opacity:0;transform:translateX(-50%) translateY(20px)} 100%{opacity:1;transform:translateX(-50%) translateY(0)} }
+
+        /* ─── BK detail modal ─── */
+        .bk-modal {
+            display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,0.75); backdrop-filter:blur(4px);
+            z-index:1000; align-items:center; justify-content:center;
+            padding:20px;
+        }
+        .bk-modal.open { display:flex; }
+        .bk-modal-content {
+            background:#1a1a2e; border-radius:14px; padding:28px;
+            width:100%; max-width:460px; max-height:85vh; overflow-y:auto;
+            border:1px solid rgba(255,255,255,0.1);
+        }
+        .bk-modal-content .bk-name { font-size:22px; font-weight:800; color:#fff; margin-bottom:2px; }
+        .bk-modal-content .bk-cat { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--accent); margin-bottom:12px; }
+        .bk-modal-content .bk-section { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:rgba(255,255,255,0.4); margin:10px 0 4px; font-weight:700; }
+        .bk-modal-content .bk-desc { font-size:14px; line-height:1.6; color:rgba(255,255,255,0.8); }
+        .bk-modal-content .bk-why { font-size:13px; line-height:1.5; color:rgba(255,255,255,0.7); padding:8px 12px; background:rgba(255,255,255,0.04); border-radius:8px; }
+        .bk-modal-content .bk-examples { display:flex; flex-direction:column; gap:3px; }
+        .bk-modal-content .bk-examples li { font-size:13px; color:var(--accent); font-family:monospace; line-height:1.5; }
+        .bk-modal-content .bk-mistakes { display:flex; flex-direction:column; gap:2px; }
+        .bk-modal-content .bk-mistakes li { font-size:12px; color:var(--red); opacity:0.85; }
+        .bk-modal-content .bk-reminder { padding:8px 12px; background:rgba(212,168,83,0.1); border-radius:8px; border-left:3px solid var(--accent); font-size:13px; color:#fff; margin-top:8px; }
+        .bk-modal-content .bk-close { margin-top:14px; padding:8px 20px; border:none; border-radius:8px; background:var(--accent); color:#1a1a2e; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; }
+        @media(max-width:480px){
+            .bk-modal-content { padding:20px 16px; border-radius:12px; }
+            .bk-modal-content .bk-name { font-size:18px; }
+        }
+
         @media (max-width: 768px) {
                     .table-surface { padding: 8px 6px; border-width: 4px; }
                     .header { flex-wrap: wrap; gap: 6px; padding: 4px 0 6px; }
@@ -1163,6 +1239,10 @@
                     <button class="btn btn-ghost btn-sm" id="stopBtn" onclick="stopSession()" style="display:none;color:var(--red);">⏹ Stop</button>
                     <button class="btn btn-ghost btn-sm" onclick="resetSession()">↺ Reset</button>
                     <button class="btn btn-ghost btn-sm" onclick="shuffleTools()">🔀 Shuffle</button>
+                    <button class="btn btn-ghost btn-sm mode-btn" id="bkBtn" onclick="toggleMode('bk')" style="border-color:#43a047;color:#43a047;">🥊 BK OFF</button>
+                    <button class="btn btn-ghost btn-sm mode-btn" id="hglBtn" onclick="toggleMode('hgl')" style="border-color:#ff5ea8;color:#ff5ea8;">💰 HG OFF</button>
+                    <button class="btn btn-ghost btn-sm mode-btn" id="frdBtn" onclick="toggleMode('frd')" style="border-color:#66bb6a;color:#66bb6a;">🤝 FR OFF</button>
+                    <button class="btn btn-ghost btn-sm mode-btn" id="bosBtn" onclick="toggleMode('bos')" style="border-color:#ff3b3b;color:#ff3b3b;">👔 BO OFF</button>
             <div class="timer-display">
                 <span class="timer-label">Timer</span>
                 <input type="number" id="durationInput" value="10" min="1" max="120">
@@ -1357,6 +1437,25 @@
         <button class="dc-close" onclick="closeDetail()">Close</button>
     </div>
 </div>
+
+<!-- BK detail modal -->
+<div class="bk-modal" id="bkModal">
+    <div class="bk-modal-content">
+        <div class="bk-name" id="bkName"></div>
+        <div class="bk-cat" id="bkCat"></div>
+        <div class="bk-section">&#128221; Description</div>
+        <div class="bk-desc" id="bkDesc"></div>
+        <div class="bk-section">&#129504; Why It Works</div>
+        <div class="bk-why" id="bkWhy"></div>
+        <div class="bk-section">&#128220; Examples</div>
+        <ol class="bk-examples" id="bkExamples"></ol>
+        <div class="bk-section">&#10060; Common Mistakes</div>
+        <ol class="bk-mistakes" id="bkMistakes"></ol>
+        <div class="bk-reminder" id="bkReminder"></div>
+        <button class="bk-close" onclick="closeBkModal()">Close</button>
+    </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════════════════════════════════
 // TOOLS DATA
@@ -1482,6 +1581,86 @@ const EMOTIONS = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════════
+// MODE TOOLS — focused tool sets per mode
+// ═══════════════════════════════════════════════════════════════════════
+const BK_TOOLS = [
+    {name:'Labels',desc:'Identify emotions, concerns, beliefs, or perceptions.',
+     why:'Naming emotions diffuses them and builds rapport. It shows you are listening on a deeper level.',
+     examples:['"It sounds like…"','"It seems like…"','"It looks like…"','"It feels like…"','"It appears that…"','"It sounds frustrating…"','"It sounds important…"','"It sounds like you\'re concerned…"','"It seems like that\'s been difficult…"'],
+     mistakes:['Do not say "I understand"','Focus on identifying emotions, not fixing them','Don\'t guess — observe and name what you hear'],
+     reminder:'Stay curious. Name the emotion. Then be quiet. Let them confirm.',
+     cat:'Rapport',count:2},
+    {name:'Vision Labels',desc:'Labels aimed at future concerns, goals, fears, or outcomes.',
+     why:'Future-focused labels address unspoken worries before they become objections.',
+     examples:['"It sounds like reliability is important to you."','"It seems like you\'re trying to avoid surprises."','"It sounds like you want confidence before moving forward."','"It sounds like timing matters here."','"I get the sense that certainty is key for you."'],
+     mistakes:['Don\'t make assumptions — listen first','Tonality matters: calm, curious, non-judgmental','Avoid leading the witness'],
+     reminder:'Label what they want NEXT, not what\'s happening NOW.',
+     cat:'Rapport',count:2},
+    {name:'Mirrors',desc:'Repeat the last 1–3 important words your counterpart says.',
+     why:'Mirroring encourages elaboration. People naturally want to fill the silence after hearing their own words echoed back.',
+     examples:['Them: "The biggest issue is the timeline."  You: "The timeline?"','Them: "We\'ve had bad experiences before."  You: "Bad experiences?"','Them: "This feels risky for our team."  You: "Risky?"'],
+     mistakes:['Don\'t mirror everything — pick key words','Don\'t parrot — repeat only the meaningful phrase','Don\'t break the silence afterward'],
+     reminder:'Mirror → silence. Let them fill the gap.',
+     cat:'Rapport',count:3},
+    {name:'Trigger',desc:'Use words that provoke a reaction — fear, shock, urgency, or past bad experiences.',
+     why:'Triggers break patterned thinking. A well-placed trigger jolts someone out of their script and opens room for real negotiation.',
+     examples:['"Have you considered what happens if this falls apart?"','"Other people in your position have been burned by that."','"I know this might be uncomfortable to hear…"','"What\'s the worst that could happen?"'],
+     mistakes:['Don\'t overuse — one trigger per conversation is enough','Don\'t sound threatening — stay calm and curious','Don\'t trigger without a follow-up (label or question)'],
+     reminder:'One trigger. Then label or ask. Don\'t pile on.',
+     cat:'Emotion',count:2},
+    {name:'Minimal Encouragers',desc:'Small responses that encourage the other person to continue talking.',
+     why:'People reveal more when they feel heard. Minimal encouragers keep them talking without interrupting their flow.',
+     examples:['"Hmm."','"Interesting."','"Go on."','"Tell me more."','"I see."','"Really?"','"And?"','"What happened next?"'],
+     mistakes:['Don\'t overuse — one word is enough','Don\'t make it sound sarcastic','Don\'t interrupt — place between their sentences'],
+     reminder:'Less is more. One word. Then quiet.',
+     cat:'Rapport',count:1},
+    {name:'Calibrated Questions',desc:'Questions that start with What or How — designed to create collaboration.',
+     why:'Calibrated questions give the other person a sense of control while steering the conversation. What/How questions avoid defensiveness.',
+     examples:[{q:'"What makes this important to you?"'},{q:'"What would an ideal outcome look like?"'},{q:'"What concerns you most?"'},{q:'"How am I supposed to do that?"'},{q:'"How would that work?"'},{q:'"How can we solve this together?"'}],
+     mistakes:['Avoid Why questions — they trigger defensiveness','Don\'t ask leading questions','Don\'t ask more than one at a time'],
+     reminder:'What/How only. No Why. No leading.',
+     cat:'Information',count:4},
+    {name:'No-Oriented Questions',desc:'Questions designed to make the other person feel safe by inviting a "no."',
+     why:'People feel safer saying no than yes. A "no" protects their autonomy and opens real dialogue.',
+     examples:['OPEN-ENDED (preferred):','"Would it be ridiculous to explore another option?"','"Is now a bad time to talk?"','"Would it be unreasonable to discuss this?"','"Is it a bad idea to look at alternatives?"','','CLOSED-ENDED (use sparingly):','"Are you against moving forward?"','"Is this not a priority right now?"'],
+     mistakes:['Focus on OPEN-ENDED no-questions — they invite explanation','Closed-ended can feel manipulative','Don\'t sound pushy — genuine curiosity only'],
+     reminder:'Give them a safe "no." Then ask what they CAN say yes to.',
+     cat:'Information',count:3},
+    {name:'Accusation Audit',desc:'List negative thoughts they may have before they say them.',
+     why:'Bringing negatives into the open early defuses them. If you name their fear, they don\'t have to raise it — and they trust you more.',
+     examples:['"You probably think I\'m wasting your time."','"It may seem like I\'m pushing too hard."','"You might feel this is too expensive."','"You may think this isn\'t a good fit."','"It probably seems like I don\'t understand your situation."'],
+     mistakes:['Don\'t skip the real fears — go for the hardest one','Don\'t apologize for the accusation — just name it','Don\'t try to rebut it immediately'],
+     reminder:'Name the elephant in the room first. Then silence. Let them respond.',
+     cat:'Information',count:5},
+    {name:'Summaries',desc:'Summaries demonstrate understanding and help move conversations forward.',
+     why:'A good summary shows you\'ve truly heard them. It builds trust and clarifies next steps. Only deploy twice — once mid-session, once near the end.',
+     examples:['"So far you\'ve told me that timing is important, you\'re concerned about cost, and you\'ve had bad experiences. Because of that, it sounds like you\'re feeling cautious."'],
+     mistakes:['Don\'t summarize more than TWICE per session','Don\'t add your own opinions — just reflect back','Don\'t skip the emotional layer: Facts + Concerns + Emotions'],
+     reminder:'Formula: Facts + Concerns + Emotions. Once mid-session, once near end.',
+     cat:'Closure',count:2},
+    {name:'Tactical Empathy',desc:'Demonstrate understanding without agreeing.',
+     why:'Understanding lowers defenses. People negotiate differently with someone who "gets it." You don\'t have to agree to understand.',
+     examples:['"It sounds like that\'s been frustrating."','"It seems like you\'ve been dealing with this for a while."','"It sounds like you\'ve put a lot of thought into this."'],
+     mistakes:['Don\'t confuse empathy with agreement','Don\'t fake it — genuine curiosity matters','Don\'t follow empathy with a solution — just sit in it'],
+     reminder:'Understand their world. You don\'t have to agree.',
+     cat:'Rapport',count:2},
+    {name:'Dynamic Silence',desc:'After a mirror, label, calibrated question, or summary — remain silent.',
+     why:'Silence creates pressure. The other person will fill it — often with the information you need.',
+     examples:['Mirror → Silence','Label → Silence','Calibrated Question → Silence','Summary → Silence'],
+     mistakes:['Don\'t rush to fill the silence','Don\'t fidget or look away — maintain eye contact','Don\'t cave — 3+ seconds feels long but works'],
+     reminder:'Speak last. The one who talks least wins.',
+     cat:'Rapport',count:2},
+];
+
+// ponytail: generic mode system — BK + Haggle + Friend + Boss
+const MODE_CONFIG = {
+    bk:  { tools:BK_TOOLS, cls:'bk-mode',  label:'\u{1F94A} BK',     color:'#43a047', overlay:'rgba(30,90,58,0.25)', name:'Bare Knuckle' },
+    hgl: { tools:[{name:'Haggle Tactic',desc:'Price war mode — flinch, anchor, fair frame.',cat:'Strategy',count:5}], cls:'hg-mode', label:'\u{1F4B0} HG', color:'#ff5ea8', overlay:'rgba(200,50,80,0.25)', name:'Haggle' },
+    frd: { tools:[{name:'Connection',desc:'Build rapport — mirror, label, validate, empathy.',cat:'Rapport',count:5}], cls:'fr-mode', label:'\u{1F91D} FR', color:'#66bb6a', overlay:'rgba(102,187,106,0.25)', name:'Connection' },
+    bos: { tools:[{name:'Boss Tactic',desc:'Command the room — accusation audit, anchor, reframe.',cat:'Strategy',count:5}], cls:'bo-mode', label:'\u{1F451} BO', color:'#ff3b3b', overlay:'rgba(200,30,30,0.25)', name:'Boss' },
+};
+
+// ═══════════════════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════════════════
 let state = {
@@ -1500,6 +1679,7 @@ let state = {
     sessionLogOpen: false,
     currentView: 'tools',
     lastUsedEmotion: null,
+    currentMode: null,
 };
 
 function freshId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
@@ -1686,7 +1866,8 @@ function renderToolsView(){
 }
 
 function renderCategoryFilters(){
-    const cats = ['All',...new Set(state.tools.map(t=>t.cat))];
+    const toolset = state.currentMode ? MODE_CONFIG[state.currentMode].tools : state.tools;
+    const cats = ['All',...new Set(toolset.map(t=>t.cat))];
     document.getElementById('categoryFilters').innerHTML =
         cats.map(c=>`<button class="cat-pill ${c===state.activeFilter?'active':''}" onclick="setFilter('${c}')">${c}</button>`).join('');
 }
@@ -1694,7 +1875,8 @@ function setFilter(cat){state.activeFilter=cat; renderCards();}
 
 function renderCards(){
     const area = document.getElementById('cardsArea');
-    const filtered = state.activeFilter==='All' ? state.tools : state.tools.filter(t=>t.cat===state.activeFilter);
+    const toolset = state.currentMode ? MODE_CONFIG[state.currentMode].tools : state.tools;
+    const filtered = state.activeFilter==='All' ? toolset : toolset.filter(t=>t.cat===state.activeFilter);
     if(!filtered.length){
         area.innerHTML='<div class="empty-state"><div style="font-size:48px;opacity:0.3;margin-bottom:10px;">&#128220;</div><h3>No tools in this category</h3></div>';
         area._cache = null;
@@ -1778,7 +1960,8 @@ document.addEventListener('click', function(e) {
 
 function buildDeck(){
     state.currentDeck=[];
-    state.tools.forEach(t=>{for(let i=0;i<t.count;i++)state.currentDeck.push({...t})});
+    const toolset = state.currentMode ? MODE_CONFIG[state.currentMode].tools : state.tools;
+    toolset.forEach(t=>{for(let i=0;i<t.count;i++)state.currentDeck.push({...t})});
     shuffleArray(state.currentDeck);
 }
 // ═══════════════════════════════════════════════════════════════════════
@@ -1928,6 +2111,12 @@ function updateTimerDisplay(ms){
 function onCardClick(name){
     const tool=state.tools.find(t=>t.name===name);
     if(!tool) return;
+    // If in a mode, show the BK detail modal instead
+    if(state.currentMode && MODE_CONFIG[state.currentMode]){
+        const modeTools = MODE_CONFIG[state.currentMode].tools;
+        const mt = modeTools.find(t=>t.name===name);
+        if(mt && mt.why && mt.examples){ showBkDetail(mt); return; }
+    }
     document.getElementById('dcName').textContent=tool.name;
     document.getElementById('dcCat').textContent=tool.cat;
     document.getElementById('dcDesc').textContent=tool.desc;
@@ -2327,6 +2516,79 @@ function generateLabels(){
     for(let i=0; i<count; i++) labels.push(makeLabel());
     renderLabels(labels);
 }
+
+// ═══════════════════════════════════════════════════════════════════════
+// MODE TOGGLES — BK, Haggle, Friend, Boss
+// ═══════════════════════════════════════════════════════════════════════
+function toast(msg){
+    const existing = document.querySelector('.toast');
+    if(existing) existing.remove();
+    const el = document.createElement('div');
+    el.className = 'toast'; el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity 0.3s'; setTimeout(()=>el.remove(),350); }, 3000);
+}
+
+function toggleMode(mode){
+    if(state.currentMode === mode){ state.currentMode = null; applyModeUI(); return; }
+    state.currentMode = mode;
+    applyModeUI();
+}
+
+function applyModeUI(){
+    document.body.classList.remove('bk-mode','hg-mode','fr-mode','bo-mode');
+    document.querySelectorAll('.mode-btn').forEach(b => {
+        b.textContent = b.textContent.replace(/ ON$/, ' OFF');
+        b.style.fontWeight = '400';
+    });
+    if(!state.currentMode){
+        const sb = document.getElementById('statsBar');
+        if(sb){ const eb = sb.querySelector('.mode-badge'); if(eb) eb.remove(); }
+        if(state.sessionActive) stopSession();
+        renderToolsView();
+        return;
+    }
+    const cfg = MODE_CONFIG[state.currentMode];
+    document.body.classList.add(cfg.cls);
+    const btn = document.getElementById(state.currentMode+'Btn');
+    if(btn){ btn.textContent = btn.textContent.replace(/ OFF$/, ' ON'); btn.style.fontWeight = '700'; }
+    if(state.sessionActive) stopSession();
+    renderToolsView();
+    const total = cfg.tools.reduce((s,t)=>s+(t.count||1),0);
+    toast(cfg.label.replace(/ .*$/,'')+' '+cfg.name+' \u2014 '+cfg.tools.length+' tools \u00b7 '+total+' cards \u00b7 Tap any card to learn');
+    const sb = document.getElementById('statsBar');
+    const existing = sb.querySelector('.mode-badge');
+    if(existing) existing.remove();
+    const badge = document.createElement('div');
+    badge.className = 'stat-item mode-badge';
+    badge.style.color = cfg.color;
+    badge.innerHTML = cfg.label.replace(/ .*$/,'')+' '+cfg.name+': <strong style="color:var(--accent);">'+cfg.tools.length+' tools</strong>';
+    sb.appendChild(badge);
+    buildDeck();
+}
+
+function showBkDetail(tool){
+    document.getElementById('bkName').textContent = tool.name;
+    document.getElementById('bkCat').textContent = tool.cat || 'Negotiation';
+    document.getElementById('bkDesc').textContent = tool.desc;
+    document.getElementById('bkWhy').textContent = tool.why || '';
+    const ex = document.getElementById('bkExamples');
+    ex.innerHTML = '';
+    if(tool.examples && tool.examples.length){
+        tool.examples.forEach(e => {
+            if(typeof e === 'string'){ const li=document.createElement('li'); li.textContent=e; ex.appendChild(li); }
+            else if(e.q){ const li=document.createElement('li'); li.textContent=e.q; ex.appendChild(li); }
+        });
+    }
+    const mk = document.getElementById('bkMistakes');
+    mk.innerHTML = '';
+    if(tool.mistakes && tool.mistakes.length){
+        tool.mistakes.forEach(m => { const li=document.createElement('li'); li.textContent=m; mk.appendChild(li); });
+    }
+    document.getElementById('bkReminder').innerHTML = '\u{1F4A1} '+ (tool.reminder || '');
+    document.getElementById('bkModal').classList.add('open');
+}
+function closeBkModal(){ document.getElementById('bkModal').classList.remove('open'); }
 
 // ═══════════════════════════════════════════════════════════════════════
 // UTILITY
