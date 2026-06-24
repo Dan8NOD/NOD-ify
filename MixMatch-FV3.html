@@ -12,6 +12,13 @@
         gtag('js', new Date());
         gtag('config', 'G-XXXXXXXXXX');
     </script>
+    <!-- ponytail: synth audio — no MP3 files needed, Web Audio API generates casino sounds via oscillators -->
+    <script>
+    const SFX={ctx:null,init(){if(!this.ctx){this.ctx=new(window.AudioContext||window.webkitAudioContext)}},tone(f,t=50,v=.08){try{this.init();const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type='sine';o.frequency.setValueAtTime(f,this.ctx.currentTime);g.gain.setValueAtTime(v,this.ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,this.ctx.currentTime+t/1e3);o.connect(g);g.connect(this.ctx.destination);o.start();o.stop(this.ctx.currentTime+t/1e3)}catch(e){}},
+    click(){this.tone(800,50)},coin(){this.tone(1200,80,.1);setTimeout(()=>this.tone(1600,100,.06),80)},spin(){this.tone(600,30,.03);setTimeout(()=>this.tone(700,30,.03),80);setTimeout(()=>this.tone(800,40,.03),160)},
+    ching(){this.tone(1000,60,.08);setTimeout(()=>this.tone(1500,100,.06),70);setTimeout(()=>this.tone(2000,120,.04),140)},
+    };
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Press+Start+2P&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1212,6 +1219,13 @@
                     .view-container { animation: none !important; }
                 }
 
+/* ─── Gold coin burst (casino feel) ─── */
+@keyframes coin-up {0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-120px) scale(0.2)}}
+.coin-burst{position:fixed;pointer-events:none;z-index:9999;width:14px;height:14px;border-radius:50%;
+background:radial-gradient(circle at 35% 35%, #ffd740, #d4a853);
+box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
+.coin-burst::after{content:'$';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#1a1a2e;}
+
 /* ─── Extra-small screens (< 400px) ─── */
 @media (max-width: 399px) {
     .wheel-canvas-wrap svg { max-height: 80vh; }
@@ -1338,8 +1352,11 @@
                        oninput="sliderRotate(this.value)">
                 <span class="rotate-val" id="rotateVal">0&deg;</span>
             </div>
-            <button class="btn btn-ghost btn-sm" onclick="toggleLegend()" style="margin-top: 8px;">&#128196; Show all words</button>
-            <button class="btn btn-ghost btn-sm" id="focusBtn" onclick="toggleFocus()" style="margin-top: 8px; margin-left: 4px;">&#128065; Focus</button>
+            <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
+                <button class="btn btn-ghost btn-sm" onclick="spinWheel()" style="border-color:var(--accent);color:var(--accent);font-weight:700;">&#128259; SPIN!</button>
+                <button class="btn btn-ghost btn-sm" onclick="toggleLegend()">&#128196; Show all words</button>
+                <button class="btn btn-ghost btn-sm" id="focusBtn" onclick="toggleFocus()">&#128065; Focus</button>
+            </div>
             <div class="focus-hint" id="focusHint">Tap any emotion to focus</div>
             <div class="wheel-legend" id="wheelLegend"></div>
             <div class="emotion-detail" id="emotionDetail"></div>
@@ -1723,6 +1740,7 @@ function freshId(){return Date.now().toString(36)+Math.random().toString(36).sli
 // VIEW SWITCHING
 // ═══════════════════════════════════════════════════════════════════════
 function switchView(name,btn){
+    SFX.click();
     document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
     document.querySelectorAll('.view-container').forEach(v=>v.classList.remove('active'));
     if(btn) btn.classList.add('active');
@@ -1863,6 +1881,7 @@ function renderModeCards(mode){
 }
 
 function showModeScenario(mode, idx){
+    SFX.click();coinBurst(6);
     const box = document.getElementById('scenario-'+mode);
     const c = (MODE_CARDS[mode]||[])[idx]; if(!c) return;
     const modeColors = {haggle:'#ff5ea8',friend:'#66bb6a',boss:'#ff3b3b'};
@@ -2144,6 +2163,7 @@ function updateTimerDisplay(ms){
 }
 
 function onCardClick(name){
+    SFX.click();
     const tool=state.tools.find(t=>t.name===name);
     if(!tool) return;
     // If in a mode, show the BK detail modal instead
@@ -2213,6 +2233,7 @@ function renderStair(){
 }
 
 function toggleStage(i){
+    SFX.click();
     const desc = document.getElementById(`stageDesc-${i}`);
     const card = document.getElementById(`stage-${i}`);
     const wasOpen = desc.classList.contains('open');
@@ -2329,6 +2350,29 @@ function updateWheelRotation(){
     if(rv)rv.textContent=Math.round(wheelRotation)+'\u00b0';
 }
 function sliderRotate(val){wheelRotation=parseFloat(val);updateWheelRotation();}
+function spinWheel(){
+    SFX.spin();SFX.spin();SFX.spin();
+    const spins = 3 + Math.floor(Math.random()*2); // 3-4 full revs
+    const target = Math.floor(Math.random()*360);
+    const total = wheelRotation + (spins*360) + target;
+    const g=document.querySelector('#wheelGroup');
+    if(g){g.style.transition='transform 2.5s cubic-bezier(0.07,0.8,0.16,1)';g.setAttribute('transform',`rotate(${total},250,250)`);}
+    const s=document.getElementById('wheelSlider');if(s)s.value=0;
+    wheelRotation = total;
+    setTimeout(()=>{if(g)g.style.transition='transform 0.6s cubic-bezier(0.34,1.56,0.64,1)';coinBurst(10);SFX.ching();},2600);
+}
+function coinBurst(n=8,x,y){
+    const body=document.body;
+    for(let i=0;i<n;i++){
+        const el=document.createElement('div');el.className='coin-burst';
+        const rx=(x||window.innerWidth/2)+(Math.random()-0.5)*160;
+        const ry=(y||window.innerHeight/2)+(Math.random()-0.5)*80;
+        const dx=(Math.random()-0.5)*70,dy=-60-Math.random()*80;
+        el.style.cssText=`left:${rx}px;top:${ry}px;animation:coin-up ${.5+Math.random()*.4}s cubic-bezier(.34,1.56,.64,1) forwards;--dx:${dx}px;--dy:${dy}px;`;
+        body.appendChild(el);
+        setTimeout(()=>el.remove(),1000);
+    }
+}
 
 function buildLegend(){
     const legend=document.getElementById('wheelLegend');
@@ -2546,6 +2590,7 @@ function renderLabels(labels){
 }
 
 function generateLabels(){
+    SFX.ching();coinBurst(6);
     const count = 2;
     const labels = [];
     for(let i=0; i<count; i++) labels.push(makeLabel());
@@ -2565,6 +2610,7 @@ function toast(msg){
 }
 
 function toggleMode(mode){
+    SFX.coin();
     if(state.currentMode === mode){ state.currentMode = null; applyModeUI(); return; }
     state.currentMode = mode;
     // ponytail: only bk mode exists now
@@ -2623,6 +2669,19 @@ function renderBkMiniWheel(){
 }
 
 function bkNextLabel(){
+    // ponytail: slot-machine reel — cycle 4 fake emotions before landing
+    const card=document.getElementById('bkLabelCard');
+    const fakeEmotions=['ANGER','DISGUST','SAD','HAPPY','SURPRISE','FEAR','GUILT','SHAME','JOY','TRUST'];
+    for(let f=0;f<5;f++){
+        ((delay)=>{
+            setTimeout(()=>{
+                const fake=fakeEmotions[Math.floor(Math.random()*fakeEmotions.length)];
+                document.getElementById('bkLabelPhrase').textContent=`It seems like you're feeling ${fake.toLowerCase()}…`;
+                document.getElementById('bkLabelSource').textContent=`— ${fake}`;
+            },delay);
+        })(f*80);
+    }
+    setTimeout(()=>{
     const em = pickEmotion();
     const patterns = [
         'It seems like you\'re feeling ',
@@ -2638,6 +2697,8 @@ function bkNextLabel(){
     document.getElementById('bkLabelCard').style.animation = 'none';
     void document.getElementById('bkLabelCard').offsetWidth;
     document.getElementById('bkLabelCard').style.animation = 'label-pop 0.35s cubic-bezier(0.34,1.56,0.64,1)';
+        SFX.ching();coinBurst(8);
+    },550);
 }
 
 function showBkDetail(tool){
