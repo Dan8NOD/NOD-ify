@@ -6,6 +6,7 @@
     <title>NOD-ify — MixMatch FV8</title>
     <!-- ponytail: issue #30 — GA4 placeholder, replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
@@ -1296,6 +1297,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <button class="nav-tab" onclick="switchView('friend',this)" style="color:#66bb6a;">&#129309; Friend</button>
         <button class="nav-tab" onclick="switchView('boss',this)" style="color:#ff3b3b;">&#128081; Boss</button>
         <button class="nav-tab" onclick="switchView('mediator',this)" style="color:#64b5f6;">&#9878;&#65039; Mediator</button>
+        <button class="nav-tab" onclick="switchView('graphics',this)" style="color:#c9a96e;">&#128196; Graphics</button>
     </div>
 
     <!-- ██ VIEW: Tools ██ -->
@@ -1495,6 +1497,25 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
             </div>
             <div class="mode-scenario" id="scenario-mediator"></div>
             <div class="mode-grid" id="grid-mediator"></div>
+        </div>
+    </div>
+
+    <!-- ██ VIEW: Graphics ██ -->
+    <div class="view-container" id="view-graphics">
+        <div class="mode-wrap">
+            <div class="mode-header">
+                <h2>📄 NOD Academy Graphics</h2>
+                <p>Level 1 tactical reference cards — Ch 1-4: Awareness, BATNA, Empathy, Listening.</p>
+            </div>
+            <div id="graphics-viewer" style="max-width:800px;margin:20px auto;">
+                <div style="text-align:center;margin-bottom:10px;">
+                    <button class="btn" onclick="gfxPrevPage()">◀ Prev</button>
+                    <span id="gfx-page-num" style="color:var(--accent);font-weight:600;margin:0 12px;">1</span> / <span id="gfx-page-count">9</span>
+                    <button class="btn" onclick="gfxNextPage()">Next ▶</button>
+                </div>
+                <canvas id="gfx-canvas" style="width:100%;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.5);background:#fff;"></canvas>
+                <p style="color:#888;font-size:11px;text-align:center;margin-top:8px;">NOD Academy Tactical Reference Graphics</p>
+            </div>
         </div>
     </div>
 
@@ -2979,6 +3000,16 @@ renderToolsView();
     wireAll();
     new MutationObserver(wireAll).observe(document.body,{childList:true,subtree:true});
 })();
+
+// ponytail: graphics tab PDF viewer
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let gfxPdfDoc=null,gfxPageNum=1;
+async function gfxLoad(){if(gfxPdfDoc)return;gfxPdfDoc=await pdfjsLib.getDocument('nod_academy_graphics.pdf').promise;document.getElementById('gfx-page-count').textContent=gfxPdfDoc.numPages;gfxRenderPage();}
+async function gfxRenderPage(){if(!gfxPdfDoc)return;const page=await gfxPdfDoc.getPage(gfxPageNum);const canvas=document.getElementById('gfx-canvas');const ctx=canvas.getContext('2d');const vp=page.getViewport({scale:1.5});canvas.width=vp.width;canvas.height=vp.height;await page.render({canvasContext:ctx,viewport:vp}).promise;document.getElementById('gfx-page-num').textContent=gfxPageNum;}
+function gfxPrevPage(){if(gfxPageNum>1){gfxPageNum--;gfxRenderPage();}}
+function gfxNextPage(){if(gfxPdfDoc&&gfxPageNum<gfxPdfDoc.numPages){gfxPageNum++;gfxRenderPage();}}
+// lazy load on tab click
+const origSwitch=switchView;switchView=function(n,b){origSwitch(n,b);if(n==='graphics')gfxLoad();};
 </script>
 <!-- ponytail: issue #28 — QR code to open site on mobile -->
 <div style="text-align:center;padding:12px 0;">
