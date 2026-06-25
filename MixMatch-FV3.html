@@ -209,6 +209,9 @@
         .table-surface[data-feel="boss"] { background: radial-gradient(ellipse at center, #3a1a1a 0%, #0a0505 100%); }
         .table-surface[data-feel="boss"] .mode-header h2 { color: #ff3b3b; text-shadow: 3px 3px 0 #000, 0 0 30px #ff3b3b; }
         .table-surface[data-feel="boss"] .mode-card { border-top-color: #d4a853; }
+        .table-surface[data-feel="mediator"] .mode-card { border-top-color: #64b5f6; }
+        .table-surface[data-feel="mediator"] { background: radial-gradient(ellipse at center, #0d1f2d 0%, #040a0f 100%); }
+        .table-surface[data-feel="mediator"] .mode-header h2 { color: #64b5f6; text-shadow: 3px 3px 0 #000, 0 0 30px #64b5f6; }
 
         .mode-toolbar { display: flex; gap: 8px; justify-content: center; margin: 18px 0; flex-wrap: wrap; }
         .mode-toolbar .btn {
@@ -1292,6 +1295,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <button class="nav-tab" onclick="switchView('haggle',this)" style="color:#ff5ea8;">&#128176; Haggle</button>
         <button class="nav-tab" onclick="switchView('friend',this)" style="color:#66bb6a;">&#129309; Friend</button>
         <button class="nav-tab" onclick="switchView('boss',this)" style="color:#ff3b3b;">&#128081; Boss</button>
+        <button class="nav-tab" onclick="switchView('mediator',this)" style="color:#64b5f6;">&#9878;&#65039; Mediator</button>
     </div>
 
     <!-- ██ VIEW: Tools ██ -->
@@ -1474,6 +1478,23 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
             </div>
             <div class="mode-scenario" id="scenario-boss"></div>
             <div class="mode-grid" id="grid-boss"></div>
+        </div>
+    </div>
+
+    <!-- ██ Mode Transition Overlay ██ -->
+    <!-- ██ VIEW: Mediator Mode ██ -->
+    <div class="view-container" id="view-mediator">
+        <div class="mode-wrap">
+            <div class="mode-header">
+                <h2>⚖️ MEDIATOR MODE</h2>
+                <p>6 scenarios · de-escalate, label, reframe, calibrated Q. Tap a card for the script.</p>
+            </div>
+            <div class="mode-toolbar">
+                <button class="btn" onclick="renderModeCards('mediator')">⇄ SHUFFLE</button>
+                <button class="btn" onclick="document.querySelectorAll('.mode-scenario').forEach(s=>s.classList.remove('open'))">✕ CLEAR</button>
+            </div>
+            <div class="mode-scenario" id="scenario-mediator"></div>
+            <div class="mode-grid" id="grid-mediator"></div>
         </div>
     </div>
 
@@ -1824,7 +1845,7 @@ function switchView(name,btn){
 
     // ponytail: 90s mode feel — swap background, trigger arcade overlay
     const surface = document.querySelector('.table-surface');
-    const feels = {haggle:'haggle',friend:'friend',boss:'boss'};
+    const feels = {haggle:'haggle',friend:'friend',boss:'boss',mediator:'mediator'};
     if(feels[name]){ surface.setAttribute('data-feel', feels[name]); triggerModeTransition(name); }
     else { surface.removeAttribute('data-feel'); }
 
@@ -1837,7 +1858,8 @@ function triggerModeTransition(mode){
     const titles = {
         haggle:['HAGGLE MODE','💰 PRICE WAR'],
         friend:['FRIEND MODE','🤝 BUILD THE BOND'],
-        boss:['BOSS MODE','👔 COMMAND THE ROOM']
+        boss:['BOSS MODE','👔 COMMAND THE ROOM'],
+        mediator:['MEDIATOR MODE','⚖️ HOLD THE PEACE'],
     };
     const ov = document.getElementById('modeTransition');
     const t = titles[mode]; if(!t) return;
@@ -1853,51 +1875,61 @@ function triggerModeTransition(mode){
 // ponytail: 90s arcade negotiation scenarios per mode
 const MODE_CARDS = {
     haggle: [
-        {tag:'LANDLORD', name:'The Rent Hike', label:'Flinch + Anchor', desc:'Tenant pushes back on $200 increase. Flinch at their reaction, then anchor on comps.',
-         approach:'Flinch first to reset their expectations, then drop an anchored price backed by market data. Let them feel heard before you move the frame.',
+        // ponytail: no-rapport haggle — Ackerman, 3 ways of no, calibrated Q, labels, guilt trip, getting more
+        {tag:'COLD OPENER', name:'The Ackerman Ladder', label:'Ackerman Model', desc:'No small talk. They want a number. Give one designed to move — not your real ceiling.',
+         approach:'Start at 65% of your target. Each counter goes 85→95→odd final. Shrinking steps signal you\'re at your ceiling without saying it.',
          script:[
-            {who:'You', line:'\"I hear you — $200 stings. Let me show you what the comps say.\"'},
-            {who:'You', line:'[Pause. Pull up 3 comparable units.] \"Every renovated 2-bed in this radius is listing at $1,895+. Yours is still $150 under market.\"'},
-            {who:'You', line:'\"I want this to feel fair. What number works so we both walk away good?\"'},
+            {who:'You', line:'"Here\'s where I\'m at: [65% number]. That\'s what works for me right now."'},
+            {who:'You', line:'[They counter.] "I hear you. I can move to [85%]. That\'s a real stretch for me."'},
+            {who:'You', line:'"Last move: [$4,953 — odd number]. That\'s every dollar I have. Take it or tell me why it doesn\'t work."'},
          ],
-         tools:['Bargaining Chip','Bracket','Fairness Framing'],
-         hint:'💡 Flinch → comps → fairness frame'},
-        {tag:'TENANT', name:'The Move-Out Bluff', label:'Accusation Audit + Calibrated Q', desc:'Tenant threatens to leave over rent. You know they have no deposit budget.',
-         approach:'Call out the threat before they can use it. Use a calibrated question to make them solve their own move-out math.',
+         tools:['Ackerman Model','Bargaining Chip','Deadline Pressure'],
+         hint:'💡 65→85→95→odd final. Odd number = signals you did the math'},
+        {tag:'THEY WON\'T BUDGE', name:'Three Ways of No', label:'No Without Saying No', desc:'You need to say no — but yes is still possible. Don\'t close the door.',
+         approach:'Never say no directly. Question it, reframe it, or make them solve it. Three moves that feel like no but keep the deal alive.',
          script:[
-            {who:'You', line:'\"It probably seems like I don\'t care if you stay or go. That\'s fair — let\'s talk about it.\"'},
-            {who:'You', line:'\"How would you handle a $3,000+ move-out cost with your current savings?\"'},
-            {who:'You', line:'[Let silence work.] \"If we can find a number that works for both of us, you don\'t have to go through that.\"'},
+            {who:'You', line:'"How am I supposed to do that?" [Calibrated Q — forces them to solve YOUR problem]'},
+            {who:'You', line:'"That\'s a real stretch. What can you do on your side to make that work?" [Shift burden]'},
+            {who:'You', line:'"I want to make this work. What would need to change for that number to be possible?" [Reframe]'},
          ],
-         tools:['Calibrated Questions','Dynamic Silence','Label'],
-         hint:'💡 Accusation audit → calibrated Q → silence'},
-        {tag:'BUYER AGENT', name:'The Inspection Walk-Back', label:'Fairness Frame + Receipts', desc:'Buyer wants $10k credit for $2k in actual repairs.',
-         approach:'Frame around fairness backed by real numbers. Hand them the receipts — hard data derails emotional anchoring.',
+         tools:['Calibrated Questions','Dynamic Silence','Fairness Framing'],
+         hint:'💡 How/What only. Never Why. Never a flat no.'},
+        {tag:'GUILT TRIP', name:'The Sympathy Play', label:'Label + Getting More', desc:'They\'re using guilt or emotion to get a better deal. Acknowledge it, don\'t absorb it.',
+         approach:'Label the guilt play without accepting it. Then use a "getting more" move — ask what else is on the table before you give anything.',
          script:[
-            {who:'You', line:'\"I want you to walk away thinking you got a fair deal. Here are the actual licensed contractor quotes.\"'},
-            {who:'You', line:'[Show receipts.] \"Total wear-and-tear comes to $2,180. I\'m happy to credit that. The $10k ask doesn\'t match what\'s on paper.\"'},
-            {who:'You', line:'\"Help me find the number that feels right based on the facts, not the feelings.\"'},
+            {who:'Them', line:'"I\'ve been a loyal customer for years and this is how you treat me?"'},
+            {who:'You', line:'"It sounds like you feel undervalued. That matters to me. Tell me more."'},
+            {who:'You', line:'"Before I move on price — is there anything else we haven\'t put on the table yet?"'},
          ],
-         tools:['Fairness Framing','\"That\'s Right\" Trigger','Summary'],
-         hint:'💡 Fairness frame → receipts → partner not opponent'},
-        {tag:'SELLER', name:'The Net Sheet Shock', label:'Label + \"That\'s Right\" Summary', desc:'Seller sees the net and demands $50k more. Emotional, not rational.',
-         approach:'Label the feeling first — don\'t fight the number, fight the emotion. Then summarize their world until they say \"That\'s right.\"',
+         tools:['Label','Empathy Statement','Getting More'],
+         hint:'💡 Label the emotion → pause → ask what else is on the table before conceding'},
+        {tag:'HARD ANCHOR', name:'The Extreme Opener', label:'Anchor + Flinch Counter', desc:'They drop an outrageous number first. Don\'t panic. Don\'t counter immediately.',
+         approach:'Flinch visibly, go silent, then label their anchor as extreme before countering. Countering too fast validates their number.',
          script:[
-            {who:'You', line:'\"It sounds like you feel this house is worth more than what the offers are saying. Like the market isn\'t seeing what you see.\"'},
-            {who:'You', line:'\"You\'ve put years of work into this home. Of course it feels like it should be valued higher.\"'},
-            {who:'You', line:'[After they nod/agree.] \"Here\'s what the comps actually sold for in the last 30 days. Let\'s look at this together.\"'},
+            {who:'You', line:'"[Exhale, pause 3 seconds.] That\'s… a lot further than I expected."'},
+            {who:'You', line:'"It sounds like you\'re anchoring high to give yourself room. I respect the move — here\'s mine: [65% counter]."'},
+            {who:'You', line:'"I\'m not going to meet in the middle on this. What would make my number work for you?"'},
          ],
-         tools:['Label','Mirror & Label Combo','Empathy Statement','\"That\'s Right\" Trigger'],
-         hint:'💡 Label → validate → \"That\'s right\"'},
-        {tag:'NO-RAPPORT', name:'The Hostile Counterpart', label:'Ackerman + Use Your Name', desc:'They won\'t engage, won\'t build rapport. You need a deal anyway. Go procedural.',
-         approach:'Skip rapport entirely. Use their name to force attention. Run the Ackerman model cold — it works because it\'s mechanical, not emotional. Frame every move as a choice, not a concession.',
+         tools:['Flinch','Anchor','Calibrated Questions'],
+         hint:'💡 Flinch → silence → label their anchor → counter with your own'},
+        {tag:'STALLED DEAL', name:'The Deadline Trigger', label:'Deadline + Loss Aversion', desc:'Deal stalled, no movement. They\'re comfortable waiting. Make waiting hurt.',
+         approach:'Loss aversion: frame what they lose by waiting, not what they gain by moving. Real or implied deadline creates urgency without pressure tactics.',
          script:[
-            {who:'You', line:'\"[Name], I know you don\'t have time for small talk. Here\'s the number. It\'s fair. Tell me what doesn\'t work.\"'},
-            {who:'You', line:'\"I can\'t go lower than this. How am I supposed to make this work given my constraints?\"'},
-            {who:'You', line:'[After pushback.] \"I hear you. Here\'s what I can do. Take it or let me know your counter. Either way, we\'ll know where we stand.\"'},
+            {who:'You', line:'"I want to be upfront — I have two other conversations happening this week. I\'d prefer to close this with you first."'},
+            {who:'You', line:'"If we don\'t move by [date], I have to take the next option. I don\'t want to do that."'},
+            {who:'You', line:'"What do you need from me to make a decision today?"'},
          ],
-         tools:['Ackerman Model','Loss Aversion','Deadline Pressure','Bargaining Chip'],
-         hint:'💡 Name them → Ackerman → hard frame'},
+         tools:['Deadline Pressure','Loss Aversion','Bargaining Chip'],
+         hint:'💡 What they lose > what they gain. Frame the cost of waiting.'},
+        {tag:'CONCESSION TRAP', name:'Getting More', label:'Getting More + Trade', desc:'They keep asking for more after every yes. Draw the line before the next ask.',
+         approach:'Every concession must cost them something. Trading is non-negotiable — never give without getting. Stop the pattern before it compounds.',
+         script:[
+            {who:'You', line:'"I\'ve moved three times now. If I go further, I need something from your side."'},
+            {who:'You', line:'"What can you give me that offsets this? Not just in price — timeline, terms, something."'},
+            {who:'You', line:'"If the answer is nothing — then we\'re at my number. And I\'m good staying here."'},
+         ],
+         tools:['Trade Concessions','Bargaining Chip','Dynamic Silence'],
+         hint:'💡 Never give without getting. Every yes has a price — collect it.'},
     ],
     friend: [
         // ponytail: Cialdini-based universal befriending situations (not real-estate-specific)
@@ -1975,6 +2007,63 @@ const MODE_CARDS = {
             {who:'You', line:'\"Here\'s exactly what I\'d do differently, and why. [Show data, not opinion.] Does that make sense?\"'},
          ],
          hint:'💡 Validate → reframe → data-driven new plan'}
+    ],
+    mediator: [
+        // ponytail: emotionally charged mediation — de-escalate, label, reframe, calibrated Q
+        {tag:'BLOW-UP', name:'The Temperature Drop', label:'Label + Dynamic Silence', desc:'Someone explodes in the room. Everyone freezes. You need to lower the heat fast.',
+         approach:'Don\'t match the energy or fight it. Name the emotion without judgment. Use silence as a pressure valve — it works faster than words.',
+         script:[
+            {who:'You', line:'"It sounds like this has been building for a long time and today was just too much."'},
+            {who:'You', line:'[Silence. Hold eye contact. Don\'t fill the space.]'},
+            {who:'You', line:'"I hear you. Before we go further — what do you need right now to feel like you can be heard?"'},
+         ],
+         tools:['Label','Dynamic Silence','Empathy Statement'],
+         hint:'💡 Name the emotion → silence → ask what they need, not what they want'},
+        {tag:'TWO SIDES', name:'The Invisible Third', label:'Reframe + Paraphrase', desc:'Two people in conflict, both convinced they\'re right. Neither is listening.',
+         approach:'Don\'t take sides. Reframe them as solving a shared problem instead of fighting each other. Paraphrase each side back until both feel heard.',
+         script:[
+            {who:'You', line:'"Before either of you responds — let me make sure I understand both sides correctly."'},
+            {who:'You', line:'[Paraphrase side A.] "Is that right?" → [Paraphrase side B.] "Is that fair?"'},
+            {who:'You', line:'"So the question isn\'t who\'s right — it\'s how do we fix this going forward. What would that look like?"'},
+         ],
+         tools:['Paraphrase & Summary','Reframing','Calibrated Questions'],
+         hint:'💡 Paraphrase both sides → reframe as shared problem → forward-looking Q'},
+        {tag:'BLAME GAME', name:'The Ownership Shift', label:'Accusation Audit + Calibrated Q', desc:'Everyone is blaming each other. No one is owning anything. You need accountability without war.',
+         approach:'Name all the bad things out loud before they do. It deflates the blame energy. Then use a calibrated question to move toward responsibility.',
+         script:[
+            {who:'You', line:'"I\'m going to name some things that might be uncomfortable. Nobody here is fully blameless in this — including the process."'},
+            {who:'You', line:'"What I\'m hearing is [Side A] felt ignored and [Side B] felt blindsided. Both of those are real."'},
+            {who:'You', line:'"What would each of you need to do differently for this not to happen again?"'},
+         ],
+         tools:['Accusation Audit','Label','Calibrated Questions'],
+         hint:'💡 Pre-empt the blame → validate both pains → calibrated Q for accountability'},
+        {tag:'SILENT PARTY', name:'The Drawn-Out', label:'Mirror + Calibrated Q', desc:'One person has shut down completely. Won\'t engage. The silence is becoming the problem.',
+         approach:'Don\'t push. Mirror the last thing they said or did. Use a "what" question — it\'s impossible to answer with silence without looking childish.',
+         script:[
+            {who:'You', line:'"You\'ve gone quiet. [Mirror:] Quiet?"'},
+            {who:'You', line:'[Silence. Wait 5 full seconds.]'},
+            {who:'You', line:'"What would it take for you to feel like it\'s worth speaking up right now?"'},
+         ],
+         tools:['Mirror','Calibrated Questions','Dynamic Silence'],
+         hint:'💡 Mirror what\'s there → silence → What Q forces engagement'},
+        {tag:'POWER PLAY', name:'The Status Grab', label:'Label + Fairness Frame', desc:'One party is using status or authority to steamroll the other. You need to level the field.',
+         approach:'Label the power dynamic without attacking the person. Use a fairness frame to reanchor everyone to the process, not the pecking order.',
+         script:[
+            {who:'You', line:'"It seems like there\'s a feeling that seniority should settle this. I understand that instinct."'},
+            {who:'You', line:'"In this room, though, the process has to feel fair to everyone — or nothing we agree on will stick."'},
+            {who:'You', line:'"What would a fair process look like from where you\'re each sitting?"'},
+         ],
+         tools:['Label','Fairness Framing','Calibrated Questions'],
+         hint:'💡 Label the power play → fairness anchor → calibrated Q restores process'},
+        {tag:'NEAR AGREEMENT', name:'The Last Mile', label:'Summary + That\'s Right', desc:'You\'re close to resolution but one person keeps reopening old wounds. Help them land.',
+         approach:'Summarize the progress made, not what\'s left. Get them to say "that\'s right" about where they\'ve come from — momentum closes.',
+         script:[
+            {who:'You', line:'"Let me reflect back what I\'ve heard today. You started here — you\'ve both moved here. That\'s significant."'},
+            {who:'You', line:'"[Side A], you agreed to X. [Side B], you agreed to Y. Is that right?"'},
+            {who:'You', line:'"What\'s the one thing left that would let both of you leave today saying this was worth it?"'},
+         ],
+         tools:['Paraphrase & Summary','"That\'s Right" Trigger','Calibrated Questions'],
+         hint:'💡 Summarize the wins → "that\'s right" moment → one final calibrated Q to close'},
     ]
 };
 
@@ -1996,7 +2085,7 @@ function showModeScenario(mode, idx){
     SFX.click();coinBurst(6);
     const box = document.getElementById('scenario-'+mode);
     const c = (MODE_CARDS[mode]||[])[idx]; if(!c) return;
-    const modeColors = {haggle:'#ff5ea8',friend:'#66bb6a',boss:'#ff3b3b'};
+    const modeColors = {haggle:'#ff5ea8',friend:'#66bb6a',boss:'#ff3b3b',mediator:'#64b5f6'};
     const color = modeColors[mode] || '#d4a853';
     const scriptHtml = c.script ? c.script.map(s =>
         `<div class=\"ms-script\"><span class=\"say\">${s.who}:</span> ${s.line}</div>`
