@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
-    <title>NOD-ify — MixMatch FV7.1</title>
+    <title>NOD-ify — MixMatch FV7.2</title>
     <!-- ponytail: issue #30 — GA4 placeholder, replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
@@ -1078,6 +1078,25 @@
         .btn.glow-active { box-shadow:0 0 40px var(--accent-glow), inset 0 0 15px rgba(212,168,83,0.2); animation:btn-glow-pulse 1.2s ease-in-out infinite; transform:translateY(-2px); }
         @keyframes btn-glow-pulse { 0%,100%{box-shadow:0 0 25px var(--accent-glow), inset 0 0 10px rgba(212,168,83,0.1)} 50%{box-shadow:0 0 50px var(--accent-glow), inset 0 0 20px rgba(212,168,83,0.25)} }
 
+        /* ponytail FV7.2: universal button press effect — ALL buttons */
+        .btn { -webkit-tap-highlight-color: transparent; touch-action: manipulation; min-height: 44px; min-width: 44px; }
+        .btn:active { transform: scale(0.93); box-shadow: 0 0 18px var(--accent-glow); transition: transform 0.08s, box-shadow 0.08s; }
+        .btn-primary:active { background: var(--accent); color: #1a1a2e; box-shadow: 0 0 30px var(--accent-glow); }
+        .nav-tab { min-height: 44px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        .nav-tab:active { transform: scale(0.95); background: rgba(212,168,83,0.2); transition: transform 0.08s; }
+        .mode-card:active { transform: scale(0.97) !important; box-shadow: 0 0 20px var(--accent-glow) !important; }
+        .bk-btn-glow:active { transform: scale(0.95); }
+
+        /* ponytail FV7.2: ripple on button tap */
+        .btn-ripple { position: relative; overflow: hidden; }
+        .btn-ripple::after { content:''; position:absolute; border-radius:50%; background:rgba(212,168,83,0.35); width:0; height:0; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); animation:none; pointer-events:none; }
+        .btn-ripple.rippling::after { width:200px; height:200px; animation: btn-ripple-anim 0.4s ease-out forwards; }
+        @keyframes btn-ripple-anim { to { transform:translate(-50%,-50%) scale(1); opacity:0; } }
+
+        /* ponytail FV7.2: credits section */
+        .credit-pill { display:inline-block; padding:6px 14px; border:1px solid rgba(212,168,83,0.25); border-radius:20px; font-size:11px; color:rgba(255,255,255,0.45); background:rgba(212,168,83,0.05); white-space:nowrap; transition: all 0.2s; cursor:default; }
+        .credit-pill:hover { border-color:rgba(212,168,83,0.6); color:rgba(212,168,83,0.8); background:rgba(212,168,83,0.1); }
+
         /* ─── BK panel (wheel + label maker) ─── */
         .bk-panel { display:none; width:100%; max-width:1100px; margin:10px 0; }
         .bk-panel.open { display:block; animation:fade-up 0.3s ease; }
@@ -1255,7 +1274,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
             <div class="logo-icon">N</div>
             <div>
                 <h1>NOD-ify</h1>
-                <span>MixMatch · FV7.1</span>
+                <span>MixMatch · FV7.2</span>
             </div>
         </div>
         <div class="header-controls">
@@ -1431,7 +1450,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>🤝 FRIEND MODE</h2>
-                <p>6 scenarios · Cialdini principles: liking, reciprocity, unity, social proof. Tap a card for the script.</p>
+                <p>6 scenarios · liking, reciprocity, unity, social proof. Tap a card for the script.</p>
             </div>
             <div class="mode-toolbar">
                 <button class="btn" onclick="renderModeCards('friend')">⇄ SHUFFLE</button>
@@ -1883,7 +1902,7 @@ const MODE_CARDS = {
     friend: [
         // ponytail: Cialdini-based universal befriending situations (not real-estate-specific)
         {tag:'FIRST MEETING', name:'The Instant Connection', label:'Liking + Mirroring', desc:'You just met someone. You want them to actually remember you.',
-         approach:'Cialdini: people like people who are like them. Mirror their energy and ask about them — don\'t sell yourself, find the overlap.',
+         People connect with people like them. Mirror their energy and ask about them — don't sell yourself, find the overlap.
          script:[
             {who:'You', line:'"I\'m curious — what made you come to this [event/place/call] today?"'},
             {who:'You', line:'[They answer. Mirror last 2 words back with genuine curiosity.] "[Last 2 words]?"'},
@@ -1891,7 +1910,7 @@ const MODE_CARDS = {
          ],
          hint:'💡 Liking: find overlap fast → they feel seen, not sold to'},
         {tag:'AWKWARD SILENCE', name:'The Dead Air Save', label:'Reciprocity + Vulnerability', desc:'Conversation stalls. You need to restart it without it feeling forced.',
-         approach:'Cialdini: reciprocity kicks in when you give first. Give a small vulnerable truth — they almost always match it.',
+         approach:'Give first. A small vulnerable truth unlocks them — they almost always match your openness.',
          script:[
             {who:'You', line:'"Honest question — do you actually enjoy these [networking events / meetings / parties] or do you just show up because you have to?"'},
             {who:'You', line:'[They laugh or admit the truth. Join them honestly.] "Same. I always tell myself it\'ll be worth it."'},
@@ -1899,7 +1918,7 @@ const MODE_CARDS = {
          ],
          hint:'💡 Reciprocity: give vulnerability first → they open up'},
         {tag:'RECONNECT', name:'The Long-Lost Come Back', label:'Unity + Acknowledgment', desc:'Someone you lost touch with. You want to rebuild the bond without it being weird.',
-         approach:'Cialdini: Unity — shared identity and history. Lead with the shared past before anything new.',
+         approach:'Shared history is the fastest bridge. Lead with the past before anything new.',
          script:[
             {who:'You', line:'"I was thinking about [specific shared memory] the other day and it made me think of you."'},
             {who:'You', line:'"No agenda — I just realized I hadn\'t reached out in too long and wanted to change that."'},
@@ -1907,7 +1926,7 @@ const MODE_CARDS = {
          ],
          hint:'💡 Unity: honor the shared history first → door opens naturally'},
         {tag:'ASK FOR HELP', name:'The Benjamin Franklin Effect', label:'Commitment + Liking', desc:'You need a favor but don\'t want to seem needy or transactional.',
-         approach:'Cialdini: asking someone for a small favor makes them like you MORE — they justify helping by deciding you\'re worth it.',
+         Ask someone for a small favor and they like you MORE — they justify helping by deciding you're worth it.
          script:[
             {who:'You', line:'"You seem like someone who would actually know this — I\'d love your honest take on something."'},
             {who:'You', line:'"[Small specific ask — advice, an intro, a resource.] Five minutes of your brain would save me a week."'},
@@ -1923,7 +1942,7 @@ const MODE_CARDS = {
          ],
          hint:'💡 Accusation audit → label the tension → calibrated Q to close'},
         {tag:'NEW GROUP', name:'The Room Read', label:'Social Proof + Curiosity', desc:'You\'re new to a group (team, event, community). You want in without trying too hard.',
-         approach:'Cialdini: Social Proof — people follow people who seem connected. Ask about the group\'s culture before inserting yourself.',
+         People follow people who seem connected. Ask about the group's culture before inserting yourself.
          script:[
             {who:'You', line:'"How long have you been part of this group? I\'m still figuring out how it works."'},
             {who:'You', line:'[They explain. Affirm one specific thing.] "That\'s actually really cool — I didn\'t expect that."'},
@@ -2851,10 +2870,47 @@ function shuffleArray(arr){
 // INIT
 // ═══════════════════════════════════════════════════════════════════════
 renderToolsView();
+
+// ponytail FV7.2: haptic + ripple on ALL buttons — mobile feel
+(function(){
+    function triggerHaptic(){ if(navigator.vibrate) navigator.vibrate(8); }
+    function addRipple(el){
+        if(el.dataset.rippled) return;
+        el.dataset.rippled='1';
+        el.classList.add('btn-ripple');
+        el.addEventListener('pointerdown', function(){
+            triggerHaptic();
+            el.classList.remove('rippling');
+            void el.offsetWidth;
+            el.classList.add('rippling');
+            setTimeout(()=>el.classList.remove('rippling'), 420);
+        }, {passive:true});
+    }
+    function wireAll(){ document.querySelectorAll('.btn,.nav-tab,.bk-btn-glow,.bk-label-next,.mode-card').forEach(addRipple); }
+    wireAll();
+    new MutationObserver(wireAll).observe(document.body,{childList:true,subtree:true});
+})();
 </script>
 <!-- ponytail: issue #28 — QR code to open site on mobile -->
 <div style="text-align:center;padding:12px 0;">
   <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://nod-ify.com" alt="QR code to nod-ify.com" width="120" height="120" style="border-radius:8px;opacity:0.85;">
+</div>
+
+<!-- ██ CREDITS ██ -->
+<div id="creditsPanel" style="max-width:700px;margin:0 auto 40px;padding:0 16px;">
+  <div style="border-top:1px solid rgba(212,168,83,0.2);padding-top:24px;text-align:center;">
+    <div style="font-size:11px;letter-spacing:3px;color:rgba(212,168,83,0.5);text-transform:uppercase;margin-bottom:16px;">Inspired By</div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
+      <span class="credit-pill">Chris Voss · Never Split the Difference</span>
+      <span class="credit-pill">Derek Gaunt · Ego, Authority, Failure</span>
+      <span class="credit-pill">Jim Camp · Start With No</span>
+      <span class="credit-pill">Robert Cialdini · Influence</span>
+      <span class="credit-pill">Robert Greene · The 48 Laws of Power</span>
+      <span class="credit-pill">The Black Swan Group · Negotiation Through Emotion</span>
+      <span class="credit-pill">Gary Noesner · Stalling for Time</span>
+    </div>
+    <div style="margin-top:18px;font-size:11px;color:rgba(255,255,255,0.2);">NOD-ify · Built by Dan Cruz · © 2026</div>
+  </div>
 </div>
 </body>
 </html><!-- Pages rebuild: 2026-06-23T19:55:23Z -->
