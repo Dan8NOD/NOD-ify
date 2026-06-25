@@ -1472,7 +1472,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>👔 BOSS MODE</h2>
-                <p>3 scenarios · accusation audit, anchor, reframe. Tap a card for the script.</p>
+                <p>3 scenarios · managing up — BATNA, label, reframe, accusation audit. Tap a card for the script.</p>
             </div>
             <div class="mode-toolbar">
                 <button class="btn" onclick="renderModeCards('boss')">⇄ SHUFFLE</button>
@@ -1507,13 +1507,17 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                 <h2>📄 NOD Academy Graphics</h2>
                 <p>Level 1 tactical reference cards — Ch 1-4: Awareness, BATNA, Empathy, Listening.</p>
             </div>
-            <div id="graphics-viewer" style="max-width:800px;margin:20px auto;">
+            <div id="graphics-viewer" style="max-width:800px;margin:20px auto;padding:0 8px;">
                 <div style="text-align:center;margin-bottom:10px;">
                     <button class="btn" onclick="gfxPrevPage()">◀ Prev</button>
                     <span id="gfx-page-num" style="color:var(--accent);font-weight:600;margin:0 12px;">1</span> / <span id="gfx-page-count">9</span>
                     <button class="btn" onclick="gfxNextPage()">Next ▶</button>
                 </div>
-                <canvas id="gfx-canvas" style="width:100%;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.5);background:#fff;"></canvas>
+                <div style="position:relative;width:100%;max-width:100%;overflow:hidden;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.5);">
+                    <canvas id="gfx-canvas" style="width:100%;height:auto;display:block;background:#fff;"></canvas>
+                    <!-- ponytail: cover Black Swan Group text in PDF header -->
+                    <div id="gfx-bs-overlay" style="position:absolute;top:0;left:0;right:0;height:12%;background:var(--bg,#1a1a2e);z-index:2;pointer-events:none;"></div>
+                </div>
                 <p style="color:#888;font-size:11px;text-align:center;margin-top:8px;">NOD Academy Tactical Reference Graphics</p>
             </div>
         </div>
@@ -2004,30 +2008,35 @@ const MODE_CARDS = {
          hint:'💡 Social Proof: let them be the guide → you look curious, not lost'},
     ],
     boss: [
-        {tag:'LISTING PRESENTATION', name:'The Room Takeover', label:'Accusation Audit + Calibrated Q', desc:'3 sellers interviewing you. 15 minutes. Lead with their pain, not your creds.',
-         approach:'Don\'t lead with your resume — they\'ve heard 5 of those today. Lead with what\'s keeping them up at night and they\'ll lean in.',
+        // ponytail: managing-up scenarios using Level 1 tools (Awareness, BATNA, Empathy, Listening)
+        {tag:'THE RAISE', name:'The Salary Conversation', label:'BATNA + Calibrated Q', desc:'Your boss brings up performance review. You want more. They hold the pen. You need leverage without ultimatums.',
+         approach:'Never give your number first — the first anchor to stick, sticks. Know your BATNA (another offer? market data? side income?). Use calibrated questions to make them name the range. Silence after their number does more work than any counter.',
          script:[
-            {who:'You', line:'\"Before I tell you about my track record — what\'s keeping you up at night about this move?\"'},
-            {who:'You', line:'[Listen. Take notes. Mirror what you hear.]'},
-            {who:'You', line:'\"It sounds like you\'re worried about finding the right buyer in this market. How would you know you picked the right agent?\"'},
+            {who:'Boss', line:'\"We value you on the team. We\'re looking at X% for your bracket.\"'},
+            {who:'You', line:'\"I appreciate that. Before we settle on a number — what would it take for this role to be in the top quartile of the market?\"'},
+            {who:'Boss', line:'\"Well, we\'d need to see more consistent deals closed.\"'},
+            {who:'You', line:'\"I closed 14 last year, 3 above quota. What specific metric would make that case?\"'},
          ],
-         hint:'💡 Start with their pain → listen → calibrated Q'},
-        {tag:'OFFER NEGOTIATION', name:'The Multi-Offer Leverage', label:'Anchor + Deadline Pressure', desc:'5 offers. Pick the strongest, anchor high, make others compete.',
-         approach:'Name the strongest offer openly. Give a clear deadline to beat it. Creates urgency without needing to push.',
+         hint:'💡 Know your BATNA → let them anchor → calibrated Q to their constraint'},
+        {tag:'THE OVERLOAD', name:'The Unrealistic Deadline', label:'Label + Reframe', desc:'Your boss just dropped a project with a timeline that doesn\'t add up. Pushback without looking like you can\'t handle it.',
+         approach:'Label their pressure first — it disarms. Then reframe the constraint as a trade-off, not a refusal. \"We can do fast, or we can do thorough. Which matters more here?\" gives them the choice, not you the blame.',
          script:[
-            {who:'You', line:'\"We\'ve got a strong offer at $X with solid terms. It\'s not signed yet — and I wanted to give you a chance to put your best foot forward.\"'},
-            {who:'You', line:'\"We\'re asking for best-and-final by 5pm today. That gives everyone time to sharpen their pencil.\"'},
-            {who:'You', line:'\"If you can come in at $Y or better, you\'re in a strong position. What do you need to get there?\"'},
+            {who:'Boss', line:'\"I need this by Friday. No exceptions.\"'},
+            {who:'You', line:'\"It sounds like there\'s real pressure on this one. I want to deliver something we\'re both proud of.\"'},
+            {who:'You', line:'\"If Friday\'s the hard line — I can hit it if we trim scope A and B. Or I can go deep on all three by next Tuesday. Which serves the goal better?\"'},
+            {who:'Boss', line:'\"Tuesday gives us better quality. Let\'s do that.\"'},
          ],
-         hint:'💡 Name the anchor → deadline → "What do you need?"'},
-        {tag:'EXPIRED LISTING', name:'The Second Chance', label:'Label + Reframe', desc:'Seller gave up after listing with another agent. One shot to re-frame.',
-         approach:'Don\'t trash the last agent — that\'s expected. Label their disappointment and reframe the market. Show where the strategy broke, not who broke it.',
+         hint:'💡 Label their pressure → reframe as trade-off → let them choose'},
+        {tag:'THE CREDIT', name:'The Stolen Spotlight', label:'Accusation Audit + Mirror', desc:'Your boss presented your work as theirs in the meeting. You\'re angry. Reacting in the moment burns the relationship.',
+         approach:'Name the elephant without accusation. \"I noticed my analysis was presented under your name — I\'m guessing that wasn\'t intentional?\" gives them a graceful exit. Mirror their response. Silence after the mirror does the work. Schedule a follow-up, don\'t resolve in the hallway.',
          script:[
-            {who:'You', line:'\"That must have been frustrating — putting in months of effort with no result. I can\'t imagine how that felt.\"'},
-            {who:'You', line:'\"The last strategy didn\'t work. That doesn\'t mean the house can\'t sell — it means the approach needs to change.\"'},
-            {who:'You', line:'\"Here\'s exactly what I\'d do differently, and why. [Show data, not opinion.] Does that make sense?\"'},
+            {who:'You', line:'\"Hey, I wanted to check something from the meeting earlier. My Q3 analysis was presented under your name — I\'m guessing that wasn\'t intentional?\"'},
+            {who:'Boss', line:'\"Oh, I was just summarizing the team\'s work.\"'},
+            {who:'You', line:'\"Summarizing the team\'s work?\"'},
+            {who:'Boss', line:'\"I mean — it was your analysis, yes. I should have credited you. My mistake.\"'},
+            {who:'You', line:'\"I appreciate you saying that. Going forward, I\'d like my name on my deliverables when they go up. Fair?\"'},
          ],
-         hint:'💡 Validate → reframe → data-driven new plan'}
+         hint:'💡 Accusation audit → mirror → propose the new rule'}
     ],
     mediator: [
         // ponytail: emotionally charged mediation — de-escalate, label, reframe, calibrated Q
@@ -3005,7 +3014,7 @@ renderToolsView();
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 let gfxPdfDoc=null,gfxPageNum=1;
 async function gfxLoad(){if(gfxPdfDoc)return;gfxPdfDoc=await pdfjsLib.getDocument('https://dan8nod.github.io/NOD-ify/nod_academy_graphics.pdf').promise;document.getElementById('gfx-page-count').textContent=gfxPdfDoc.numPages;gfxRenderPage();}
-async function gfxRenderPage(){if(!gfxPdfDoc)return;const page=await gfxPdfDoc.getPage(gfxPageNum);const canvas=document.getElementById('gfx-canvas');const ctx=canvas.getContext('2d');const vp=page.getViewport({scale:1.5});canvas.width=vp.width;canvas.height=vp.height;await page.render({canvasContext:ctx,viewport:vp}).promise;document.getElementById('gfx-page-num').textContent=gfxPageNum;}
+async function gfxRenderPage(){if(!gfxPdfDoc)return;const page=await gfxPdfDoc.getPage(gfxPageNum);const canvas=document.getElementById('gfx-canvas');const ctx=canvas.getContext('2d');const vp=page.getViewport({scale:window.innerWidth<600?1:1.5});canvas.width=vp.width;canvas.height=vp.height;await page.render({canvasContext:ctx,viewport:vp}).promise;document.getElementById('gfx-page-num').textContent=gfxPageNum;}
 function gfxPrevPage(){if(gfxPageNum>1){gfxPageNum--;gfxRenderPage();}}
 function gfxNextPage(){if(gfxPdfDoc&&gfxPageNum<gfxPdfDoc.numPages){gfxPageNum++;gfxRenderPage();}}
 // lazy load on tab click
