@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
-    <title>NOD-ify — MixMatch FV7</title>
+    <title>NOD-ify — MixMatch FV7.1</title>
     <!-- ponytail: issue #30 — GA4 placeholder, replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
@@ -1255,7 +1255,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
             <div class="logo-icon">N</div>
             <div>
                 <h1>NOD-ify</h1>
-                <span>MixMatch · FV7</span>
+                <span>MixMatch · FV7.1</span>
             </div>
         </div>
         <div class="header-controls">
@@ -1431,7 +1431,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>🤝 FRIEND MODE</h2>
-                <p>3 scenarios · mirror, label, validate. Tap a card for the script.</p>
+                <p>6 scenarios · Cialdini principles: liking, reciprocity, unity, social proof. Tap a card for the script.</p>
             </div>
             <div class="mode-toolbar">
                 <button class="btn" onclick="renderModeCards('friend')">⇄ SHUFFLE</button>
@@ -1881,30 +1881,55 @@ const MODE_CARDS = {
          hint:'💡 Name them → Ackerman → hard frame'},
     ],
     friend: [
-        {tag:'NEW LEAD', name:'The First Call', label:'Mirror + Accusation Audit', desc:'Cold lead talking to 3 agents. Mirror their fear of being rushed.',
-         approach:'Call out the pressure before they feel it. Mirror their concern back so they know you get it without selling.',
+        // ponytail: Cialdini-based universal befriending situations (not real-estate-specific)
+        {tag:'FIRST MEETING', name:'The Instant Connection', label:'Liking + Mirroring', desc:'You just met someone. You want them to actually remember you.',
+         approach:'Cialdini: people like people who are like them. Mirror their energy and ask about them — don\'t sell yourself, find the overlap.',
          script:[
-            {who:'You', line:'\"It probably seems like I\'m just another agent trying to lock you into a meeting.\"'},
-            {who:'You', line:'\"You\'re talking to a few people. You want to make sure you pick someone who actually listens, not just pitches.\"'},
-            {who:'You', line:'\"I get that. Let\'s skip the pitch. What would you need to hear to know I\'m the right person?\"'},
+            {who:'You', line:'"I\'m curious — what made you come to this [event/place/call] today?"'},
+            {who:'You', line:'[They answer. Mirror last 2 words back with genuine curiosity.] "[Last 2 words]?"'},
+            {who:'You', line:'"That\'s actually exactly how I got into [your connection point]. Small world."'},
          ],
-         hint:'💡 Accusation audit → mirror → open question'},
-        {tag:'TENANT', name:'The Maintenance Complaint', label:'Label + Empathy Statement', desc:'Tenant furious about slow repair. Fix the feeling, not the plumbing.',
-         approach:'The repair is secondary — the feeling of being ignored is primary. Label the frustration before you fix the problem.',
+         hint:'💡 Liking: find overlap fast → they feel seen, not sold to'},
+        {tag:'AWKWARD SILENCE', name:'The Dead Air Save', label:'Reciprocity + Vulnerability', desc:'Conversation stalls. You need to restart it without it feeling forced.',
+         approach:'Cialdini: reciprocity kicks in when you give first. Give a small vulnerable truth — they almost always match it.',
          script:[
-            {who:'You', line:'\"It sounds like you feel completely ignored. That\'s not acceptable, and I\'m sorry that happened.\"'},
-            {who:'You', line:'\"If I were waiting on a repair this long, I\'d be furious too. You have every right to be upset.\"'},
-            {who:'You', line:'\"Here\'s exactly what I\'m going to do right now. [Outline the plan.] I\'ll text you updates personally.\"'},
+            {who:'You', line:'"Honest question — do you actually enjoy these [networking events / meetings / parties] or do you just show up because you have to?"'},
+            {who:'You', line:'[They laugh or admit the truth. Join them honestly.] "Same. I always tell myself it\'ll be worth it."'},
+            {who:'You', line:'"What would make this one worth it for you?"'},
          ],
-         hint:'💡 Label → validate → action plan'},
-        {tag:'CO-BROKER', name:'The Showing Friction', label:'Dynamic Silence + Mirror', desc:'Other agent is difficult about showing times. Build the bond first.',
-         approach:'Stop pushing against the friction. Mirror their energy, use silence to let them fill the gap, then find the real blocker.',
+         hint:'💡 Reciprocity: give vulnerability first → they open up'},
+        {tag:'RECONNECT', name:'The Long-Lost Come Back', label:'Unity + Acknowledgment', desc:'Someone you lost touch with. You want to rebuild the bond without it being weird.',
+         approach:'Cialdini: Unity — shared identity and history. Lead with the shared past before anything new.',
          script:[
-            {who:'You', line:'\"It seems like coordinating showings has been a headache this week.\"'},
-            {who:'You', line:'[Silence. Let them vent.]'},
-            {who:'You', line:'\"What would make your calendar work better? I want to make your life easy here.\"'},
+            {who:'You', line:'"I was thinking about [specific shared memory] the other day and it made me think of you."'},
+            {who:'You', line:'"No agenda — I just realized I hadn\'t reached out in too long and wanted to change that."'},
+            {who:'You', line:'"How\'s [thing they cared about last time you spoke]?"'},
          ],
-         hint:'💡 Mirror → silence → partner frame'}
+         hint:'💡 Unity: honor the shared history first → door opens naturally'},
+        {tag:'ASK FOR HELP', name:'The Benjamin Franklin Effect', label:'Commitment + Liking', desc:'You need a favor but don\'t want to seem needy or transactional.',
+         approach:'Cialdini: asking someone for a small favor makes them like you MORE — they justify helping by deciding you\'re worth it.',
+         script:[
+            {who:'You', line:'"You seem like someone who would actually know this — I\'d love your honest take on something."'},
+            {who:'You', line:'"[Small specific ask — advice, an intro, a resource.] Five minutes of your brain would save me a week."'},
+            {who:'You', line:'"I really appreciate it. If I can ever return the favor — I mean that."'},
+         ],
+         hint:'💡 Franklin Effect: asking = bonding. They like you more after helping you'},
+        {tag:'WIN THEM BACK', name:'The Repair Move', label:'Accusation Audit + Label', desc:'Someone is cold or distant. Something shifted and you don\'t know what.',
+         approach:'Name the tension before trying to fix it. Pretending it\'s not there makes it worse. Naming it releases pressure.',
+         script:[
+            {who:'You', line:'"I might be reading this wrong — but it feels like something shifted between us. I don\'t want to ignore that."'},
+            {who:'You', line:'"If I did something that landed wrong, I want to know. I\'d rather have an awkward conversation than lose the connection."'},
+            {who:'You', line:'"What would make things feel right again?"'},
+         ],
+         hint:'💡 Accusation audit → label the tension → calibrated Q to close'},
+        {tag:'NEW GROUP', name:'The Room Read', label:'Social Proof + Curiosity', desc:'You\'re new to a group (team, event, community). You want in without trying too hard.',
+         approach:'Cialdini: Social Proof — people follow people who seem connected. Ask about the group\'s culture before inserting yourself.',
+         script:[
+            {who:'You', line:'"How long have you been part of this group? I\'m still figuring out how it works."'},
+            {who:'You', line:'[They explain. Affirm one specific thing.] "That\'s actually really cool — I didn\'t expect that."'},
+            {who:'You', line:'"Who here should I definitely talk to? You seem like you know the room."'},
+         ],
+         hint:'💡 Social Proof: let them be the guide → you look curious, not lost'},
     ],
     boss: [
         {tag:'LISTING PRESENTATION', name:'The Room Takeover', label:'Accusation Audit + Calibrated Q', desc:'3 sellers interviewing you. 15 minutes. Lead with their pain, not your creds.',
