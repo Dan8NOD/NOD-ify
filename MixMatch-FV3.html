@@ -3004,7 +3004,7 @@ renderToolsView();
 // ponytail: graphics tab PDF viewer
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 let gfxPdfDoc=null,gfxPageNum=1;
-async function gfxLoad(){if(gfxPdfDoc)return;gfxPdfDoc=await pdfjsLib.getDocument('nod_academy_graphics.pdf').promise;document.getElementById('gfx-page-count').textContent=gfxPdfDoc.numPages;gfxRenderPage();}
+async function gfxLoad(){if(gfxPdfDoc)return;gfxPdfDoc=await pdfjsLib.getDocument('https://dan8nod.github.io/NOD-ify/nod_academy_graphics.pdf').promise;document.getElementById('gfx-page-count').textContent=gfxPdfDoc.numPages;gfxRenderPage();}
 async function gfxRenderPage(){if(!gfxPdfDoc)return;const page=await gfxPdfDoc.getPage(gfxPageNum);const canvas=document.getElementById('gfx-canvas');const ctx=canvas.getContext('2d');const vp=page.getViewport({scale:1.5});canvas.width=vp.width;canvas.height=vp.height;await page.render({canvasContext:ctx,viewport:vp}).promise;document.getElementById('gfx-page-num').textContent=gfxPageNum;}
 function gfxPrevPage(){if(gfxPageNum>1){gfxPageNum--;gfxRenderPage();}}
 function gfxNextPage(){if(gfxPdfDoc&&gfxPageNum<gfxPdfDoc.numPages){gfxPageNum++;gfxRenderPage();}}
