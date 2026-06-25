@@ -265,6 +265,12 @@
             cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
         }
         .mode-scenario .ms-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
+        .mode-scenario .ms-tools { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 2px; }
+        .mode-scenario .ms-tool {
+            padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600;
+            background: rgba(255,255,255,0.06); color: var(--accent);
+            border: 1px solid rgba(212,168,83,0.25); cursor: default;
+        }
 
         /* ─── Cards (Tools view) ─── */
         .cards-area {
@@ -1835,6 +1841,7 @@ const MODE_CARDS = {
             {who:'You', line:'[Pause. Pull up 3 comparable units.] \"Every renovated 2-bed in this radius is listing at $1,895+. Yours is still $150 under market.\"'},
             {who:'You', line:'\"I want this to feel fair. What number works so we both walk away good?\"'},
          ],
+         tools:['Bargaining Chip','Bracket','Fairness Framing'],
          hint:'💡 Flinch → comps → fairness frame'},
         {tag:'TENANT', name:'The Move-Out Bluff', label:'Accusation Audit + Calibrated Q', desc:'Tenant threatens to leave over rent. You know they have no deposit budget.',
          approach:'Call out the threat before they can use it. Use a calibrated question to make them solve their own move-out math.',
@@ -1843,6 +1850,7 @@ const MODE_CARDS = {
             {who:'You', line:'\"How would you handle a $3,000+ move-out cost with your current savings?\"'},
             {who:'You', line:'[Let silence work.] \"If we can find a number that works for both of us, you don\'t have to go through that.\"'},
          ],
+         tools:['Calibrated Questions','Dynamic Silence','Label'],
          hint:'💡 Accusation audit → calibrated Q → silence'},
         {tag:'BUYER AGENT', name:'The Inspection Walk-Back', label:'Fairness Frame + Receipts', desc:'Buyer wants $10k credit for $2k in actual repairs.',
          approach:'Frame around fairness backed by real numbers. Hand them the receipts — hard data derails emotional anchoring.',
@@ -1851,15 +1859,26 @@ const MODE_CARDS = {
             {who:'You', line:'[Show receipts.] \"Total wear-and-tear comes to $2,180. I\'m happy to credit that. The $10k ask doesn\'t match what\'s on paper.\"'},
             {who:'You', line:'\"Help me find the number that feels right based on the facts, not the feelings.\"'},
          ],
+         tools:['Fairness Framing','\"That\'s Right\" Trigger','Summary'],
          hint:'💡 Fairness frame → receipts → partner not opponent'},
-        {tag:'SELLER', name:'The Net Sheet Shock', label:'Label + "That\'s Right" Summary', desc:'Seller sees the net and demands $50k more. Emotional, not rational.',
-         approach:'Label the feeling first — don\'t fight the number, fight the emotion. Then summarize their world until they say "That\'s right."',
+        {tag:'SELLER', name:'The Net Sheet Shock', label:'Label + \"That\'s Right\" Summary', desc:'Seller sees the net and demands $50k more. Emotional, not rational.',
+         approach:'Label the feeling first — don\'t fight the number, fight the emotion. Then summarize their world until they say \"That\'s right.\"',
          script:[
             {who:'You', line:'\"It sounds like you feel this house is worth more than what the offers are saying. Like the market isn\'t seeing what you see.\"'},
             {who:'You', line:'\"You\'ve put years of work into this home. Of course it feels like it should be valued higher.\"'},
             {who:'You', line:'[After they nod/agree.] \"Here\'s what the comps actually sold for in the last 30 days. Let\'s look at this together.\"'},
          ],
-         hint:'💡 Label → validate → "That\'s right"'}
+         tools:['Label','Mirror & Label Combo','Empathy Statement','\"That\'s Right\" Trigger'],
+         hint:'💡 Label → validate → \"That\'s right\"'},
+        {tag:'NO-RAPPORT', name:'The Hostile Counterpart', label:'Ackerman + Use Your Name', desc:'They won\'t engage, won\'t build rapport. You need a deal anyway. Go procedural.',
+         approach:'Skip rapport entirely. Use their name to force attention. Run the Ackerman model cold — it works because it\'s mechanical, not emotional. Frame every move as a choice, not a concession.',
+         script:[
+            {who:'You', line:'\"[Name], I know you don\'t have time for small talk. Here\'s the number. It\'s fair. Tell me what doesn\'t work.\"'},
+            {who:'You', line:'\"I can\'t go lower than this. How am I supposed to make this work given my constraints?\"'},
+            {who:'You', line:'[After pushback.] \"I hear you. Here\'s what I can do. Take it or let me know your counter. Either way, we\'ll know where we stand.\"'},
+         ],
+         tools:['Ackerman Model','Loss Aversion','Deadline Pressure','Bargaining Chip'],
+         hint:'💡 Name them → Ackerman → hard frame'},
     ],
     friend: [
         {tag:'NEW LEAD', name:'The First Call', label:'Mirror + Accusation Audit', desc:'Cold lead talking to 3 agents. Mirror their fear of being rushed.',
@@ -1936,17 +1955,22 @@ function showModeScenario(mode, idx){
     const modeColors = {haggle:'#ff5ea8',friend:'#66bb6a',boss:'#ff3b3b'};
     const color = modeColors[mode] || '#d4a853';
     const scriptHtml = c.script ? c.script.map(s =>
-        `<div class="ms-script"><span class="say">${s.who}:</span> ${s.line}</div>`
-    ).join('') : `<div class="ms-script">${c.hint}</div>`;
+        `<div class=\"ms-script\"><span class=\"say\">${s.who}:</span> ${s.line}</div>`
+    ).join('') : `<div class=\"ms-script\">${c.hint}</div>`;
+    const toolsHtml = c.tools ? `
+        <div class=\"ms-section-label\">🏆 RELEVANT TOOLS</div>
+        <div class=\"ms-tools\">${c.tools.map(t => `<span class=\"ms-tool\">${t}</span>`).join('')}</div>
+    ` : '';
     box.innerHTML = `
-        <span class="ms-badge" style="background:${color}20;color:${color};border:1px solid ${color}40;">${c.tag}</span>
-        <div class="ms-title">${c.name}</div>
-        <div class="ms-tagline">${c.desc}</div>
-        <div class="ms-section-label">🎯 TACTIC: ${c.label}</div>
-        <div class="ms-approach">${c.approach}</div>
-        <div class="ms-section-label">📝 SCRIPT</div>
+        <span class=\"ms-badge\" style=\"background:${color}20;color:${color};border:1px solid ${color}40;\">${c.tag}</span>
+        <div class=\"ms-title\">${c.name}</div>
+        <div class=\"ms-tagline\">${c.desc}</div>
+        <div class=\"ms-section-label\">🎯 TACTIC: ${c.label}</div>
+        <div class=\"ms-approach\">${c.approach}</div>
+        <div class=\"ms-section-label\">📝 SCRIPT</div>
         ${scriptHtml}
-        <button class="ms-close" onclick="this.parentElement.classList.remove('open')">✕ Close</button>
+        ${toolsHtml}
+        <button class=\"ms-close\" onclick=\"this.parentElement.classList.remove('open')\">✕ Close</button>
     `;
     box.classList.remove('open'); void box.offsetWidth; box.classList.add('open');
 }
