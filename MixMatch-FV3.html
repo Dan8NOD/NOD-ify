@@ -1283,7 +1283,16 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         </div>
         <div class="header-controls">
             <stripe-buy-button buy-button-id="buy_btn_1TmLlDQ6aOWMGfDtB404eD1C" publishable-key="pk_live_51KTBXQQ6aOWMGfDt8X2jmDCdioHb2EFQIkY5DSH8s9RQwX0cDigzpsIcnPJNB58EGFhauYL2o1RyjS9NIdefUs5C00vH0w26p3"></stripe-buy-button>
-            <a href="https://calendly.com/negotiatorsondemand" target="_blank" class="btn-icon" title="Book coaching">📅</a>
+            <a href="https://calendly.com/negotiatorsondemand" target="_blank" title="Book a coaching session"
+               style="display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:10px;text-decoration:none;font-weight:700;font-size:12px;letter-spacing:1px;white-space:nowrap;
+                      background:linear-gradient(135deg,#1a1a2e 0%,#2a2050 50%,#1a1a2e 100%);
+                      color:#d4a853;border:1px solid rgba(212,168,83,0.5);
+                      box-shadow:0 0 12px rgba(212,168,83,0.25),inset 0 1px 0 rgba(255,255,255,0.05);
+                      transition:box-shadow 0.2s,border-color 0.2s;"
+               onmouseover="this.style.boxShadow='0 0 24px rgba(212,168,83,0.55)';this.style.borderColor='rgba(212,168,83,0.9)'"
+               onmouseout="this.style.boxShadow='0 0 12px rgba(212,168,83,0.25)';this.style.borderColor='rgba(212,168,83,0.5)'">
+              📅 Book a Session
+            </a>
             <button class="btn-icon" onclick="toggleSessionLog()" id="slBtn" title="Session log">&#128203;</button>
             <button class="btn-icon" onclick="toggleInfo()" id="infoBtn" title="About">?</button>
             <button class="btn-icon" onclick="showAddToolModal()" title="Add custom tool">+</button>
@@ -3026,6 +3035,50 @@ const origSwitch=switchView;switchView=function(n,b){origSwitch(n,b);if(n==='gra
 <div style="text-align:center;padding:12px 0;">
   <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://nod-ify.com" alt="QR code to nod-ify.com" width="120" height="120" style="border-radius:8px;opacity:0.85;">
 </div>
+
+<!-- ██ COACHING + DONATE FOOTER ██ -->
+<!-- ponytail: static links, no js needed -->
+<div style="max-width:700px;margin:0 auto 12px;padding:0 16px;">
+  <div style="border-radius:16px;overflow:hidden;position:relative;background:linear-gradient(135deg,#0d0d1a 0%,#1a1230 50%,#0d0d1a 100%);border:1px solid rgba(212,168,83,0.3);box-shadow:0 0 40px rgba(212,168,83,0.08);">
+    <!-- animated gold shimmer bar across top -->
+    <div style="height:2px;background:linear-gradient(90deg,transparent 0%,#d4a853 40%,#fff8e1 55%,#d4a853 70%,transparent 100%);background-size:200% 100%;animation:shimmer 3s linear infinite;"></div>
+    <div style="padding:22px 20px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;">
+      <!-- eyeball: gold glyph cluster -->
+      <div style="font-size:28px;line-height:1;animation:pulse 2s ease-in-out infinite;user-select:none;" aria-hidden="true">⚔️🧠💰</div>
+      <div style="flex:1;min-width:200px;text-align:center;">
+        <div style="font-size:10px;letter-spacing:3px;color:rgba(212,168,83,0.6);text-transform:uppercase;margin-bottom:6px;">Train With The Negotiator</div>
+        <a href="https://calendly.com/negotiatorsondemand" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:12px;text-decoration:none;font-weight:800;font-size:14px;letter-spacing:1.5px;
+                  background:linear-gradient(135deg,#c8922a 0%,#f0c060 40%,#d4a853 70%,#b8801e 100%);
+                  color:#0d0d1a;box-shadow:0 0 20px rgba(212,168,83,0.5),0 3px 10px rgba(0,0,0,0.5);
+                  border:1px solid rgba(255,220,100,0.6);transition:box-shadow 0.2s,transform 0.15s;"
+           onmouseover="this.style.boxShadow='0 0 40px rgba(212,168,83,0.8)';this.style.transform='scale(1.03)'"
+           onmouseout="this.style.boxShadow='0 0 20px rgba(212,168,83,0.5)';this.style.transform='scale(1)'">
+          📅 Book a 1-on-1 Session
+        </a>
+      </div>
+      <div style="width:1px;height:40px;background:rgba(212,168,83,0.2);flex-shrink:0;"></div>
+      <div style="flex:1;min-width:160px;text-align:center;">
+        <div style="font-size:10px;letter-spacing:3px;color:rgba(192,210,230,0.5);text-transform:uppercase;margin-bottom:6px;">Support the Mission</div>
+        <a href="https://www.paypal.com/paypalme/NegotiatorsDemand" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:12px;text-decoration:none;font-weight:700;font-size:13px;letter-spacing:1px;
+                  background:linear-gradient(135deg,#1a2540 0%,#2a3a60 50%,#1a2540 100%);
+                  color:#a8c8ee;box-shadow:0 0 16px rgba(100,160,220,0.2),0 3px 10px rgba(0,0,0,0.4);
+                  border:1px solid rgba(100,160,220,0.3);transition:box-shadow 0.2s,transform 0.15s;"
+           onmouseover="this.style.boxShadow='0 0 28px rgba(100,160,220,0.45)';this.style.transform='scale(1.03)'"
+           onmouseout="this.style.boxShadow='0 0 16px rgba(100,160,220,0.2)';this.style.transform='scale(1)'">
+          🙏 Donate
+        </a>
+      </div>
+      <div style="font-size:22px;line-height:1;animation:pulse 2.5s ease-in-out infinite 0.8s;user-select:none;" aria-hidden="true">🏆✦💎</div>
+    </div>
+    <div style="height:2px;background:linear-gradient(90deg,transparent 0%,#4080c0 40%,#a0c8f0 55%,#4080c0 70%,transparent 100%);background-size:200% 100%;animation:shimmer 4s linear infinite reverse;"></div>
+  </div>
+</div>
+<style>
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes pulse{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+</style>
 
 <!-- ██ BOOK CTA FOOTER ██ -->
 <!-- ponytail: static links, no tracking — add utm_source=nodify if analytics ever matter -->
