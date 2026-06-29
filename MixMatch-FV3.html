@@ -663,16 +663,16 @@
                     transform: translateX(-50%);
                     z-index: 20;
                     width: 0; height: 0;
-                    border-left: 10px solid transparent;
-                    border-right: 10px solid transparent;
-                    border-top: 18px solid #e53935;
-                    filter: drop-shadow(0 2px 6px rgba(229,57,53,0.6));
+                    border-left: 14px solid transparent;
+                    border-right: 14px solid transparent;
+                    border-top: 26px solid #e53935;
+                    filter: drop-shadow(0 2px 8px rgba(229,57,53,0.8));
                 }
                 .wheel-pointer::after {
                     content: ''; position: absolute;
-                    top: -20px; left: 50%;
+                    top: -28px; left: 50%;
                     transform: translateX(-50%);
-                    width: 8px; height: 8px;
+                    width: 14px; height: 14px;
                     background: radial-gradient(circle, #ff1744, #b71c1c);
                     border-radius: 50%;
                     box-shadow: 0 0 10px rgba(255,23,68,0.7), 0 0 20px rgba(255,23,68,0.3);
@@ -682,6 +682,103 @@
                     0%,100%{box-shadow:0 0 6px #ff1744,0 0 12px rgba(255,23,68,0.2)}
                     50%{box-shadow:0 0 14px #ff1744,0 0 28px rgba(255,23,68,0.5)}
                 }
+
+                /* ── Big SPIN button ── */
+                .spin-btn-big {
+                    padding: 14px 40px;
+                    font-size: 20px;
+                    font-weight: 900;
+                    font-family: 'Press Start 2P', monospace;
+                    border-radius: 50px;
+                    border: none;
+                    cursor: pointer;
+                    background: radial-gradient(circle at 35% 35%, #ffd740, #d4a853, #b8860b);
+                    color: #1a1a2e;
+                    letter-spacing: 2px;
+                    box-shadow: 0 0 30px rgba(212,168,83,0.6), 0 6px 0 #7a5a00, inset 0 1px 0 rgba(255,255,255,0.4);
+                    transition: all 0.15s;
+                    text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+                    animation: spin-btn-pulse 2s ease-in-out infinite;
+                    position: relative;
+                    overflow: hidden;
+                }
+                .spin-btn-big:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 0 50px rgba(212,168,83,0.8), 0 8px 0 #7a5a00, inset 0 1px 0 rgba(255,255,255,0.4);
+                }
+                .spin-btn-big:active {
+                    transform: translateY(3px);
+                    box-shadow: 0 0 20px rgba(212,168,83,0.4), 0 2px 0 #7a5a00, inset 0 1px 0 rgba(255,255,255,0.2);
+                }
+                .spin-btn-big:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    animation: none;
+                    transform: none;
+                }
+                @keyframes spin-btn-pulse {
+                    0%,100% { box-shadow: 0 0 30px rgba(212,168,83,0.6), 0 6px 0 #7a5a00; }
+                    50% { box-shadow: 0 0 60px rgba(212,168,83,0.9), 0 6px 0 #7a5a00, 0 0 100px rgba(212,168,83,0.3); }
+                }
+
+                /* ── Winner banner ── */
+                .wheel-winner {
+                    text-align: center;
+                    padding: 16px 28px;
+                    margin: 10px auto;
+                    max-width: 420px;
+                    background: rgba(0,0,0,0.5);
+                    border-radius: 16px;
+                    border: 2px solid var(--accent);
+                    color: #fff;
+                    font-size: 22px;
+                    font-weight: 900;
+                    font-family: 'Press Start 2P', monospace;
+                    letter-spacing: 2px;
+                    animation: winner-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+                    box-shadow: 0 0 40px var(--accent-glow), 0 0 80px rgba(212,168,83,0.2);
+                    text-shadow: 0 0 20px var(--accent-glow);
+                }
+                @keyframes winner-pop {
+                    0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+                    60% { transform: scale(1.1) rotate(2deg); }
+                    100% { transform: scale(1) rotate(0); opacity: 1; }
+                }
+
+                /* ── Spin history strip ── */
+                .spin-history {
+                    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+                    min-height: 28px; margin: 6px 0;
+                }
+                .spin-history .sh-chip {
+                    padding: 3px 12px; border-radius: 14px;
+                    font-size: 11px; font-weight: 700; color: #fff;
+                    letter-spacing: 0.5px;
+                    opacity: 0.85;
+                    animation: card-pop 0.3s both;
+                }
+
+                /* ── Graphics loading shimmer ── */
+                #gfx-loading {
+                    position: absolute; inset: 0;
+                    background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.05) 75%);
+                    background-size: 200% 100%;
+                    animation: gfx-shimmer 1.2s infinite;
+                    border-radius: 8px;
+                    z-index: 3;
+                }
+                @keyframes gfx-shimmer {
+                    0% { background-position: 200% 0; }
+                    100% { background-position: -200% 0; }
+                }
+
+                /* ── Graphics mobile layout ── */
+                @media (max-width: 600px) {
+                    #graphics-viewer .gfx-nav {
+                        width: 100%; justify-content: space-between; display: flex; align-items: center;
+                    }
+                }
+
                 /* 90s CRT scanlines + vignette on wheel container */
                 .wheel-canvas-wrap::before {
                     content: ''; position: absolute; inset: 0; z-index: 5;
@@ -1400,10 +1497,14 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                 <span class="rotate-val" id="rotateVal">0&deg;</span>
             </div>
             <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
-                <button class="btn btn-ghost btn-sm" onclick="spinWheel()" style="border-color:var(--accent);color:var(--accent);font-weight:700;">&#128259; SPIN!</button>
                 <button class="btn btn-ghost btn-sm" onclick="toggleLegend()">&#128196; Show all words</button>
                 <button class="btn btn-ghost btn-sm" id="focusBtn" onclick="toggleFocus()">&#128065; Focus</button>
             </div>
+            <div id="spinHistory" class="spin-history"></div>
+            <div style="display:flex;justify-content:center;margin:8px 0;">
+                <button id="spinBtn" onclick="spinWheel()" class="spin-btn-big">&#127922; SPIN!</button>
+            </div>
+            <div id="wheelWinner" class="wheel-winner" style="display:none;"></div>
             <div class="focus-hint" id="focusHint">Tap any emotion to focus</div>
             <div class="wheel-legend" id="wheelLegend"></div>
             <div class="emotion-detail" id="emotionDetail"></div>
@@ -1492,16 +1593,17 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                 <h2>📄 NOD Academy Graphics</h2>
                 <p>Level 1 tactical reference cards — Ch 1-4: Awareness, BATNA, Empathy, Listening.</p>
             </div>
-            <div id="graphics-viewer" style="max-width:800px;margin:20px auto;padding:0 8px;">
-                <div style="text-align:center;margin-bottom:10px;">
-                    <button class="btn" onclick="gfxPrevPage()">◀ Prev</button>
+            <div id="graphics-viewer" style="max-width:800px;margin:20px auto;padding:0 8px;max-width:100%;overflow-x:hidden;">
+                <div class="gfx-nav" style="text-align:center;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;">
+                    <button class="btn btn-ghost" style="padding:10px 22px;font-size:15px;font-weight:700;" onclick="gfxPrevPage()">◀ Prev</button>
                     <span id="gfx-page-num" style="color:var(--accent);font-weight:600;margin:0 12px;">1</span> / <span id="gfx-page-count">9</span>
-                    <button class="btn" onclick="gfxNextPage()">Next ▶</button>
+                    <button class="btn btn-ghost" style="padding:10px 22px;font-size:15px;font-weight:700;" onclick="gfxNextPage()">Next ▶</button>
                 </div>
                 <div style="position:relative;width:100%;max-width:100%;overflow:hidden;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.5);">
                     <canvas id="gfx-canvas" style="width:100%;height:auto;display:block;background:#fff;"></canvas>
                     <!-- ponytail: cover Black Swan Group text in PDF header -->
                     <div id="gfx-bs-overlay" style="position:absolute;top:0;left:0;right:0;height:12%;background:var(--bg,#1a1a2e);z-index:2;pointer-events:none;"></div>
+                    <div id="gfx-loading" style="display:none;"></div>
                 </div>
                 <p style="color:#888;font-size:11px;text-align:center;margin-top:8px;">NOD Academy Tactical Reference Graphics</p>
             </div>
@@ -2641,6 +2743,11 @@ function updateWheelRotation(){
 }
 function sliderRotate(val){wheelRotation=parseFloat(val);updateWheelRotation();}
 function spinWheel(){
+    const spinBtn=document.getElementById('spinBtn');
+    if(spinBtn)spinBtn.disabled=true;
+    // Hide previous winner
+    const banner=document.getElementById('wheelWinner');
+    if(banner)banner.style.display='none';
     SFX.spin();SFX.spin();SFX.spin();
     const spins = 3 + Math.floor(Math.random()*2); // 3-4 full revs
     const target = Math.floor(Math.random()*360);
@@ -2649,7 +2756,39 @@ function spinWheel(){
     if(g){g.style.transition='transform 2.5s cubic-bezier(0.07,0.8,0.16,1)';g.setAttribute('transform',`rotate(${total},250,250)`);}
     const s=document.getElementById('wheelSlider');if(s)s.value=0;
     wheelRotation = total;
-    setTimeout(()=>{if(g)g.style.transition='transform 0.6s cubic-bezier(0.34,1.56,0.64,1)';coinBurst(10);SFX.ching();},2600);
+    // Ticker: recursive setTimeout that slows down as wheel decelerates
+    function ticker(delay,endAt){if(Date.now()>=endAt||delay>400)return;SFX.tone(900+Math.random()*200,15,0.06);setTimeout(()=>ticker(delay*1.06,endAt),delay);}
+    ticker(50,Date.now()+2400);
+    setTimeout(()=>{
+        if(g)g.style.transition='transform 0.6s cubic-bezier(0.34,1.56,0.64,1)';
+        coinBurst(10);SFX.ching();
+        // Determine landed emotion
+        const finalAngle=((total%360)+360)%360;
+        const sectorSize=360/EMOTIONS.length;
+        const idx=Math.floor(((360-finalAngle)%360)/sectorSize)%EMOTIONS.length;
+        const won=EMOTIONS[idx];
+        // Show winner banner
+        if(banner){
+            banner.style.display='block';
+            banner.style.color=won.color;
+            banner.innerHTML=`&#127922; ${won.name}! &#127922;`;
+            banner.style.borderColor=won.color;
+            banner.style.boxShadow=`0 0 40px ${won.color}55, 0 0 80px ${won.color}22`;
+            setTimeout(()=>{banner.style.display='none';},4000);
+        }
+        // Update spin history (last 5)
+        const hist=document.getElementById('spinHistory');
+        if(hist){
+            const chip=document.createElement('span');
+            chip.className='sh-chip';
+            chip.style.background=won.color;
+            chip.textContent=won.name;
+            hist.insertBefore(chip,hist.firstChild);
+            while(hist.children.length>5)hist.removeChild(hist.lastChild);
+        }
+        selectEmotion(idx);
+        if(spinBtn)spinBtn.disabled=false;
+    },2600);
 }
 function coinBurst(n=8,x,y){
     const body=document.body;
@@ -3049,8 +3188,33 @@ renderToolsView();
 // ponytail: graphics tab PDF viewer
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 let gfxPdfDoc=null,gfxPageNum=1;
-async function gfxLoad(){if(gfxPdfDoc)return;gfxPdfDoc=await pdfjsLib.getDocument('https://dan8nod.github.io/NOD-ify/nod_academy_graphics.pdf').promise;document.getElementById('gfx-page-count').textContent=gfxPdfDoc.numPages;gfxRenderPage();}
-async function gfxRenderPage(){if(!gfxPdfDoc)return;const page=await gfxPdfDoc.getPage(gfxPageNum);const canvas=document.getElementById('gfx-canvas');const ctx=canvas.getContext('2d');const vp=page.getViewport({scale:window.innerWidth<600?1:1.5});canvas.width=vp.width;canvas.height=vp.height;await page.render({canvasContext:ctx,viewport:vp}).promise;document.getElementById('gfx-page-num').textContent=gfxPageNum;}
+async function gfxLoad(){if(gfxPdfDoc)return;gfxPdfDoc=await pdfjsLib.getDocument('https://dan8nod.github.io/NOD-ify/nod_academy_graphics.pdf').promise;document.getElementById('gfx-page-count').textContent=gfxPdfDoc.numPages;gfxRenderPage();
+    // Swipe support
+    let _tx=0;
+    const cv=document.getElementById('gfx-canvas');
+    cv.addEventListener('touchstart',e=>{_tx=e.changedTouches[0].clientX;},{passive:true});
+    cv.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-_tx;if(dx<-40)gfxNextPage();else if(dx>40)gfxPrevPage();},{passive:true});
+}
+async function gfxRenderPage(){
+    if(!gfxPdfDoc)return;
+    const loading=document.getElementById('gfx-loading');
+    if(loading)loading.style.display='block';
+    const page=await gfxPdfDoc.getPage(gfxPageNum);
+    const canvas=document.getElementById('gfx-canvas');
+    const ctx=canvas.getContext('2d');
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    const targetWidth=(document.getElementById('graphics-viewer').clientWidth||window.innerWidth)-16;
+    const baseVp=page.getViewport({scale:1});
+    const scale=(targetWidth/baseVp.width)*dpr;
+    const vp=page.getViewport({scale});
+    canvas.width=vp.width;canvas.height=vp.height;
+    canvas.style.width='100%';canvas.style.height='auto';
+    await page.render({canvasContext:ctx,viewport:vp}).promise;
+    document.getElementById('gfx-page-num').textContent=gfxPageNum;
+    const overlay=document.getElementById('gfx-bs-overlay');
+    if(overlay)overlay.style.height=Math.round(canvas.height*0.09)+'px';
+    if(loading)loading.style.display='none';
+}
 function gfxPrevPage(){if(gfxPageNum>1){gfxPageNum--;gfxRenderPage();}}
 function gfxNextPage(){if(gfxPdfDoc&&gfxPageNum<gfxPdfDoc.numPages){gfxPageNum++;gfxRenderPage();}}
 // lazy load on tab click
