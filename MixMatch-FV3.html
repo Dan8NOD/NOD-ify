@@ -3838,33 +3838,90 @@ function filterAcademy(cat, btn) {
   <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://nod-ify.com" alt="QR code to nod-ify.com" width="120" height="120" style="border-radius:8px;opacity:0.85;">
 </div>
 
-<!-- ██ COACHING + DONATE FOOTER ██ -->
-<!-- ponytail: static links, no js needed -->
+<!-- ██ COACHING + PRODUCTS FOOTER ██ -->
+<!-- ponytail: replaced donate button with $5 Field Guide tripwire — keeps revenue in ecosystem -->
 <div style="max-width:700px;margin:0 auto 12px;padding:0 16px;">
   <div style="border-radius:16px;overflow:hidden;position:relative;background:linear-gradient(135deg,#0d0d1a 0%,#1a1230 50%,#0d0d1a 100%);border:1px solid rgba(212,168,83,0.3);box-shadow:0 0 40px rgba(212,168,83,0.08);">
-    <!-- animated gold shimmer bar across top -->
     <div style="height:2px;background:linear-gradient(90deg,transparent 0%,#d4a853 40%,#fff8e1 55%,#d4a853 70%,transparent 100%);background-size:200% 100%;animation:shimmer 3s linear infinite;"></div>
-    <div style="padding:22px 20px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;">
-      <!-- eyeball: gold glyph cluster -->
-      <div style="font-size:28px;line-height:1;animation:pulse 2s ease-in-out infinite;user-select:none;" aria-hidden="true">⚔️🧠💰</div>
-      <div style="flex:1;min-width:200px;text-align:center;">
-        <div style="font-size:10px;letter-spacing:3px;color:rgba(212,168,83,0.6);text-transform:uppercase;margin-bottom:6px;">Train With The Negotiator</div>
-        <a href="https://calendly.com/negotiatorsondemand" target="_blank" rel="noopener"
-           style="display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:12px;text-decoration:none;font-weight:800;font-size:14px;letter-spacing:1.5px;
-                  background:linear-gradient(135deg,#c8922a 0%,#f0c060 40%,#d4a853 70%,#b8801e 100%);
-                  color:#0d0d1a;box-shadow:0 0 20px rgba(212,168,83,0.5),0 3px 10px rgba(0,0,0,0.5);
-                  border:1px solid rgba(255,220,100,0.6);transition:box-shadow 0.2s,transform 0.15s;"
-           onmouseover="this.style.boxShadow='0 0 40px rgba(212,168,83,0.8)';this.style.transform='scale(1.03)'"
-           onmouseout="this.style.boxShadow='0 0 20px rgba(212,168,83,0.5)';this.style.transform='scale(1)'">
-          📅 Book a 1-on-1 Session
-        </a>
+    <div style="padding:22px 20px;">
+      <!-- Coaching CTA — top, premium positioning -->
+      <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;margin-bottom:20px;">
+        <div style="font-size:28px;line-height:1;animation:pulse 2s ease-in-out infinite;user-select:none;" aria-hidden="true">⚔️🧠💰</div>
+        <div style="flex:1;min-width:200px;text-align:center;">
+          <div style="font-size:10px;letter-spacing:3px;color:rgba(212,168,83,0.6);text-transform:uppercase;margin-bottom:6px;">Train 1-on-1 With The Negotiator</div>
+          <a href="https://calendly.com/negotiatorsondemand" target="_blank" rel="noopener"
+             style="display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:12px;text-decoration:none;font-weight:800;font-size:14px;letter-spacing:1.5px;
+                    background:linear-gradient(135deg,#c8922a 0%,#f0c060 40%,#d4a853 70%,#b8801e 100%);
+                    color:#0d0d1a;box-shadow:0 0 20px rgba(212,168,83,0.5),0 3px 10px rgba(0,0,0,0.5);
+                    border:1px solid rgba(255,220,100,0.6);transition:box-shadow 0.2s,transform 0.15s;"
+             onmouseover="this.style.boxShadow='0 0 40px rgba(212,168,83,0.8)';this.style.transform='scale(1.03)'"
+             onmouseout="this.style.boxShadow='0 0 20px rgba(212,168,83,0.5)';this.style.transform='scale(1)'">
+            📅 Book a 1-on-1 Session
+          </a>
+        </div>
       </div>
-      <div style="width:1px;height:40px;background:rgba(212,168,83,0.2);flex-shrink:0;"></div>
-      <div style="flex:1;min-width:160px;text-align:center;">
-        <div style="font-size:10px;letter-spacing:3px;color:rgba(192,210,230,0.5);text-transform:uppercase;margin-bottom:6px;">Support the Mission</div>
-        <stripe-buy-button buy-button-id="buy_btn_1TmLlDQ6aOWMGfDtB404eD1C" publishable-key="pk_live_51KTBXQQ6aOWMGfDt8X2jmDCdioHb2EFQIkY5DSH8s9RQwX0cDigzpsIcnPJNB58EGFhauYL2o1RyjS9NIdefUs5C00vH0w26p3"></stripe-buy-button>
+
+      <!-- Product ladder — clear hierarchy, keeps them in ecosystem -->
+      <div style="border-top:1px solid rgba(212,168,83,0.15);padding-top:20px;">
+        <div style="text-align:center;font-size:11px;letter-spacing:3px;color:rgba(192,210,230,0.6);text-transform:uppercase;margin-bottom:16px;">📚 Level Up Your Negotiation</div>
+
+        <!-- Step 1: Field Guide $5 — tripwire, impulse buy -->
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;align-items:stretch;">
+          <a href="https://dancruzpro.gumroad.com/l/bksozf" target="_blank" rel="noopener"
+             style="display:flex;flex-direction:column;justify-content:center;min-width:140px;padding:14px 20px;border-radius:10px;text-decoration:none;
+                    background:linear-gradient(135deg,#1a3040 0%,#2a5060 50%,#1a3040 100%);
+                    color:#e0f0ff;box-shadow:0 0 18px rgba(100,181,246,0.25),0 2px 8px rgba(0,0,0,0.4);
+                    border:1px solid rgba(100,181,246,0.4);transition:box-shadow 0.2s,transform 0.15s;"
+             onmouseover="this.style.boxShadow='0 0 32px rgba(100,181,246,0.5),0 2px 12px rgba(0,0,0,0.5)';this.style.transform='translateY(-2px)'"
+             onmouseout="this.style.boxShadow='0 0 18px rgba(100,181,246,0.25),0 2px 8px rgba(0,0,0,0.4)';this.style.transform='translateY(0)'">
+            <span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(100,181,246,0.8);margin-bottom:4px;">Start Here</span>
+            <span style="font-size:15px;font-weight:800;">📖 Field Guide</span>
+            <span style="font-size:18px;font-weight:900;color:#64b5f6;margin-top:2px;">$5</span>
+            <span style="font-size:10px;color:rgba(224,240,255,0.5);margin-top:2px;">25-page quick reference</span>
+          </a>
+
+          <!-- Step 2: Field Manual $49 — best value, highlighted -->
+          <a href="https://dancruzpro.gumroad.com/l/bksozf" target="_blank" rel="noopener"
+             style="display:flex;flex-direction:column;justify-content:center;min-width:160px;padding:14px 22px;border-radius:10px;text-decoration:none;
+                    background:linear-gradient(135deg,#c8922a 0%,#f0c060 40%,#d4a853 70%,#b8801e 100%);
+                    color:#0d0d1a;box-shadow:0 0 24px rgba(212,168,83,0.5),0 3px 12px rgba(0,0,0,0.5);
+                    border:2px solid rgba(255,220,100,0.7);transition:box-shadow 0.2s,transform 0.15s;position:relative;"
+             onmouseover="this.style.boxShadow='0 0 40px rgba(212,168,83,0.8),0 3px 16px rgba(0,0,0,0.5)';this.style.transform='translateY(-3px)'"
+             onmouseout="this.style.boxShadow='0 0 24px rgba(212,168,83,0.5),0 3px 12px rgba(0,0,0,0.5)';this.style.transform='translateY(0)'">
+            <span style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#0d0d1a;color:#d4a853;font-size:8px;font-weight:800;letter-spacing:1px;padding:2px 10px;border-radius:8px;border:1px solid rgba(212,168,83,0.5);">★ BEST VALUE</span>
+            <span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(13,13,26,0.6);margin-bottom:4px;">Full System</span>
+            <span style="font-size:15px;font-weight:800;">📕 Field Manual</span>
+            <span style="font-size:18px;font-weight:900;margin-top:2px;">$49</span>
+            <span style="font-size:10px;color:rgba(13,13,26,0.5);margin-top:2px;">33 chapters · 1,000+ sessions</span>
+          </a>
+
+          <!-- Step 3: RE Scripts $99 — for realtors, premium -->
+          <a href="https://dancruzpro.gumroad.com/l/fxgdpc" target="_blank" rel="noopener"
+             style="display:flex;flex-direction:column;justify-content:center;min-width:150px;padding:14px 20px;border-radius:10px;text-decoration:none;
+                    background:linear-gradient(135deg,#3a1a4a 0%,#5a2a6a 50%,#3a1a4a 100%);
+                    color:#f0e0ff;box-shadow:0 0 18px rgba(186,104,200,0.3),0 2px 8px rgba(0,0,0,0.4);
+                    border:1px solid rgba(186,104,200,0.4);transition:box-shadow 0.2s,transform 0.15s;"
+             onmouseover="this.style.boxShadow='0 0 32px rgba(186,104,200,0.5),0 2px 12px rgba(0,0,0,0.5)';this.style.transform='translateY(-2px)'"
+             onmouseout="this.style.boxShadow='0 0 18px rgba(186,104,200,0.3),0 2px 8px rgba(0,0,0,0.4)';this.style.transform='translateY(0)'">
+            <span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(186,104,200,0.8);margin-bottom:4px;">For Realtors</span>
+            <span style="font-size:15px;font-weight:800;">🏠 RE Scripts Pack</span>
+            <span style="font-size:18px;font-weight:900;color:#ba68c8;margin-top:2px;">$99</span>
+            <span style="font-size:10px;color:rgba(240,224,255,0.5);margin-top:2px;">25 word-for-word scripts</span>
+          </a>
+        </div>
+
+        <!-- Amazon book — small, below main ladder, keeps ecosystem focus -->
+        <div style="text-align:center;margin-top:14px;">
+          <a href="https://www.amazon.com/dp/B0H6T2M995" target="_blank" rel="noopener"
+             style="display:inline-block;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:11px;
+                    color:rgba(192,210,230,0.5);background:rgba(255,255,255,0.03);border:1px solid rgba(192,210,230,0.15);
+                    transition:all 0.2s;"
+             onmouseover="this.style.color='rgba(192,210,230,0.8)';this.style.background='rgba(255,255,255,0.06)'"
+             onmouseout="this.style.color='rgba(192,210,230,0.5)';this.style.background='rgba(255,255,255,0.03)'">
+            📙 Also on Amazon →
+          </a>
+        </div>
       </div>
-      <div style="font-size:22px;line-height:1;animation:pulse 2.5s ease-in-out infinite 0.8s;user-select:none;" aria-hidden="true">🏆✦💎</div>
     </div>
     <div style="height:2px;background:linear-gradient(90deg,transparent 0%,#4080c0 40%,#a0c8f0 55%,#4080c0 70%,transparent 100%);background-size:200% 100%;animation:shimmer 4s linear infinite reverse;"></div>
   </div>
@@ -3872,58 +3929,6 @@ function filterAcademy(cat, btn) {
 <style>
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @keyframes pulse{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
-</style>
-
-<!-- ██ BOOK CTA FOOTER ██ -->
-<!-- ponytail: static links, no tracking — add utm_source=nodify if analytics ever matter -->
-<div id="bookCtaFooter" style="max-width:700px;margin:0 auto 8px;padding:0 16px;">
-  <div style="border:1px solid rgba(192,192,220,0.25);border-radius:16px;background:linear-gradient(135deg,rgba(20,20,35,0.95) 0%,rgba(35,30,55,0.98) 100%);padding:24px 20px;text-align:center;position:relative;overflow:hidden;">
-    <!-- sparkle diamonds -->
-    <div style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;font-size:14px;line-height:1;" aria-hidden="true">
-      <span style="position:absolute;top:10px;left:12px;opacity:0.7;animation:sparkle 2.4s ease-in-out infinite;">💎</span>
-      <span style="position:absolute;top:8px;right:14px;opacity:0.6;animation:sparkle 1.9s ease-in-out infinite 0.5s;">💎</span>
-      <span style="position:absolute;bottom:10px;left:18px;opacity:0.5;animation:sparkle 2.8s ease-in-out infinite 1s;">💎</span>
-      <span style="position:absolute;bottom:9px;right:16px;opacity:0.65;animation:sparkle 2.1s ease-in-out infinite 0.3s;">💎</span>
-      <span style="position:absolute;top:50%;left:6px;transform:translateY(-50%);opacity:0.4;animation:sparkle 3s ease-in-out infinite 0.8s;">✦</span>
-      <span style="position:absolute;top:50%;right:6px;transform:translateY(-50%);opacity:0.4;animation:sparkle 2.6s ease-in-out infinite 1.2s;">✦</span>
-    </div>
-    <div style="font-size:11px;letter-spacing:3px;color:rgba(192,210,230,0.6);text-transform:uppercase;margin-bottom:14px;">📚 Level Up Your Negotiation</div>
-    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
-      <a href="https://www.amazon.com/dp/B0H6T2M995" target="_blank" rel="noopener"
-         style="display:inline-block;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;letter-spacing:1px;
-                background:linear-gradient(135deg,#b0b8c8 0%,#e8eaf0 40%,#a8b0c0 70%,#d0d8e8 100%);
-                color:#1a1a2e;box-shadow:0 0 18px rgba(192,210,230,0.35),0 2px 8px rgba(0,0,0,0.4);
-                border:1px solid rgba(210,220,240,0.5);transition:box-shadow 0.2s;"
-         onmouseover="this.style.boxShadow='0 0 32px rgba(210,220,240,0.65),0 2px 12px rgba(0,0,0,0.5)'"
-         onmouseout="this.style.boxShadow='0 0 18px rgba(192,210,230,0.35),0 2px 8px rgba(0,0,0,0.4)'">
-        💎 NOD Academy Book — Amazon
-      </a>
-      <a href="https://dancruzpro.gumroad.com/l/bksozf" target="_blank" rel="noopener"
-         style="display:inline-block;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;letter-spacing:1px;
-                background:linear-gradient(135deg,#8090a8 0%,#c0cce0 40%,#7080a0 70%,#a0b0c8 100%);
-                color:#f0f4ff;box-shadow:0 0 18px rgba(160,185,215,0.3),0 2px 8px rgba(0,0,0,0.4);
-                border:1px solid rgba(180,200,230,0.4);transition:box-shadow 0.2s;"
-         onmouseover="this.style.boxShadow='0 0 32px rgba(180,200,230,0.55),0 2px 12px rgba(0,0,0,0.5)'"
-         onmouseout="this.style.boxShadow='0 0 18px rgba(160,185,215,0.3),0 2px 8px rgba(0,0,0,0.4)'">
-        💎 Field Manual — $49
-      </a>
-      <a href="https://dancruzpro.gumroad.com/l/fxgdpc" target="_blank" rel="noopener"
-         style="display:inline-block;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;letter-spacing:1px;
-                background:linear-gradient(135deg,#8090a8 0%,#c0cce0 40%,#7080a0 70%,#a0b0c8 100%);
-                color:#f0f4ff;box-shadow:0 0 18px rgba(160,185,215,0.3),0 2px 8px rgba(0,0,0,0.4);
-                border:1px solid rgba(180,200,230,0.4);transition:box-shadow 0.2s;"
-         onmouseover="this.style.boxShadow='0 0 32px rgba(180,200,230,0.55),0 2px 12px rgba(0,0,0,0.5)'"
-         onmouseout="this.style.boxShadow='0 0 18px rgba(160,185,215,0.3),0 2px 8px rgba(0,0,0,0.4)'">
-        💎 RE Scripts Pack — $99
-      </a>
-    </div>
-  </div>
-</div>
-<style>
-@keyframes sparkle {
-  0%,100%{opacity:0.3;transform:scale(1);}
-  50%{opacity:0.9;transform:scale(1.25);}
-}
 </style>
 
 <!-- ██ CREDITS ██ -->
