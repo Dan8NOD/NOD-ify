@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Real Estate Negotiation Scripts — Dan Cruz</title>
+<style>
+:root{--gold:#C9A935;--dark:#090909;--ink:#111;--paper:#faf9f6;--green:#1a3a1a;--red:#8B1A1A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Times New Roman',Georgia,serif;font-size:11pt;line-height:1.7;color:var(--ink);background:var(--paper);max-width:780px;margin:0 auto;padding:48px 56px}
+.cover{min-height:94vh;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;page-break-after:always;margin:-48px -56px 0;padding:60px 56px}
+.cover h1{font-size:2.6em;color:#fff;letter-spacing:.02em;margin-bottom:6px;font-weight:700}
+.cover .sub{font-size:1.05em;color:var(--gold);font-style:italic;margin-bottom:24px}
+.cover .gold-rule{width:56px;height:2.5px;background:var(--gold);margin:0 auto 22px}
+.cover .desc{color:#888;max-width:420px;font-size:.88em;line-height:1.6}
+.cover .author{font-size:.9em;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-top:28px}
+.cover .price-badge{background:var(--gold);color:#000;font-weight:700;font-size:.8em;padding:6px 18px;letter-spacing:.1em;text-transform:uppercase;margin-top:16px;display:inline-block}
+.links-banner{background:var(--dark);padding:14px 24px;margin:-48px -56px 32px;display:grid;grid-template-columns:1fr 1fr;gap:8px;border-bottom:2px solid var(--gold);font-size:.76em}
+.links-banner .lbl{color:#555;font-size:.68em;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1px}
+.links-banner a{color:var(--gold);text-decoration:none}
+.sec{background:var(--dark);margin:-4px -56px 26px;padding:14px 56px;border-bottom:2px solid var(--gold);page-break-before:always}
+.sec h2{font-size:1.45em;font-weight:700;color:#fff;margin:0}
+.sec .sec-sub{color:var(--gold);font-size:.7em;letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
+.sec:first-of-type{page-break-before:avoid}
+.pb{page-break-before:always}
+h3{font-size:1.1em;font-weight:700;margin:20px 0 5px;border-left:3px solid var(--gold);padding-left:9px}
+h4{font-size:.85em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;margin:16px 0 3px}
+p{margin:5px 0;text-align:justify}
+ul,ol{padding-left:18px;margin:5px 0}
+li{margin:2px 0}
+blockquote{border-left:3px solid var(--gold);padding:7px 13px;margin:10px 0;font-style:italic;color:#555;background:#fffdf4}
+pre{background:var(--dark);color:#ccc;padding:9px 13px;font-size:8.5pt;line-height:1.55;border-left:3px solid var(--gold);margin:9px 0;white-space:pre-wrap;word-break:break-word;font-family:'Courier New',monospace}
+.sc{border:1.5px solid var(--gold);margin:18px 0;page-break-inside:avoid;background:#fff}
+.sc-hd{background:var(--dark);padding:9px 14px}
+.sc-tag{font-size:.62em;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);opacity:.7;font-weight:700}
+.sc-title{font-weight:700;color:#fff;font-size:.98em;margin-top:2px}
+.sc-context{font-size:.8em;color:#aaa;margin-top:3px;font-style:italic}
+.sc-bd{padding:12px 14px}
+.sl{font-size:.83em;margin:5px 0;padding:3px 0}
+.sl .who{font-weight:700;min-width:70px;display:inline-block}
+.sl .you .who{color:#1a5c1a}
+.sl .them .who{color:#8B1A1A}
+.sc-bd .who-you{color:#1a5c1a;font-weight:700;min-width:70px;display:inline-block}
+.sc-bd .who-th{color:#8B1A1A;font-weight:700;min-width:70px;display:inline-block}
+.hint{font-size:.76em;color:#888;border-top:1px dashed #ddd;padding-top:8px;margin-top:8px}
+.tool-badge{display:inline-block;background:#f5f2ef;border:1px solid var(--gold);font-size:.65em;padding:2px 7px;letter-spacing:.06em;text-transform:uppercase;color:#888;margin-bottom:8px}
+.pro-tip{background:#fffdf4;border:1px solid var(--gold);padding:10px 14px;margin:14px 0;font-size:.84em;font-style:italic;color:#555}
+.pro-tip strong{color:var(--gold);font-style:normal}
+.back{background:var(--dark);margin:-48px -56px -48px;padding:56px 56px;page-break-before:always;min-height:75vh}
+.back h2{color:var(--gold);font-size:1.7em;margin-bottom:18px}
+.back p{color:#999;font-size:.92em;margin:8px 0;max-width:500px}
+.back a{color:var(--gold);text-decoration:none}
+.ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}
+.ref-c{border:1.5px solid var(--gold);padding:13px;background:rgba(255,255,255,.03)}
+.ref-c h4{color:var(--gold);font-size:.68em;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.ref-c p{color:#888;font-size:.82em;margin:2px 0}
+.ref-c a{color:#aaa;font-size:.82em}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <svg width="100" height="52" xmlns="http://www.w3.org/2000/svg" style="opacity:.18;margin-bottom:10px">
+    <polyline points="4,48 4,40 17,40 17,28 33,28 33,16 52,16 52,5 74,5 74,0" fill="none" stroke="#C9A935" stroke-width="2"/>
+  </svg>
+  <h1>Real Estate Negotiation Scripts</h1>
+  <div class="sub">25 Word-for-Word Conversations for Agents</div>
+  <div class="gold-rule"></div>
+  <div class="desc">Commission defense. Listing presentations. Offer battles. Price reductions. Buyer objections. Every script grounded in FBI negotiation methodology — tested across 1,000+ live sessions.</div>
+  <div class="price-badge">$47 · Digital Download</div>
+  <div class="author">Dan Cruz · NOD Academy</div>
+  <div style="color:#444;font-size:.62em;margin-top:18px;letter-spacing:.2em;text-transform:uppercase">negotiatorsondemand.com</div>
+</div>
+
+<!-- LINKS -->
+<div class="links-banner">
+  <div><div class="lbl">Full Methodology</div><a href="https://negotiatorsondemand.com">NOD Academy — The Practice-First Negotiation Manual</a></div>
+  <div><div class="lbl">Free Practice App</div><a href="https://dan8nod.github.io/NOD-ify">dan8nod.github.io/NOD-ify</a></div>
+  <div><div class="lbl">Saturday Live Practice (Free)</div><a href="https://negotiatorsondemand.com">negotiatorsondemand.com</a></div>
+  <div><div class="lbl">Hire Dan</div><a href="mailto:negotiatorsondemand@gmail.com">negotiatorsondemand@gmail.com</a></div>
+</div>
+
+<!-- INTRO -->
+<h3>How to Use These Scripts</h3>
+<p>Every script in this pack is based on real conversations from live NOD Academy practice sessions and actual real estate negotiations. They are built on five FBI-tested tools: Mirror, Label, Calibrated Question, Accusation Audit, and Validation.</p>
+<p><strong>Three rules:</strong></p>
+<ol>
+  <li>Never read scripts verbatim. Read them until you own the move. Then improvise from the principle.</li>
+  <li>The most important line in every script is the silence after it. Marked as <code>[wait]</code>. Do not skip it.</li>
+  <li>One script per conversation. Don't stack moves. Pick the right one and run it clean.</li>
+</ol>
+<blockquote>"Terms close deals. Price just gets you in the room." — Dan Cruz, NOD Academy</blockquote>
+<p><strong>Color code:</strong> <span style="color:#1a5c1a;font-weight:700">You (green)</span> · <span style="color:#8B1A1A;font-weight:700">Them (red)</span></p>
+
+<!-- PART 1: COMMISSION -->
+<div class="sec pb">
+  <div class="sec-sub">Part One · 5 Scripts</div>
+  <h2>Commission Defense</h2>
+</div>
+<p>Commission objections are not about money. They are about trust and value. The agent who gets defensive loses. The agent who labels and reframes wins. These five scripts cover the objections you hear on 90% of listing appointments.</p>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Commission · Script 01</div>
+    <div class="sc-title">The Classic Low-Ball: "Another Agent Will Do It for 1%"</div>
+    <div class="sc-context">Listing appointment, seller just dropped the discount bomb.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Label + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "The other agent said they'd do it for 1%. Why should I pay you more?"</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "It sounds like you've been burned on fees before — or you're not sure the difference in commission translates to anything real for you." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "Honestly, I just don't see why agents make so much on one deal."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "That's fair. Let me ask you this — what would it cost you if the house sat on the market 30 extra days because the pricing or negotiation was off?"</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "Well... a lot, I guess."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "The last three homes I listed at full commission averaged 8 days on market and sold at 101% of list. The gap between good negotiation and average negotiation isn't the commission — it's the close price. Does that math work for you?"</div>
+    <div class="hint">💡 Frame commission as insurance against a bad outcome, not a cost. Label first, then the data. They're buying certainty, not a service.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Commission · Script 02</div>
+    <div class="sc-title">"Can You Come Down?" — The Soft Ask</div>
+    <div class="sc-context">The seller likes you but wants a discount out of habit.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Accusation Audit + Swap</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "I love everything you said. I just feel like the commission is a lot. Is there any flexibility?"</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I want to be straight with you about something before I answer. I know I'm asking for more than some of my competitors. And I know this might feel like I'm not being flexible. I hear that."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Here's what I can do: if you can give me a 90-day exclusive listing agreement instead of 60, I'm willing to absorb the staging consultation — that's a $400 value. Is that the kind of flexibility that would make this easier?"</div>
+    <div class="hint">💡 Never just cut the rate — swap it. You extend your runway, they feel like they won. Both sides gain.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Commission · Script 03</div>
+    <div class="sc-title">"We're Going With a Flat Fee Broker"</div>
+    <div class="sc-context">Seller has essentially decided on a discount service. One last shot.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Label + Story</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "We've decided to go with a flat-fee service. It's just $500 to list."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "That makes complete sense. You're trying to protect your net. I would too." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Can I ask you one thing before you finalize? I had a seller last spring who did exactly that — flat fee, saved $12,000 on commission. The house got two lowball offers, both fell through on inspection because no one knew how to structure contingency language. It sat 94 days and sold for $18,000 under the first offer she'd turned down."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I'm not saying that's your outcome. I just want you to have that picture before you decide. What would 94 days on the market cost you in carrying costs?"</div>
+    <div class="hint">💡 You're not arguing — you're planting a story. The calibrated Q at the end makes them calculate their own risk.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Commission · Script 04</div>
+    <div class="sc-title">"My Brother-in-Law Is an Agent and He'll Do It Free"</div>
+    <div class="sc-context">The family obligation objection. Tricky — don't attack the relationship.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Validation + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "My brother-in-law just got his license. He said he'd do it for free as a favor."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "That makes total sense, and honestly that's a real gift. Family wanting to help is something you don't take for granted." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I'm just curious — what happens to the dinner table if the deal gets complicated? An inspection issue, a buyer who wants to renegotiate after appraisal, a closing that almost falls apart?"</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "...I hadn't thought about that."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "It's worth thinking about. The best gift your brother-in-law can give you might be referring you to someone who's done 200 of these — and then celebrating when it closes clean."</div>
+    <div class="hint">💡 Never attack the brother-in-law. Attack the situation. The family relationship is sacred — make them see you're protecting it.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Commission · Script 05</div>
+    <div class="sc-title">The Post-Listing Commission Cut Request</div>
+    <div class="sc-context">House has been sitting. Seller wants to cut commission to attract buyers.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Label + Reframe + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "We've been on market 45 days. I want to cut the buyer's agent commission to 1% to save money."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "It sounds like you're feeling the pressure of time — and you want to control something you can control." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Here's what I'm seeing in the data. Homes that cut buyer's agent commission get shown less — not more. Agents steer clients to homes where they're fully compensated. Cutting from 2.5% to 1% in this market likely reduces showings by 30-40%."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "What if instead we looked at a $5,000 price reduction? That actually puts money in the buyer's pocket — and it shows up on the search results as a new price drop. Which do you think gets more showings?"</div>
+    <div class="hint">💡 The seller wants control. Give it to them on the right lever — price, not commission. Reframe the math and let them choose.</div>
+  </div>
+</div>
+
+<!-- PART 2: LISTING PRESENTATION -->
+<div class="sec pb">
+  <div class="sec-sub">Part Two · 5 Scripts</div>
+  <h2>Listing Presentation</h2>
+</div>
+<p>You are not the only agent they're interviewing. These five scripts help you stand apart without competing on price — by leading with their pain, their fears, and their goals before you say a word about yourself.</p>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Listing · Script 06</div>
+    <div class="sc-title">Opening the Appointment: Lead with Their Pain</div>
+    <div class="sc-context">First 60 seconds. Three sellers interviewing you. Most agents start with their track record.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Accusation Audit + Label + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Before I tell you anything about me — I want to ask you something. You've probably heard a lot of agents today talk about their average days on market and their list-to-sale ratio. And honestly, that starts to blur together."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "So let me ask instead: what's keeping you up at night about this move?" [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "Honestly, we're worried about pricing right. We don't want to leave money on the table."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "It sounds like getting the number right matters more to you than speed." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "Yes, exactly."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Good. Then let me show you how I approach pricing — because that's where most sellers leave $10,000-$30,000 on the table without knowing it."</div>
+    <div class="hint">💡 You just found their priority in 60 seconds without PowerPoint. Now everything you present is in service of that priority.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Listing · Script 07</div>
+    <div class="sc-title">"We Need to Think About It" — End of Appointment</div>
+    <div class="sc-context">They liked you. They're not saying no. They're stalling.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Label + No-Oriented Question</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "We want to think it over and get back to you."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Of course. And it sounds like there's something that isn't fully settled for you yet — and I'd rather you have clarity than rush." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "It's just a big decision."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Is there anything I said today — or didn't say — that's creating a question for you? I'd rather answer it now than have you sitting with it this weekend."</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "Actually... we're comparing your marketing plan with the other agent's."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Perfect. Can you tell me what their plan looks like? I want to make sure you're comparing the same things."</div>
+    <div class="hint">💡 "Think it over" usually means "I have a question I don't want to say." No-oriented framing ("is there anything I didn't say") releases the real blocker.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Listing · Script 08</div>
+    <div class="sc-title">Overpriced Listing: Seller Wants More Than Market</div>
+    <div class="sc-context">Your CMA says $380K. Seller says they need $420K. This is the hardest conversation in real estate.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Validation + Reframe + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "We put $40,000 into this kitchen. We need $420,000."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "That makes complete sense. You invested real money and real time into this home, and you need to see it reflected in the price. I would feel exactly the same way." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Here's what I'm looking at in the data. The three homes that sold in your zip code in the last 90 days — buyers didn't pay for the renovation cost. They paid for what those renovations did to the comparable value. The market puts your kitchen at $8,000-$12,000 in added value."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "If we list at $420K, here's what I'm concerned about: the first 21 days are your highest traffic. If the price creates hesitation, we lose those buyers. They don't come back. A price drop later gets less attention than a right price on day one."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Would you be open to listing at $389K for 30 days, with a clear plan to evaluate? If I'm wrong, we adjust. If I'm right, we get you multiple offers and you may net more than $420K — without the carrying cost."</div>
+    <div class="hint">💡 Validate the investment. Don't dispute feelings. Then data. Then a limited commitment — "30 days with a plan" is easier to say yes to than "trust me forever."</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Listing · Script 09</div>
+    <div class="sc-title">Expired Listing: One Shot at a Second Chance</div>
+    <div class="sc-context">Calling an expired listing. The last agent burned them.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Accusation Audit + Label</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I want to call out something before I pitch you anything. You just spent months on the market with no result. The last thing you probably want is another agent telling you it was the pricing or the marketing — like you should have done something differently."</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "...Yeah, that's exactly it."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "It sounds like the frustration isn't just about the house — it's about the process. And about not knowing why." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "We were never told why we weren't getting offers."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "That's the gap I want to close for you today — before you decide anything. Can I spend 15 minutes showing you exactly what happened in the market during your listing period, and what's changed since?"</div>
+    <div class="hint">💡 Your opening move is empathy for the pain, not a pitch. You just became the only agent who didn't immediately defend the industry.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Listing · Script 10</div>
+    <div class="sc-title">Competing Against a Friend or Referral Agent</div>
+    <div class="sc-context">You're the unknown. They have a "friend in the business."</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Label + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "We feel kind of obligated to go with our neighbor — she's been in real estate for years."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "That makes total sense. Loyalty and relationship matter — those are the right things to factor in." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I'll just ask one thing: is your primary goal to make your neighbor feel good about getting your listing — or to maximize what you walk away with at closing?"</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "When you put it that way..."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I'm not saying don't use her. I'm saying you owe yourself one honest comparison. Give me 20 minutes to show you my numbers. If hers are better, I'll tell you to hire her."</div>
+    <div class="hint">💡 You're not attacking the friends. You're separating the emotional decision from the financial one — and volunteering to lose if they're better. That confidence is disarming.</div>
+  </div>
+</div>
+
+<!-- PART 3: OFFER BATTLES -->
+<div class="sec pb">
+  <div class="sec-sub">Part Three · 5 Scripts</div>
+  <h2>Offer Battles</h2>
+</div>
+<p>Whether you're representing a buyer who's losing to competition or a seller with five offers, these scripts win with framing — not just price.</p>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Offer · Script 11</div>
+    <div class="sc-title">Calling the Listing Agent Before Submitting a Competitive Offer</div>
+    <div class="sc-context">You want to know what the seller actually needs before you write the offer.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Calibrated Q + Label</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Before I write this offer, I want to make sure I'm not missing something. What matters most to your seller beyond price?"</div>
+    <div class="sl"><span class="sc-bd who-th">LA:</span> "Honestly, they've already moved. They want to close fast — ideally 21 days."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "And it sounds like timing certainty matters more than chasing the highest number?" [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-th">LA:</span> "I mean... yes. A clean, certain deal."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Got it. I'm going to structure this with a 21-day close, pre-approval from a direct lender, and a limited inspection window with a repair cap. If I do that — what does the price conversation look like?"</div>
+    <div class="hint">💡 This call is worth $10,000-$30,000. Most agents skip it. The listing agent just told you how to win without being the highest offer.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Offer · Script 12</div>
+    <div class="sc-title">Multiple Offer Situation: How to Present Your Buyer's Offer</div>
+    <div class="sc-context">You're calling to present your buyer's offer. There are 4 others.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Framing + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Before I send the formal docs, I want to walk you through why I think this offer is the strongest — not just on price."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "My buyer is pre-approved with [lender name] — not pre-qualified, approved. We've structured a 21-day close. We're limiting inspection to major structural only and capping repair requests at $3,000. We have no contingency on their current home."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Here's my question: if a cleaner offer came in $5,000 lower but the certainty of close was 40% higher — how would your seller weigh that?"</div>
+    <div class="hint">💡 You're reframing price into probability of closing. Sellers who've had deals fall apart respond to this hard.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Offer · Script 13</div>
+    <div class="sc-title">Buyer's Offer Gets Countered High: Don't Just Agree</div>
+    <div class="sc-context">Seller counters your offer by $15,000. Your buyer is at their ceiling.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Flinch + Calibrated Q + Swap</div>
+    <div class="sl"><span class="sc-bd who-th">LA:</span> "The seller countered at $395,000."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "$395,000?" [<em>pause 3 seconds</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "That's a significant jump. What did the seller say was driving that number?"</div>
+    <div class="sl"><span class="sc-bd who-th">LA:</span> "They have another offer coming in this week."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "If that offer doesn't materialize — is there a backup plan?" [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-th">LA:</span> "...I mean, they'd want to keep negotiating."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "My buyer can move to $387,500 with a pre-approval letter and an immediate 5-day close. But I need the seller to acknowledge that the terms make this offer worth more than a higher number with contingencies. Can we get there?"</div>
+    <div class="hint">💡 Flinch first, test the deadline ("backup plan?"), then swap price for terms. Never just accept the counter — always probe first.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Offer · Script 14</div>
+    <div class="sc-title">As the Listing Agent: Getting Buyers to Sharpen Their Offers</div>
+    <div class="sc-context">You have 3 offers. You want to run a best-and-final process.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Anchor + Deadline</div>
+    <div class="sl"><span class="sc-bd who-you">You (to each BA):</span> "We have a strong offer in hand with solid terms. It expires at 5pm Friday. I'm calling everyone with an active offer to give them the opportunity to come back with their best and final."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I can tell you that price alone won't determine this decision — my seller cares about certainty of close. What can you do before 5pm?"</div>
+    <div class="hint">💡 You've anchored that there's competition, created a real deadline, and signaled that terms matter. All three levers in one call. Now they sharpen themselves.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Offer · Script 15</div>
+    <div class="sc-title">Lowball Offer Comes In: How to Respond Without Insulting the Buyer</div>
+    <div class="sc-context">Buyer offers $40K under ask. Your seller is offended.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Label + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-you">You (to seller):</span> "It sounds like this offer felt insulting — and I get that. They're treating your home like it's a distressed property." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "Exactly. We don't even want to respond."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Here's the thing — your counter is a communication. If you don't respond, they walk away and you never know if they had flexibility. If you counter at full list with a tight deadline, you find out exactly who you're dealing with. Want to send a message or find out if there's a deal?"</div>
+    <div class="hint">💡 The seller wants to feel respected. Validate that first. Then reframe the counter as intel-gathering, not concession. They're more likely to respond strategically than emotionally.</div>
+  </div>
+</div>
+
+<!-- PART 4: PRICE REDUCTIONS -->
+<div class="sec pb">
+  <div class="sec-sub">Part Four · 5 Scripts</div>
+  <h2>Price Reductions</h2>
+</div>
+<p>The price reduction conversation is the most avoided conversation in real estate. These scripts make it easier — by framing it as the seller's decision, not your recommendation.</p>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Price · Script 16</div>
+    <div class="sc-title">30 Days, No Offers: Bringing the Data</div>
+    <div class="sc-context">House has been sitting. Time to have the conversation.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Label + Data + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I want to share something with you and I want to do it straight. We've had 22 showings in 30 days. Good traffic. No offers. That tells me the product is right — people want to see the house. Something in the presentation is creating hesitation once they're inside."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "The most common feedback in my showing reports is price against comparable homes. Three homes in your range sold in 19 days this month. They were priced $12,000-$18,000 less than your list."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I'm not saying you have to reduce. What I am saying is: staying at this price for another 30 days is a decision. It costs you $2,400 in mortgage payments. In your view, what would tell you it's time to adjust?"</div>
+    <div class="hint">💡 You're not recommending. You're giving them the decision. "What would tell you it's time?" makes them set their own trigger — and own it.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Price · Script 17</div>
+    <div class="sc-title">Seller Refuses to Reduce: Holding Firm</div>
+    <div class="sc-context">You've recommended twice. They still won't move.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Validation + Honest Frame</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "We're not reducing. We'll wait for the right buyer."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "That makes sense — and it's absolutely your call. I want to be your partner here, not push you. The home is priced where you feel it belongs, and I respect that."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I do want to make sure you have the full picture so this is your decision with open eyes. At the current price, our market absorption rate suggests we'd need to wait 90-120 more days based on who's actively buying in this range. If rates move up, that window shrinks. I'll keep marketing hard — I just want that context clear between us. Does that work?"</div>
+    <div class="hint">💡 Validate first, then plant the timeline seed without ultimatums. They'll think about that 90-120 days number every week. They'll call you when they're ready.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Price · Script 18</div>
+    <div class="sc-title">Appraisal Came in Low: Renegotiating After Appraisal</div>
+    <div class="sc-context">Home appraised $20,000 under contract price. Deal is in jeopardy.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Reframe + Multiple Options</div>
+    <div class="sl"><span class="sc-bd who-you">You (to your seller):</span> "Here's the situation straight. The appraisal came in at $350K. We're contracted at $370K. The buyer's lender won't fund the gap."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "We have three paths. One: seller reduces to $350K. Two: buyer brings the $20K gap in cash — we can ask. Three: we split it — seller drops $10K, buyer covers $10K cash. Which of those can you live with?"</div>
+    <div class="sl"><span class="sc-bd who-th">Seller:</span> "I'm not going all the way to $350K."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Then let's go to the buyer with Option 3 first. If they say no, we have a real decision to make — but let's not leave $10K on the table by assuming the answer."</div>
+    <div class="hint">💡 Multiple options = better than one demand. Option 3 is your real target — present it as the middle-ground compromise between Options 1 and 2.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Price · Script 19</div>
+    <div class="sc-title">Inspection Renegotiation: Buyer Comes Back With a List</div>
+    <div class="sc-context">After inspection, buyer submits 12 repair requests totaling $22,000.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Calibrated Q + Swap</div>
+    <div class="sl"><span class="sc-bd who-you">You (to BA):</span> "$22,000 in repairs — that's a significant ask. Can you walk me through which of these your buyer considers deal-breakers versus preferences?"</div>
+    <div class="sl"><span class="sc-bd who-th">BA:</span> "Really it's the roof and the HVAC. The rest they're flexible on."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "So the deal question is really $14,000 — not $22,000. That's a different conversation. My seller isn't in a position to do repairs, but I can ask about a credit at closing. If we offer a $9,500 credit on those two items, does your buyer stay in the deal?"</div>
+    <div class="hint">💡 Always make them separate deal-breakers from preferences. The real number is almost always smaller than the list total. Then credit instead of repair — faster, cleaner, seller keeps control.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Price · Script 20</div>
+    <div class="sc-title">Buyer's Remorse: "We Want to Renegotiate or Walk"</div>
+    <div class="sc-context">Two days before closing, buyer gets cold feet and calls with demands.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Label + Deadline Dynamics</div>
+    <div class="sl"><span class="sc-bd who-th">BA:</span> "My buyer is having second thoughts. They want a $10,000 price reduction or they're walking."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "It sounds like your buyer is feeling the weight of the decision — closing is a real moment and it's normal for the nerves to hit. I get it." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Here's my honest read: we're two days from close. Your buyer has a signed contract. The demand has no inspection basis. If they walk now, they're in breach — and they lose their earnest money and potentially face a suit."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I'm going to ask you to go back to them with this: the seller is not reducing. They are asking your buyer to close as agreed — and they're offering to leave the refrigerator and the garage shelving, which they were planning to take. That's about $800 in real value. Is there a version of that conversation where your buyer gets to feel like they won something and this closes Thursday?"</div>
+    <div class="hint">💡 Name the legal reality without being threatening. Then give the buyer a small win — the fridge / shelving — so they can feel like they extracted something. Everyone needs to save face.</div>
+  </div>
+</div>
+
+<!-- PART 5: BUYER OBJECTIONS -->
+<div class="sec pb">
+  <div class="sec-sub">Part Five · 5 Scripts</div>
+  <h2>Buyer Objections</h2>
+</div>
+<p>These scripts handle the five buyer conversations that stall or kill deals — from rate anxiety to commitment hesitation.</p>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Buyer · Script 21</div>
+    <div class="sc-title">"The Rates Are Too High — We're Going to Wait"</div>
+    <div class="sc-context">Buyers want to wait for rates to drop. They may wait forever.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Validation + Reframe + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-th">Buyer:</span> "We're just going to wait until rates come down to 5%."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "That makes sense — and rates absolutely matter to your monthly payment. I'm not going to argue that." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Here's the question I'd sit with: when rates drop to 5%, what happens to prices? In this market, the last time rates moved down 1%, inventory tightened and prices went up 7% in 4 months. You may save $200 a month on the payment — and pay $30,000 more for the house."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Would you feel better knowing your monthly payment exactly, compared to what waiting would actually cost you in the real scenario — not the theoretical one?"</div>
+    <div class="hint">💡 Don't argue rates. Reframe the math. "Date the rate, marry the house" — but show it with real numbers, not a slogan.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Buyer · Script 22</div>
+    <div class="sc-title">"We Want to See More Houses Before We Decide"</div>
+    <div class="sc-context">You've shown 15 homes. They've loved three. Fear of commitment.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Label + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-th">Buyer:</span> "We just want to see what else is out there before we make a decision."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "It sounds like you're not sure what 'right' looks like yet — or you're worried you'll find it right after you commit." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-th">Buyer:</span> "Kind of both, honestly."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "If the perfect house existed in your price range — described exactly the way you described it to me on day one — and you walked in tomorrow, would you make an offer?"</div>
+    <div class="sl"><span class="sc-bd who-th">Buyer:</span> "Yes, absolutely."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Then tell me what that house looks like in three words. Because I think we've seen it — and I want to make sure we're not overthinking this."</div>
+    <div class="hint">💡 The "three words" question sharpens their criteria and anchors the conversation on decision, not more searching. You're not pushing — you're clarifying.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Buyer · Script 23</div>
+    <div class="sc-title">"We Don't Want to Use a Buyer's Agent — We'll Go Direct"</div>
+    <div class="sc-context">Post-NAR settlement world. Buyer wants to go direct and save the commission.</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Accusation Audit + Calibrated Q</div>
+    <div class="sl"><span class="sc-bd who-th">Buyer:</span> "We've been reading online — we can just deal directly with the listing agent and save the buyer's agent fee."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "You're right that you can do that — and I won't pretend transaction-only models don't exist. I want to tell you what you're actually trading before you decide." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "The listing agent represents the seller. Their legal duty is to the seller's best outcome. When you negotiate inspection credits, appraisal gaps, or closing terms — who is working for your outcome?"</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I'm not the right buyer's agent for everyone. But what I can do for you — in terms of offer structure, contract language, and knowing when to walk — is worth multiples of my fee. What would it cost you to lose this deal on a technicality in the contract?"</div>
+    <div class="hint">💡 Don't get defensive about your fee. Make them think about the specific risk they're accepting. The inspection and appraisal scenarios land every time.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Buyer · Script 24</div>
+    <div class="sc-title">Buyer Wants to Lowball Before Seeing Comps</div>
+    <div class="sc-context">Buyer says "let's just go in really low and see what happens."</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Honest Frame + Story</div>
+    <div class="sl"><span class="sc-bd who-th">Buyer:</span> "Let's just offer $50,000 under and see what happens."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "I'll write whatever you want me to write — it's your money and your decision. I want to give you one picture first." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "This home has been on market 11 days. In this neighborhood, homes in this range have sold in an average of 18 days at 99% of list price. A $50K-under offer signals to this seller one of two things: you don't know the market, or you're not serious. Either way, they counter high or they don't counter at all."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "What's your real ceiling? Let's build an offer that's your best position — not your opening position. Those are two different numbers."</div>
+    <div class="hint">💡 You're protecting them from a losing strategy, not their budget. "Opening vs ceiling" reframes the conversation from negotiation theater to real strategy.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd">
+    <div class="sc-tag">Buyer · Script 25</div>
+    <div class="sc-title">After an Accepted Offer: Managing Buyer Cold Feet</div>
+    <div class="sc-context">Offer accepted. Buyer texts you at 11pm: "Did we do the right thing?"</div>
+  </div>
+  <div class="sc-bd">
+    <div class="tool-badge">Tools: Label + Validation + Story</div>
+    <div class="sl"><span class="sc-bd who-th">Buyer:</span> "I'm second-guessing everything. What if we overpaid? What if we find something better next month?"</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "This is completely normal — and it actually tells me you're taking this seriously, which means you'll make good decisions as homeowners." [<em>wait</em>]</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "Here's what I know: you didn't make an emotional decision. We ran the comps. You came in at $2K over a supported comp price. You have a 10-day inspection window where you can walk with full earnest money back if anything surfaces."</div>
+    <div class="sl"><span class="sc-bd who-you">You:</span> "The question 'what if something better comes up' is real — but I've watched clients wait for 'better' for 18 months in this market. You found something that met your criteria. That's worth trusting."</div>
+    <div class="hint">💡 Validate the anxiety. Then replace it with data they already agreed to. The inspection reminder is your ace — it's their real safety net and most forget it they have it.</div>
+  </div>
+</div>
+
+<!-- QUICK REF -->
+<div class="sec pb">
+  <div class="sec-sub">Quick Reference</div>
+  <h2>25 Scripts at a Glance</h2>
+</div>
+<pre>
+#   Category          Title                                        Tool
+──────────────────────────────────────────────────────────────────────
+01  Commission        "Another agent will do it for 1%"           Label + Cal Q
+02  Commission        Soft ask for a discount                      Accusation Audit + Swap
+03  Commission        "Going with flat-fee"                        Label + Story
+04  Commission        "My brother-in-law is an agent"             Validation + Cal Q
+05  Commission        Post-listing cut request                     Label + Reframe
+06  Listing           Lead with their pain (opening)              Audit + Label + Cal Q
+07  Listing           "We need to think about it"                  Label + No-Orient Q
+08  Listing           Seller wants over-market price              Validation + Reframe
+09  Listing           Expired listing call                         Audit + Label
+10  Listing           Competing against a friend                  Label + Cal Q
+11  Offer             Pre-offer intel call to LA                  Cal Q + Label
+12  Offer             Presenting in a multiple-offer situation    Framing + Cal Q
+13  Offer             Counter came back high                       Flinch + Cal Q + Swap
+14  Offer             Running best-and-final as LA                Anchor + Deadline
+15  Offer             Seller offended by lowball                  Label + Cal Q
+16  Price             30 days, no offers                          Label + Data + Cal Q
+17  Price             Seller refuses to reduce                    Validation + Honest Frame
+18  Price             Appraisal came in low                       Reframe + Multiple Options
+19  Price             Inspection repair list                      Cal Q + Swap
+20  Price             Buyer's remorse 2 days from close          Label + Deadline
+21  Buyer             "Waiting for rates to drop"                 Validation + Reframe
+22  Buyer             "Want to see more houses"                   Label + Cal Q
+23  Buyer             "Going direct, no buyer's agent"            Audit + Cal Q
+24  Buyer             Wants to lowball before comps               Honest Frame + Story
+25  Buyer             Cold feet after accepted offer              Label + Validation
+</pre>
+
+<h3>The 5 Tools Behind All 25 Scripts</h3>
+<pre>
+Mirror           Repeat last 1-3 words, rising tone. Then wait.
+Label            "It sounds like..." + name the emotion. Then wait.
+Calibrated Q     "How..." or "What..." to make them solve your problem.
+Accusation Audit Name every bad thing they're thinking. First. Out loud.
+Validation       "That makes sense because..." + "And..." (never "but").
+</pre>
+
+<div class="pro-tip" style="margin-top:16px">
+  <strong>Pro Tip from 1,000+ Sessions:</strong> The [wait] marker in every script is not optional. The silence after a label or calibrated question is where the other side reveals their real position. Most rookies break the silence within 2 seconds. Two seconds of silence feels like two minutes. Count five internally. Whatever they say next is the most important information in the conversation.
+</div>
+
+<!-- BACK COVER -->
+<div class="back">
+  <h2>Keep Developing</h2>
+  <p>These 25 scripts are the tactical layer. The full methodology — BATNA, Ackerman bidding, Black Swan, deadline dynamics, reframing, storytelling — is in the NOD Academy manual and the free app.</p>
+  <p>If you want to drill these scenarios live with other practitioners, the Saturday morning sessions are open to everyone. First one is always free.</p>
+
+  <div class="ref-grid" style="margin-top:22px">
+    <div class="ref-c">
+      <h4>Free Practice App</h4>
+      <p>Scenario cards, emotion wheel, tool deck</p>
+      <a href="https://dan8nod.github.io/NOD-ify">dan8nod.github.io/NOD-ify</a>
+    </div>
+    <div class="ref-c">
+      <h4>Full Book — Amazon</h4>
+      <p>33 chapters, 9 tools, complete methodology</p>
+      <a href="#">Search "NOD ACADEMY Dan Cruz"</a>
+    </div>
+    <div class="ref-c">
+      <h4>Live Saturday Practice</h4>
+      <p>Every Saturday 9am Chicago. First one free.</p>
+      <a href="https://negotiatorsondemand.com">negotiatorsondemand.com</a>
+    </div>
+    <div class="ref-c">
+      <h4>Corporate Training / Coaching</h4>
+      <p>Workshops for brokerages and sales teams.</p>
+      <a href="mailto:negotiatorsondemand@gmail.com">negotiatorsondemand@gmail.com</a>
+    </div>
+  </div>
+
+  <div style="margin-top:28px">
+    <p style="color:#555;font-size:.72em;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px">Dan Cruz — NOD Academy</p>
+    <a href="mailto:negotiatorsondemand@gmail.com" style="display:block;margin:3px 0;font-size:.88em">✉ negotiatorsondemand@gmail.com</a>
+    <a href="https://negotiatorsondemand.com" style="display:block;margin:3px 0;font-size:.88em">🌐 negotiatorsondemand.com</a>
+    <a href="https://linkedin.com/in/dancruznegotiator" style="display:block;margin:3px 0;font-size:.88em">in linkedin.com/in/dancruznegotiator</a>
+  </div>
+
+  <p style="color:#333;font-size:.7em;letter-spacing:.2em;text-transform:uppercase;margin-top:40px">Walk the stairway. Kill people with empathy — no excuse.</p>
+</div>
+
+</body>
+</html>

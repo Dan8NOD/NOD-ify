@@ -1,0 +1,455 @@
+#!/usr/bin/env python3
+"""NOD ACADEMY Negotiation Field Guide — HTML → PDF builder."""
+import os, subprocess
+
+OUT_DIR  = os.path.dirname(os.path.abspath(__file__))
+OUT_HTML = os.path.join(OUT_DIR, "NOD_Field_Guide.html")
+OUT_PDF  = os.path.join(OUT_DIR, "NOD_Field_Guide.pdf")
+
+HTML = r"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NOD ACADEMY — Negotiation Field Guide</title>
+<style>
+:root{--gold:#C9A935;--dark:#090909;--ink:#111;--paper:#faf9f6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Times New Roman',Georgia,serif;font-size:11pt;line-height:1.7;color:var(--ink);background:var(--paper);max-width:780px;margin:0 auto;padding:48px 56px}
+
+.cover{min-height:94vh;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;page-break-after:always;margin:-48px -56px 0;padding:60px 56px}
+.cover h1{font-size:3.2em;color:#fff;letter-spacing:.04em;margin-bottom:8px}
+.cover .sub{font-size:1.1em;color:var(--gold);font-style:italic;margin-bottom:28px}
+.cover .gold-rule{width:56px;height:2.5px;background:var(--gold);margin:0 auto 24px}
+.cover .desc{color:#666;max-width:380px;font-size:.88em;font-style:italic;line-height:1.6}
+.cover .series{font-size:.7em;color:#555;letter-spacing:.2em;text-transform:uppercase;margin-top:28px}
+.cover .author{font-size:.98em;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-top:10px}
+
+.links-banner{background:var(--dark);padding:16px 24px;margin:-48px -56px 36px;display:grid;grid-template-columns:1fr 1fr;gap:10px;border-bottom:2px solid var(--gold);font-size:.78em}
+.links-banner .lbl{color:#666;font-size:.7em;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.links-banner a{color:var(--gold);text-decoration:none}
+
+.section-opener{background:var(--dark);margin:-4px -56px 26px;padding:16px 56px;border-bottom:2px solid var(--gold);page-break-before:always}
+.section-opener h2{font-size:1.55em;font-weight:700;color:#fff;margin:0}
+.section-opener .sec-sub{color:var(--gold);font-size:.72em;letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.section-opener:first-of-type{page-break-before:avoid}
+.pb{page-break-before:always}
+
+h3{font-size:1.18em;font-weight:700;color:var(--ink);margin:22px 0 6px;border-left:3px solid var(--gold);padding-left:10px}
+h4{font-size:.87em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888;margin:18px 0 4px}
+p{margin:6px 0;text-align:justify}
+blockquote{border-left:3px solid var(--gold);padding:8px 14px;margin:12px 0;font-style:italic;color:#555;background:#fffdf4;border-radius:0 3px 3px 0}
+ul,ol{padding-left:20px;margin:6px 0}
+li{margin:3px 0}
+strong{font-weight:700}
+pre{background:var(--dark);color:#ccc;padding:10px 14px;font-size:8.5pt;line-height:1.6;border-left:3px solid var(--gold);margin:10px 0;white-space:pre-wrap;word-break:break-word;font-family:'Courier New',monospace}
+
+.tc{border:1.5px solid var(--gold);margin:18px 0;page-break-inside:avoid;background:#fff}
+.tc-hd{background:var(--dark);padding:9px 14px;display:flex;align-items:center;gap:10px}
+.tc-num{font-size:1.5em;color:var(--gold);opacity:.5;line-height:1;font-weight:700}
+.tc-name{font-weight:700;color:#fff;font-size:1em}
+.tc-lv{font-size:.65em;color:var(--gold);opacity:.7;letter-spacing:.1em;text-transform:uppercase}
+.tc-bd{padding:12px 14px}
+.tc-line{font-size:.82em;background:#f5f2ef;padding:6px 10px;margin:8px 0;font-style:italic;border-left:2px solid var(--gold)}
+.tc-try{font-size:.77em;color:#888;border-top:1px solid #eee;padding-top:8px;margin-top:8px}
+.tc-nug{font-size:.79em;font-weight:700;color:var(--gold);margin-top:5px}
+
+.sc{border:1px solid #ddd;margin:16px 0;page-break-inside:avoid}
+.sc-hd{background:#f5f2ef;padding:8px 14px;border-bottom:1px solid #ddd}
+.sc-tag{font-size:.65em;text-transform:uppercase;letter-spacing:.1em;color:#999;font-weight:700}
+.sc-title{font-weight:700;font-size:1em;margin-top:2px}
+.sc-bd{padding:12px 14px}
+.sl{font-size:.83em;margin:5px 0}
+.sl .who{font-weight:700;color:var(--gold);min-width:60px;display:inline-block}
+.hint{font-size:.76em;color:#888;border-top:1px dashed #ddd;padding-top:8px;margin-top:8px}
+
+.dbox{background:var(--dark);color:#fff;padding:14px 18px;margin:18px 0;border:1.5px solid var(--gold)}
+.dbox h4{color:var(--gold);margin-top:0;margin-bottom:6px}
+.dbox p{color:#bbb;font-size:.9em;margin:4px 0}
+.dbox .principle{color:#888;font-size:.82em;font-style:italic;margin-top:8px;border-top:1px solid #333;padding-top:8px}
+
+.ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.ref-c{border:1.5px solid var(--gold);padding:14px;background:#fff}
+.ref-c h4{color:var(--gold);font-size:.7em;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.ref-c p{font-size:.84em;color:#555;margin:2px 0}
+.ref-c a{color:#1a3a1a;text-decoration:none;font-weight:700;font-size:.84em}
+
+.back{background:var(--dark);margin:-48px -56px -48px;padding:60px 56px;page-break-before:always;min-height:80vh}
+.back h2{color:var(--gold);font-size:1.8em;margin-bottom:20px}
+.back p{color:#aaa;font-size:.93em;margin:10px 0;max-width:520px}
+.back .contact a{color:var(--gold);text-decoration:none;font-size:.95em;display:block;margin:4px 0}
+.back .tagline{font-size:.75em;color:#444;letter-spacing:.2em;text-transform:uppercase;margin-top:40px}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <svg width="120" height="60" xmlns="http://www.w3.org/2000/svg" style="opacity:.15;margin-bottom:8px">
+    <polyline points="5,55 5,45 20,45 20,32 38,32 38,18 60,18 60,5 85,5 85,0" fill="none" stroke="#C9A935" stroke-width="2"/>
+  </svg>
+  <h1>NOD ACADEMY</h1>
+  <div class="sub">Negotiation Field Guide</div>
+  <div class="gold-rule"></div>
+  <div class="desc">25 tools. Real scenarios. Immediate results.<br>Based on 1,000+ live practice sessions.</div>
+  <div class="series">Companion to NOD ACADEMY — The Practice-First Negotiation Manual</div>
+  <div class="author">Dan Cruz</div>
+  <div style="color:#444;font-size:.65em;margin-top:20px;letter-spacing:.2em;text-transform:uppercase">First Edition · Free Field Guide</div>
+</div>
+
+<!-- LINKS BANNER -->
+<div class="links-banner">
+  <div><div class="lbl">Free App</div><a href="https://dan8nod.github.io/NOD-ify">dan8nod.github.io/NOD-ify</a></div>
+  <div><div class="lbl">Full Book on Amazon</div><a href="#">Search "NOD ACADEMY Dan Cruz"</a></div>
+  <div><div class="lbl">Saturday Practice (Free)</div><a href="https://negotiatorsondemand.com">negotiatorsondemand.com</a></div>
+  <div><div class="lbl">Hire Dan / Write Me</div><a href="mailto:negotiatorsondemand@gmail.com">negotiatorsondemand@gmail.com</a></div>
+</div>
+
+<!-- HOW TO USE -->
+<h3>How to Use This Guide</h3>
+<p>This is a carry-everywhere reference — not a textbook.</p>
+<ul>
+  <li><strong>Before a tough conversation:</strong> pick one tool from Part 1. Use only that one.</li>
+  <li><strong>After a negotiation that went sideways:</strong> find the scenario in Part 2. Circle what you wish you'd said.</li>
+  <li><strong>For daily reps:</strong> the 30-day drill on the last page. One micro-negotiation per day.</li>
+</ul>
+<blockquote>"You can't win a game you don't know you're playing." — NOD Academy, Ch 1</blockquote>
+
+<!-- PART 1 -->
+<div class="section-opener pb">
+  <div class="sec-sub">Part One</div>
+  <h2>The 9 Core Tools</h2>
+</div>
+<p>These tools are taught at Level 1 of NOD Academy. Master these nine and you handle 80% of the negotiations in your life. They're grounded in FBI hostage negotiation research — tested where the wrong word had immediate, irreversible consequences.</p>
+
+<div class="tc">
+  <div class="tc-hd"><span class="tc-num">1</span><div><div class="tc-name">Mirror</div><div class="tc-lv">Level 1 · Listening</div></div></div>
+  <div class="tc-bd">
+    <p>Repeat the last 1–3 words the other person says. Rising inflection. Then shut up.</p>
+    <div class="tc-line">"I'm worried about the timeline." → <strong>"Worried about the timeline?"</strong> → [silence]</div>
+    <p>They elaborate. You get deeper information without asking a direct question. The mirror is a key. Silence is the door. Use both.</p>
+    <div class="tc-try">Try it: In your next meeting, mirror at least 3 times. Notice how much more you learn.</div>
+    <div class="tc-nug">Nugget: The mirror is a key. Silence is the door. Use both.</div>
+  </div>
+</div>
+
+<div class="tc">
+  <div class="tc-hd"><span class="tc-num">2</span><div><div class="tc-name">Label</div><div class="tc-lv">Level 1 · Listening</div></div></div>
+  <div class="tc-bd">
+    <p>Name the emotion you sense. Don't own it — propose it with "It sounds like..." or "It seems like..."</p>
+    <div class="tc-line">"It sounds like you've been carrying this longer than you should have had to."</div>
+    <p>Naming a negative emotion deactivates it neurologically. The tension drops. People who feel understood engage rather than dig in.</p>
+    <div class="tc-try">Try it: Drop one label before explaining your position in a tense conversation. Watch the temperature drop.</div>
+    <div class="tc-nug">Nugget: Named emotions lose their power over the conversation.</div>
+  </div>
+</div>
+
+<div class="tc">
+  <div class="tc-hd"><span class="tc-num">3</span><div><div class="tc-name">Dynamic Silence</div><div class="tc-lv">Level 1 · Listening</div></div></div>
+  <div class="tc-bd">
+    <p>After you say something significant — a price, a request, a position — count five seconds before speaking again.</p>
+    <div class="tc-line">Make offer → [5-second internal count] → wait → they move</div>
+    <p>Most people cannot hold silence. Silence signals confidence. It says: I believe this number. I'm not nervous. I have options. First person to speak after an offer loses leverage.</p>
+    <div class="tc-try">Try it: Make a request and don't add "...if that's okay." State it. Stop. Count to five silently.</div>
+    <div class="tc-nug">Nugget: First person to speak after an offer loses.</div>
+  </div>
+</div>
+
+<div class="tc">
+  <div class="tc-hd"><span class="tc-num">4</span><div><div class="tc-name">Accusation Audit</div><div class="tc-lv">Level 1 · Listening</div></div></div>
+  <div class="tc-bd">
+    <p>Before your pitch, name every bad thing they might be thinking about you or the deal. Out loud. First.</p>
+    <div class="tc-line">"I know this might seem overpriced. I know you've had issues with vendors before. I know this timeline is tight."</div>
+    <p>This disarms resistance before they've voiced it. You signal confidence. Often they'll defend you: "It's not that bad, really..."</p>
+    <div class="tc-try">Try it: Before your next presentation, list 3 silent objections. Open with them.</div>
+    <div class="tc-nug">Nugget: Name the monster before it grows. It shrinks when seen.</div>
+  </div>
+</div>
+
+<div class="tc">
+  <div class="tc-hd"><span class="tc-num">5</span><div><div class="tc-name">Calibrated Question</div><div class="tc-lv">Level 2 · Dialogue</div></div></div>
+  <div class="tc-bd">
+    <p>"How" and "What" questions that make the other side solve your problem. Never "Why" — why sounds like an accusation.</p>
+    <div class="tc-line">"How am I supposed to work with that?" &nbsp;·&nbsp; "What would need to change for this to work?"</div>
+    <p>When you hit a wall, don't argue. Ask. They shift from adversary to architect.</p>
+    <div class="tc-try">Try it: Replace one direct rebuttal with a calibrated "How" or "What" question. Notice what changes.</div>
+    <div class="tc-nug">Nugget: Don't argue their position. Question it open.</div>
+  </div>
+</div>
+
+<div class="tc">
+  <div class="tc-hd"><span class="tc-num">6</span><div><div class="tc-name">The Flinch</div><div class="tc-lv">Level 2 · Dialogue</div></div></div>
+  <div class="tc-bd">
+    <p>React visibly when you hear a number. Say it back with a questioning tone. Eyes widen. Then go silent.</p>
+    <div class="tc-line">"$500?" [raised eyebrows, 2-second pause, eye contact] → they adjust</div>
+    <p>Most people watch for your reaction when they name a price. They already know it's aggressive. The flinch gives them permission to adjust. Without it, they hold.</p>
+    <div class="tc-try">Try it: Next time someone quotes you in person, say the number back questioningly and wait.</div>
+    <div class="tc-nug">Nugget: Your face is a negotiation tool. Use it.</div>
+  </div>
+</div>
+
+<div class="tc">
+  <div class="tc-hd"><span class="tc-num">7</span><div><div class="tc-name">The Swap</div><div class="tc-lv">Level 2 · Dialogue</div></div></div>
+  <div class="tc-bd">
+    <p>Never give a concession without getting one back. Every yes has a price. Collect it.</p>
+    <div class="tc-line">"If I can come down on price, what can you do for me on timeline / terms / volume?"</div>
+    <p>Unilateral concessions train the other side to ask for more. Swapping creates a transaction, not a donation — and surfaces value they can give you that costs them almost nothing.</p>
+    <div class="tc-try">Try it: Before your next concession, ask "If I do X, what can you do for me?"</div>
+    <div class="tc-nug">Nugget: Never give. Always swap.</div>
+  </div>
+</div>
+
+<div class="tc">
+  <div class="tc-hd"><span class="tc-num">8</span><div><div class="tc-name">Validation</div><div class="tc-lv">Level 2 · Dialogue</div></div></div>
+  <div class="tc-bd">
+    <p>Acknowledge the logic of their position without agreeing to it. "That makes sense because..." — five powerful words.</p>
+    <div class="tc-line">"That makes total sense. If I were in your position, I'd feel the same way. And what I'm working with is..."</div>
+    <p>Use "and" not "but." "But" cancels everything before it. "And" builds on it. Their defensive posture drops; now they have room to be flexible.</p>
+    <div class="tc-try">Try it: Say "that makes sense" before your next counter. Notice the shift.</div>
+    <div class="tc-nug">Nugget: Validate the logic. Disagree with the outcome. Only one is your job right now.</div>
+  </div>
+</div>
+
+<div class="tc">
+  <div class="tc-hd"><span class="tc-num">9</span><div><div class="tc-name">The Late-Night Voice</div><div class="tc-lv">Level 2 · Dialogue</div></div></div>
+  <div class="tc-bd">
+    <p>Slow. Calm. Low. Deliberate. Drop your pitch at the end of sentences. Use this when naming your price or holding a difficult position.</p>
+    <div class="tc-line">[Slow down] [Drop pitch] [Pause before key words] [Hold eye contact after]</div>
+    <p>The same sentence in two tones creates two different negotiations. The late-night voice signals you are the most composed person in the room. People regulate to calm. Be the anchor.</p>
+    <div class="tc-try">Try it: Record a conversation. Listen for where your voice speeds up or rises. Fix one thing.</div>
+    <div class="tc-nug">Nugget: The late-night voice is a scalpel. Most people use a hammer.</div>
+  </div>
+</div>
+
+<!-- PART 2 -->
+<div class="section-opener pb">
+  <div class="sec-sub">Part Two</div>
+  <h2>7 Real Scenarios with Scripts</h2>
+</div>
+<p>These are the negotiations most people face — and lose, or leave money on the table in, because they never had the actual language. Each card gives the setup, the move, and lines you can use directly.</p>
+
+<div class="sc">
+  <div class="sc-hd"><div class="sc-tag">The Raise</div><div class="sc-title">Managing Up: The Salary Conversation</div></div>
+  <div class="sc-bd">
+    <p><strong>Setup:</strong> Performance review. You want more. They hold the pen.</p>
+    <div class="sl"><span class="who">Boss:</span> "We're looking at a standard increase for your bracket."</div>
+    <div class="sl"><span class="who">You:</span> "I appreciate that. Before we settle — what would it take for this role to be in the top quartile of market?"</div>
+    <div class="sl"><span class="who">Boss:</span> "We'd need more consistent deal flow."</div>
+    <div class="sl"><span class="who">You:</span> "I closed 14 deals last year — 3 above quota. What specific metric makes that case?"</div>
+    <div class="hint">💡 Know your BATNA → let them anchor → calibrated Q to their constraint</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd"><div class="sc-tag">The Deadline</div><div class="sc-title">Managing Up: The Unrealistic Timeline</div></div>
+  <div class="sc-bd">
+    <p><strong>Setup:</strong> Boss drops a project with a timeline that doesn't add up.</p>
+    <div class="sl"><span class="who">Boss:</span> "I need this by Friday. No exceptions."</div>
+    <div class="sl"><span class="who">You:</span> "It sounds like there's real pressure on this one. I want to deliver something we're both proud of."</div>
+    <div class="sl"><span class="who">You:</span> "If Friday's the hard line — I can hit it if we drop scope A and B. Or go full depth on all three by Tuesday. Which serves the goal better?"</div>
+    <div class="hint">💡 Label their pressure → reframe as trade-off → let them choose</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd"><div class="sc-tag">The Offer</div><div class="sc-title">Salary: Never Same-Day</div></div>
+  <div class="sc-bd">
+    <p><strong>Setup:</strong> Job offer comes in. You feel pressure to respond now.</p>
+    <div class="sl"><span class="who">HR:</span> "We'd like to offer you $78,000."</div>
+    <div class="sl"><span class="who">You:</span> "I'm genuinely excited. I want to give this proper consideration — can I have until Thursday?"</div>
+    <div class="sl"><span class="who">You (Thu):</span> "Based on market data for this scope, I was thinking $88,000. Is there flexibility?"</div>
+    <div class="hint">💡 Never accept same-day → ask 48h → return with a data-anchored specific number</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd"><div class="sc-tag">The Rent</div><div class="sc-title">Renting: Stability Is Your Leverage</div></div>
+  <div class="sc-bd">
+    <p><strong>Setup:</strong> Listed $1,850. Landlord says $1,800 is the floor.</p>
+    <div class="sl"><span class="who">You:</span> "If I sign 14 months and pay first + last upfront, would you do $1,775?"</div>
+    <div class="hint">💡 Longer lease + upfront payment = landlord's real priority (certainty). Trade it for price.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd"><div class="sc-tag">Contractor</div><div class="sc-title">Service Quotes: The One Question</div></div>
+  <div class="sc-bd">
+    <p><strong>Setup:</strong> Quote feels high. No competing number yet.</p>
+    <div class="sl"><span class="who">You:</span> "Is that the best you can do?" [then say nothing else]</div>
+    <div class="sl"><span class="who">Contractor:</span> "...I could do $X."</div>
+    <div class="sl"><span class="who">You:</span> "I also need [second job] while you're here — what's the combined number?"</div>
+    <div class="hint">💡 One question + silence = 10-15% off alone. Bundle for another 5-10%.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd"><div class="sc-tag">Family</div><div class="sc-title">Difficult Conversations: The Pause Protocol</div></div>
+  <div class="sc-bd">
+    <p><strong>Setup:</strong> Tense conversation. Both sides loaded.</p>
+    <div class="sl"><span class="who">You:</span> "It sounds like this has been weighing on you longer than just today."</div>
+    <div class="sl"><span class="who">[Silence]</span></div>
+    <div class="sl"><span class="who">You:</span> "[Mirror their last phrase]?"</div>
+    <div class="sl"><span class="who">You:</span> "What would make this work for both of us?"</div>
+    <div class="hint">💡 Rule: you cannot state your position until you've labeled their emotion twice.</div>
+  </div>
+</div>
+
+<div class="sc">
+  <div class="sc-hd"><div class="sc-tag">Real Estate</div><div class="sc-title">Listing Agent Intel Move</div></div>
+  <div class="sc-bd">
+    <p><strong>Setup:</strong> You're making an offer. You want to know what the seller actually needs.</p>
+    <div class="sl"><span class="who">You:</span> "What matters most to your seller beyond price?"</div>
+    <div class="sl"><span class="who">Agent:</span> "Honestly? They've already moved. They need to close fast."</div>
+    <div class="sl"><span class="who">You:</span> "If we offer 21-day close with no contingencies, what does that do to the price conversation?"</div>
+    <div class="hint">💡 Terms close deals. Price just gets you in the room.</div>
+  </div>
+</div>
+
+<!-- PART 3 — DREAM SPINE -->
+<div class="section-opener pb">
+  <div class="sec-sub">Part Three</div>
+  <h2>The Dream Spine — Where These Tools Come From</h2>
+</div>
+<p>The NOD ACADEMY manual traces back to five dreams. Not five ideas — five actual dreams, recorded and turned into negotiation principles. Each one describes a situation every negotiator faces. Here they are, plain and straight.</p>
+
+<div class="dbox">
+  <h4>Dream 1 — The White Shirt Protocol</h4>
+  <p>A man in white walks into a room. The room calms down. He does not say a word. The room adjusts to him.</p>
+  <p class="principle">The principle: Real power shows up before you speak. Your presence tells the room whether you're nervous or settled. Tools: Late-Night Voice, Dynamic Silence. Anchors: Ch 1, 4, 16.</p>
+</div>
+
+<div class="dbox">
+  <h4>Dream 2 — The Office Right Turn</h4>
+  <p>Someone tries to trap me in an argument. Instead of fighting, I make a clean right turn and walk away. I feel lighter. Not defeated. Lighter.</p>
+  <p class="principle">The principle: Your ability to leave is your biggest source of power. Make the right turn. Don't chase. Tools: BATNA, Dynamic Silence. Anchors: Ch 2, 5, 9.</p>
+</div>
+
+<div class="dbox">
+  <h4>Dream 3 — Flattening to 2D</h4>
+  <p>A situation full of drama and noise suddenly becomes flat — like a board game on a table. All the emotion drains out. I just see pieces and moves.</p>
+  <p class="principle">The principle: Strip out the 3D drama. What is the actual problem? Solve that one thing. Tools: Label, Accusation Audit. Anchors: Ch 3, 7, 8.</p>
+</div>
+
+<div class="dbox">
+  <h4>Dream 4 — The Power Strip Past the Receptionist</h4>
+  <p>I need to plug something in. There's a desk blocking the way. I walk past the desk and plug directly into the main power grid. Simple.</p>
+  <p class="principle">The principle: Most deals stall when you're talking to someone who cannot say yes. Find the decision-maker. Plug into the source. Tools: Calibrated Question. Anchors: Ch 10, 13, 17.</p>
+</div>
+
+<div class="dbox">
+  <h4>Dream 5 — The Chutzpah Throne Strike</h4>
+  <p>A figure strikes once — hard, precise, from total calm — and then goes completely still. High force. No wasted motion. No self-importance.</p>
+  <p class="principle">The principle: The best negotiators are quieter than you expect. One sentence. One move. Full conviction. Then still. Tools: The Flinch, Silence. Anchors: Ch 11, 24, 30.</p>
+</div>
+
+<!-- PART 4 — QUICK REF -->
+<div class="section-opener pb">
+  <div class="sec-sub">Part Four</div>
+  <h2>Quick Reference — Cheat Sheet</h2>
+</div>
+
+<h3>The 9 Moves at a Glance</h3>
+<pre>
+Tool                  One-Line Move                                 Level
+──────────────────────────────────────────────────────────────────────
+Mirror                Repeat last 1-3 words, rising tone →          1
+Label                 "It sounds like..." + emotion →               1
+Dynamic Silence       Make offer. Count 5 silently. Wait →          1
+Accusation Audit      Name the negatives first →                    1
+Calibrated Question   "How am I supposed to...?" →                  2
+The Flinch            "$X?" + wide eyes + silence →                 2
+The Swap              "If I do X, what can you do for me?" →        2
+Validation            "That makes sense because..." →               2
+Late-Night Voice      Slow + low + calm = authority →               2
+</pre>
+
+<h3>3-Question Pre-Negotiation Prep</h3>
+<ol>
+  <li><strong>What is my BATNA?</strong> — What do I do if this deal falls through?</li>
+  <li><strong>What is their BATNA?</strong> — What do they do if this falls through?</li>
+  <li><strong>What are they feeling right now?</strong> — Name it. That's your opening.</li>
+</ol>
+
+<h3>The Ackerman Bidding System — Price Negotiations</h3>
+<pre>
+Set your target price. Then bid in 4 rounds:
+  Round 1: 65% of target   ← extreme anchor, expect shock
+  Round 2: 85% of target   ← half the gap closed
+  Round 3: 95% of target   ← signals you're approaching ceiling
+  Round 4: 99% odd number  ← e.g., $4,953 not $5,000
+
+Between each bid: label their frustration, then use a calibrated Q.
+The odd final number signals: "I did the math. This is real."
+</pre>
+
+<h3>30-Day Micro-Negotiation Drill</h3>
+<pre>
+Week 1 (Listening)  Mirror every conversation partner once per day.
+                     Goal: instinctive, not conscious.
+
+Week 2 (Asking)     Ask for something every day — discount, upgrade,
+                     extension. "No" is fine. The ask is the drill.
+
+Week 3 (Silence)    After every significant statement, pause 3 seconds.
+                     Count it. No "...if that's okay."
+
+Week 4 (Full Run)   Run the full sequence in one conversation per day:
+                     label → mirror → calibrated Q → summary.
+
+Log each one in 3 sentences:
+  1. What I did.
+  2. What they did.
+  3. What I'll do differently next time.
+</pre>
+
+<blockquote><em>"I will use these tools to create clarity, not confusion. More dignity, not less. I will listen to understand, not to win. When this conversation ends, the other person will not feel beaten. They will feel heard. That is the standard."</em> — The NOD Pledge</blockquote>
+
+<!-- BACK COVER -->
+<div class="back">
+  <h2>Keep Going</h2>
+  <p>This guide is the beginning, not the end. The full 33-chapter manual has the complete methodology — BATNA, Ackerman, Black Swan, deadline dynamics, reframing, storytelling, and more. Every tool linked to five actual dreams that gave the tactics an unusual depth.</p>
+
+  <div class="ref-grid" style="margin-top:24px">
+    <div class="ref-c">
+      <h4>Free Practice App</h4>
+      <p>Tool Deck · Emotion Wheel · Scenario Cards</p>
+      <a href="https://dan8nod.github.io/NOD-ify">dan8nod.github.io/NOD-ify</a>
+    </div>
+    <div class="ref-c">
+      <h4>Full Book on Amazon</h4>
+      <p>NOD ACADEMY — The Practice-First Negotiation Manual</p>
+      <a href="#">Search "NOD ACADEMY Dan Cruz"</a>
+    </div>
+    <div class="ref-c">
+      <h4>Saturday Practice (Free)</h4>
+      <p>Live sessions every Saturday, 9am Chicago. First one free.</p>
+      <a href="https://negotiatorsondemand.com">negotiatorsondemand.com</a>
+    </div>
+    <div class="ref-c">
+      <h4>Hire Dan / Write Me</h4>
+      <p>Corporate workshops · keynotes · coaching</p>
+      <a href="mailto:negotiatorsondemand@gmail.com">negotiatorsondemand@gmail.com</a>
+    </div>
+  </div>
+
+  <div class="contact" style="margin-top:32px">
+    <p style="color:#666;font-size:.75em;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px">Connect</p>
+    <a href="mailto:negotiatorsondemand@gmail.com">✉ negotiatorsondemand@gmail.com</a>
+    <a href="https://negotiatorsondemand.com">🌐 negotiatorsondemand.com</a>
+    <a href="https://linkedin.com/in/dancruznegotiator">in linkedin.com/in/dancruznegotiator</a>
+  </div>
+
+  <p class="tagline">Walk the stairway. Kill people with empathy — no excuse.</p>
+</div>
+
+</body>
+</html>"""
+
+with open(OUT_HTML, 'w') as f:
+    f.write(HTML)
+print(f"HTML: {OUT_HTML} ({os.path.getsize(OUT_HTML)//1024} KB)")
+
+# PDF via macOS: open in default browser and print
+subprocess.Popen(['open', OUT_HTML])
+print(f"\nOpened in browser. To save PDF:")
+print(f"  Cmd+P → Save as PDF → Destination: Save to PDF")
+print(f"Save to: {OUT_PDF}")
