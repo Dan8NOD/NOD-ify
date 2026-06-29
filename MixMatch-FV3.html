@@ -7,19 +7,6 @@
     <!-- ponytail: issue #30 — GA4 placeholder, replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XXXXXXXXXX');
-    </script>
-    <!-- ponytail: synth audio — no MP3 files needed, Web Audio API generates casino sounds via oscillators -->
-    <script>
-    const SFX={ctx:null,init(){if(!this.ctx){this.ctx=new(window.AudioContext||window.webkitAudioContext)}},tone(f,t=50,v=.08){try{this.init();const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type='sine';o.frequency.setValueAtTime(f,this.ctx.currentTime);g.gain.setValueAtTime(v,this.ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,this.ctx.currentTime+t/1e3);o.connect(g);g.connect(this.ctx.destination);o.start();o.stop(this.ctx.currentTime+t/1e3)}catch(e){}},
-    click(){this.tone(800,50)},coin(){this.tone(1200,80,.1);setTimeout(()=>this.tone(1600,100,.06),80)},spin(){this.tone(600,30,.03);setTimeout(()=>this.tone(700,30,.03),80);setTimeout(()=>this.tone(800,40,.03),160)},
-    ching(){this.tone(1000,60,.08);setTimeout(()=>this.tone(1500,100,.06),70);setTimeout(()=>this.tone(2000,120,.04),140)},
-    };
-    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Press+Start+2P&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1326,6 +1313,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                     <button class="btn btn-ghost btn-sm" id="stopBtn" onclick="stopSession()" style="display:none;color:var(--red);">⏹ Stop</button>
                     <button class="btn btn-ghost btn-sm" onclick="resetSession()">↺ Reset</button>
                     <button class="btn btn-ghost btn-sm" onclick="shuffleTools()">🔀 Shuffle</button>
+                    <button class="btn btn-ghost btn-sm" id="cardsToggleBtn" onclick="toggleCardsArea()">➖ Cards</button>
                     <button class="bk-btn-glow" id="bkBtn" onclick="toggleMode('bk')">🥊 BK OFF</button>
             <div class="timer-display">
                 <span class="timer-label">Timer</span>
@@ -1426,20 +1414,6 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                     <input type="range" id="emoDepth" min="0" max="2" value="0" step="1"
                            oninput="setEmoDepth(this.value)">
                     <span class="depth-val" id="emoDepthLabel">Names only</span>
-                </div>
-            </div>
-
-            <!-- ─── Label Maker ─── -->
-            <div class="label-maker" id="labelMaker">
-                <div class="lm-header">
-                    <h3>&#127483;&#8205;&#127987; Label Maker</h3>
-                    <span class="lm-badge" id="lmCount">2 ready</span>
-                </div>
-                <div class="lm-cards" id="lmCards">
-                    <div class="lm-empty">Loading labels…</div>
-                </div>
-                <div class="lm-actions">
-                    <button class="btn" onclick="generateLabels()">&#128260; Generate more</button>
                 </div>
             </div>
         </div>
@@ -1610,6 +1584,23 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
 </div>
 
 <script>
+// ═══════════════════════════════════════════════════════════════════════
+// GA4 INIT (merged from head)
+// ═══════════════════════════════════════════════════════════════════════
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX');
+
+// ═══════════════════════════════════════════════════════════════════════
+// SFX — Web Audio API casino sounds (merged from head)
+// ponytail: synth audio — no MP3 files needed, oscillators only
+// ═══════════════════════════════════════════════════════════════════════
+const SFX={ctx:null,init(){if(!this.ctx){this.ctx=new(window.AudioContext||window.webkitAudioContext)}},tone(f,t=50,v=.08){try{this.init();const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type='sine';o.frequency.setValueAtTime(f,this.ctx.currentTime);g.gain.setValueAtTime(v,this.ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,this.ctx.currentTime+t/1e3);o.connect(g);g.connect(this.ctx.destination);o.start();o.stop(this.ctx.currentTime+t/1e3)}catch(e){}},
+click(){this.tone(800,50)},coin(){this.tone(1200,80,.1);setTimeout(()=>this.tone(1600,100,.06),80)},spin(){this.tone(600,30,.03);setTimeout(()=>this.tone(700,30,.03),80);setTimeout(()=>this.tone(800,40,.03),160)},
+ching(){this.tone(1000,60,.08);setTimeout(()=>this.tone(1500,100,.06),70);setTimeout(()=>this.tone(2000,120,.04),140)},
+};
+
 // ═══════════════════════════════════════════════════════════════════════
 // TOOLS DATA
 // ═══════════════════════════════════════════════════════════════════════
@@ -2291,6 +2282,7 @@ function startSession(){
 
 function getNextTool(){
     if(!state.sessionActive) return;
+    if(state.endTime === null) return; // session not fully started
     if(Date.now()>state.endTime){endSession();return;}
     if(!state.currentDeck.length){
         if(state.usedTools.length||state.skippedTools.length){buildDeck();state.round++;}
@@ -2379,17 +2371,25 @@ function resetSession(){
     if(state.timer) clearInterval(state.timer);
     state.sessionActive=false; state.timer=null; state.currentDeck=[];
     state.usedTools=[]; state.skippedTools=[]; state.currentTool=null;
-    state.round=0; state.sessionStartTime=null;
+    state.round=0; state.sessionStartTime=null; state.endTime=null;
     document.getElementById('startBtn').disabled=false;
     document.getElementById('startBtn').innerHTML='▶ Start';
     document.getElementById('nextBtn').disabled=true;
     document.getElementById('stopBtn').style.display='none';
     document.getElementById('skipBtn').style.display='none';
     hideBanner(); renderToolsView(); renderLog();
-    document.getElementById('timerDisplay').textContent='00:00';
+    const dur = parseInt(document.getElementById('durationInput').value, 10) || 10;
+    document.getElementById('timerDisplay').textContent = `${String(dur).padStart(2,'0')}:00`;
 }
 
 function shuffleTools(){if(state.sessionActive){shuffleArray(state.currentDeck);renderCards();}}
+function toggleCardsArea(){
+    const area = document.getElementById('cardsArea');
+    const btn = document.getElementById('cardsToggleBtn');
+    const hidden = area.style.display === 'none';
+    area.style.display = hidden ? '' : 'none';
+    btn.textContent = hidden ? '➖ Cards' : '➕ Cards';
+}
 function hideBanner(){document.getElementById('currentBanner').classList.remove('show');}
 function clearLog(){state.usedTools=[];state.skippedTools=[];state.currentDeck=[];state.currentTool=null;state.round=0;renderLog();renderToolsView();}
 
