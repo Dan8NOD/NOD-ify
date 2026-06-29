@@ -1634,7 +1634,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <button class="nav-tab" onclick="switchView('friend',this)" style="color:#66bb6a;">&#129309; Friend</button>
         <button class="nav-tab" onclick="switchView('boss',this)" style="color:#ff3b3b;">&#128081; Boss</button>
         <button class="nav-tab" onclick="switchView('mediator',this)" style="color:#64b5f6;">&#9878;&#65039; Mediator</button>
-        <button class="nav-tab" onclick="switchView('graphics',this)" style="color:#c9a96e;">&#128196; Graphics</button>
+        <button class="nav-tab" onclick="switchView('graphics',this)" style="color:#c9a96e;">&#9881;&#65039; Settings</button>
         <button class="nav-tab" onclick="switchView('youtube',this)" style="color:#ff4444;">&#127916; YouTube</button>
     </div>
 
@@ -1837,404 +1837,67 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         </div>
     </div>
 
-    <!-- ██ VIEW: Graphics ██ -->
+<!-- ██ VIEW: Settings ██ -->
     <div class="view-container" id="view-graphics">
-      <div class="academy-stage">
+      <div style="max-width:560px;margin:0 auto;padding:20px 0;">
 
-        <div class="academy-header">
-          <h2>&#127891; NOD Academy &middot; Tactical Reference</h2>
-          <p>33 chapters &middot; Levels 1&ndash;3 &middot; Foundation &rarr; Mastery</p>
+        <div style="text-align:center;margin-bottom:28px;">
+          <h2 style="font-family:'Press Start 2P',monospace;color:#fff;font-size:18px;letter-spacing:2px;text-shadow:3px 3px 0 #000,0 0 20px var(--accent-glow);margin-bottom:6px;">&#9881; SETTINGS</h2>
+          <p style="color:rgba(255,255,255,0.4);font-size:12px;">Customize your NOD-ify experience</p>
         </div>
 
-        <div class="academy-filters">
-          <button class="academy-filter af-active" onclick="filterAcademy('all',this)">All (33)</button>
-          <button class="academy-filter" onclick="filterAcademy('Foundation',this)">L1 &middot; Foundation</button>
-          <button class="academy-filter" onclick="filterAcademy('Toolkit',this)">Toolkit</button>
-          <button class="academy-filter" onclick="filterAcademy('Scenarios',this)">Scenarios</button>
-          <button class="academy-filter" onclick="filterAcademy('Advanced',this)">L3 &middot; Advanced</button>
-          <button class="academy-filter" onclick="filterAcademy('Mastery',this)">Mastery</button>
-          <button class="academy-filter" onclick="filterAcademy('Integration',this)">Integration</button>
-        </div>
-
-        <!-- LEVEL 1: FOUNDATION -->
-        <div class="academy-level level-1" data-level="Foundation">
-          <div class="academy-level-header">
-            <span class="academy-level-badge">Level 1</span>
-            <span class="academy-level-sub">Foundation</span>
-            <div class="academy-level-line"></div>
+        <!-- Wheel Mode -->
+        <div style="background:rgba(0,0,0,0.3);border-radius:12px;padding:18px 20px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:12px;">&#127804; Emotion Wheel</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:10px;">Wheel behavior</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost btn-sm settings-btn active-setting" id="wheelSpinMode" onclick="setWheelMode('spin')" style="flex:1;padding:10px;">&#127922; Spin &amp; Drag</button>
+            <button class="btn btn-ghost btn-sm settings-btn" id="wheelStaticMode" onclick="setWheelMode('static')" style="flex:1;padding:10px;">&#128064; Static</button>
           </div>
-          <div class="academy-grid" id="grid-foundation">
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:8px;" id="wheelModeHint">Spin mode: drag wheel or tap SPIN to randomize.</div>
+        </div>
 
-            <div class="ref-card" data-cat="Foundation">
-              <div class="rc-badges"><span class="rc-level rc-l1">L1</span><span class="rc-cat">Foundation</span></div>
-              <div class="rc-ch">Ch 1</div>
-              <div class="rc-title">The Negotiation Is Already Happening</div>
-              <div class="rc-rule">EVERY INTERACTION IS A NEGOTIATION. AWARENESS IS THE FIRST WEAPON.</div>
-              <div class="rc-body">Coffee order &middot; scope creep &middot; dinner spot &middot; parking spot &middot; deadline push &middot; return policy &mdash; ALL negotiations. Most people are asleep at the wheel. You are awake.</div>
-              <div class="rc-quote">&ldquo;You can&rsquo;t win a game you don&rsquo;t know you&rsquo;re playing.&rdquo;</div>
-            </div>
+        <!-- Tool Card Density -->
+        <div style="background:rgba(0,0,0,0.3);border-radius:12px;padding:18px 20px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:12px;">&#127183; Tool Cards</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:10px;">How many tools to show</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost btn-sm settings-btn" id="densityBare" onclick="setCardDensity('bare')" style="flex:1;padding:10px;">&#9889; Bare Bones</button>
+            <button class="btn btn-ghost btn-sm settings-btn active-setting" id="densityMedium" onclick="setCardDensity('medium')" style="flex:1;padding:10px;">&#128202; Medium</button>
+            <button class="btn btn-ghost btn-sm settings-btn" id="densityAdvanced" onclick="setCardDensity('advanced')" style="flex:1;padding:10px;">&#128640; All Tools</button>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:8px;" id="densityHint">Medium: core tools across all categories.</div>
+        </div>
 
-            <div class="ref-card" data-cat="Foundation">
-              <div class="rc-badges"><span class="rc-level rc-l1">L1</span><span class="rc-cat">Foundation</span></div>
-              <div class="rc-ch">Ch 2</div>
-              <div class="rc-title">Walkaway Power (BATNA)</div>
-              <div class="rc-rule">BATNA IS YOUR REAL POWER. DESPERATION IS YOUR GREATEST LIABILITY.</div>
-              <div class="rc-body">Strong BATNA + weak theirs &rarr; you control it. Weak BATNA + strong theirs &rarr; they control it. Both weak &rarr; last to blink wins. Both strong &rarr; most creative deal wins.<br><br><em>Prep:</em> What is my BATNA? What is theirs? How do I strengthen mine?</div>
-              <div class="rc-quote">&ldquo;Desperation is a smell. The other side always detects it.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Foundation">
-              <div class="rc-badges"><span class="rc-level rc-l1">L1</span><span class="rc-cat">Foundation</span></div>
-              <div class="rc-ch">Ch 3</div>
-              <div class="rc-title">The Other Side Is Human Too</div>
-              <div class="rc-rule">PEOPLE NEGOTIATE ON EMOTION DISGUISED AS LOGIC. EMPATHY IS INTEL.</div>
-              <div class="rc-body">&ldquo;Price is firm&rdquo; &rarr; Fear of being low-balled. &ldquo;We need more time&rdquo; &rarr; Anxiety about deadline. &ldquo;I&rsquo;ll think about it&rdquo; &rarr; Fear of wrong decision. &ldquo;That&rsquo;s the policy&rdquo; &rarr; Protecting turf/ego.</div>
-              <div class="rc-quote">&ldquo;Empathy is not agreement. It&rsquo;s intelligence.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Foundation">
-              <div class="rc-badges"><span class="rc-level rc-l1">L1</span><span class="rc-cat">Foundation</span></div>
-              <div class="rc-ch">Ch 4</div>
-              <div class="rc-title">Listening Is the Real Superpower</div>
-              <div class="rc-rule">THE PERSON WHO LISTENS CONTROLS THE CONVERSATION.</div>
-              <div class="rc-body"><strong>Gear 1 Selective</strong> &mdash; hear keywords only.<br><strong>Gear 2 Active</strong> &mdash; hear full message + tone.<br><strong>Gear 3 Empathic</strong> &mdash; hear what&rsquo;s NOT said.<br><br>Upgrade: Pause 3 seconds before speaking. Forces gear shift.</div>
-              <div class="rc-quote">&ldquo;The speaker feels powerful. The listener is powerful.&rdquo;</div>
-            </div>
-
+        <!-- Visual Options -->
+        <div style="background:rgba(0,0,0,0.3);border-radius:12px;padding:18px 20px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:12px;">&#127912; Visuals</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;">
+              <input type="checkbox" id="settingCoinFX" checked onchange="toggleSetting('coinFX',this.checked)" style="width:18px;height:18px;accent-color:var(--accent);">
+              &#127918; Coin burst effects
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;">
+              <input type="checkbox" id="settingSound" checked onchange="toggleSetting('sound',this.checked)" style="width:18px;height:18px;accent-color:var(--accent);">
+              &#128266; Sound effects
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.7);cursor:pointer;">
+              <input type="checkbox" id="settingGlow" checked onchange="toggleSetting('glow',this.checked)" style="width:18px;height:18px;accent-color:var(--accent);">
+              &#10024; Button glow effects
+            </label>
           </div>
         </div>
 
-        <!-- LEVEL 1: TOOLKIT -->
-        <div class="academy-level level-1" data-level="Toolkit">
-          <div class="academy-level-header">
-            <span class="academy-level-badge">Level 1</span>
-            <span class="academy-level-sub">Toolkit</span>
-            <div class="academy-level-line"></div>
-          </div>
-          <div class="academy-grid" id="grid-toolkit-1">
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l1">L1</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 5</div>
-              <div class="rc-title">Silence Is a Weapon</div>
-              <div class="rc-rule">AFTER YOU MAKE AN OFFER &mdash; SHUT UP. FIRST TO SPEAK LOSES.</div>
-              <div class="rc-body">1. Make your offer or request.<br>2. STOP TALKING &mdash; 5 second count.<br>3a. They speak &rarr; objection = question in disguise.<br>3b. They stay silent &rarr; &ldquo;Take your time.&rdquo; Wait again.<br>4. Answer only what they asked. Then stop again.</div>
-              <div class="rc-quote">&ldquo;First person to speak after an offer loses.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l1">L1</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 6</div>
-              <div class="rc-title">Mirroring</div>
-              <div class="rc-rule">REPEAT LAST 1&ndash;3 WORDS WITH RISING INFLECTION. THEY ELABORATE. YOU LEARN.</div>
-              <div class="rc-body">Them: [statement]<br>&darr;<br>You: &ldquo;[last 1&ndash;3 words]?&rdquo; &uarr; rising tone<br>&darr;<br>[ SILENCE ]<br>&darr;<br>Them: [elaborates &mdash; deeper layer revealed]<br>&darr; repeat until real concern surfaces &rarr; now you have the intel to close.</div>
-              <div class="rc-quote">&ldquo;The mirror is a key. The silence is the door. Use both.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l1">L1</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 7</div>
-              <div class="rc-title">Labeling</div>
-              <div class="rc-rule">NAME THE EMOTION. THEY FEEL HEARD AND OPEN UP.</div>
-              <div class="rc-body">Clear: &ldquo;It sounds like you are [X].&rdquo;<br>Unsure: &ldquo;It seems like something&rsquo;s off...&rdquo;<br><br>They agree &rarr; elaborate with next tool.<br>They correct &rarr; GIFT: real emotion revealed.</div>
-              <div class="rc-quote">&ldquo;Named emotions lose their power over the conversation.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l1">L1</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 8</div>
-              <div class="rc-title">The Accusation Audit</div>
-              <div class="rc-rule">NAME EVERY BAD THING THEY COULD THINK &mdash; BEFORE THEY SAY IT.</div>
-              <div class="rc-body">&ldquo;Too expensive&rdquo; &rarr; &ldquo;I know this isn&rsquo;t cheap...&rdquo;<br>&ldquo;You missed last time&rdquo; &rarr; &ldquo;I know we had delivery issues before...&rdquo;<br>&ldquo;You&rsquo;re pushing me&rdquo; &rarr; &ldquo;I know it feels like I&rsquo;m rushing you...&rdquo;<br>&ldquo;This is risky&rdquo; &rarr; &ldquo;I know there&rsquo;s risk here...&rdquo;<br><br>Name them ALL in your opening. Then make your case.</div>
-              <div class="rc-quote">&ldquo;Name the monster before it grows. It shrinks when it&rsquo;s seen.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l1">L1</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 9</div>
-              <div class="rc-title">The Power of &ldquo;No&rdquo;</div>
-              <div class="rc-rule">&ldquo;NO&rdquo; MAKES PEOPLE FEEL SAFE. ASK FOR IT ON PURPOSE.</div>
-              <div class="rc-body">Instead of: &ldquo;Do you have a minute?&rdquo;<br>Use No-Frame: &ldquo;Is this a bad time?&rdquo;<br><br>Instead of: &ldquo;Would you be interested?&rdquo;<br>Use: &ldquo;Would it be crazy to...&rdquo;<br><br>Instead of: &ldquo;Can we do this?&rdquo;<br>Use: &ldquo;Is there any reason we couldn&rsquo;t?&rdquo;</div>
-              <div class="rc-quote">&ldquo;No is the beginning of the real negotiation.&rdquo;</div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- LEVEL 2: TOOLKIT -->
-        <div class="academy-level level-2" data-level="Toolkit">
-          <div class="academy-level-header">
-            <span class="academy-level-badge">Level 2</span>
-            <span class="academy-level-sub">Toolkit</span>
-            <div class="academy-level-line"></div>
-          </div>
-          <div class="academy-grid" id="grid-toolkit-2">
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 10</div>
-              <div class="rc-title">The Calibrated Question</div>
-              <div class="rc-rule">&ldquo;HOW&rdquo; AND &ldquo;WHAT&rdquo; QUESTIONS MAKE THEM SOLVE YOUR PROBLEM FOR YOU.</div>
-              <div class="rc-body">Hit a wall &rarr; &ldquo;How am I supposed to work with that?&rdquo;<br>Won&rsquo;t budge &rarr; &ldquo;What would need to change?&rdquo;<br>Hard push back &rarr; &ldquo;How do you see us solving this?&rdquo;<br>Timeline pressure &rarr; &ldquo;What&rsquo;s driving that deadline?&rdquo;<br><br>RULE: &ldquo;How&rdquo; and &ldquo;What&rdquo; ONLY. Never &ldquo;Why.&rdquo; Why = accusation.</div>
-              <div class="rc-quote">&ldquo;Don&rsquo;t argue their position. Question it open.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 11</div>
-              <div class="rc-title">The Flinch</div>
-              <div class="rc-rule">REACT VISIBLY TO A NUMBER. THEY&rsquo;LL OFTEN ADJUST BEFORE YOU SAY A WORD.</div>
-              <div class="rc-body">1. They name a price.<br>2. Repeat it: &ldquo;$X?&rdquo; &mdash; raised eyebrows, slight exhale.<br>3. 2&ndash;3 second pause &mdash; hold eye contact.<br>4a. They adjust &rarr; take it or mirror again.<br>4b. They hold &rarr; &ldquo;How did you arrive at that?&rdquo;</div>
-              <div class="rc-quote">&ldquo;Your face is a negotiation tool. Use it.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 12</div>
-              <div class="rc-title">Trading &mdash; Never Give, Always Swap</div>
-              <div class="rc-rule">EVERY CONCESSION HAS A PRICE. COLLECT IT.</div>
-              <div class="rc-body">&ldquo;If I can do X &mdash; what can you do for me?&rdquo;<br><br>Trade price reduction &rarr; faster decision or longer contract.<br>Trade extended timeline &rarr; referral or testimonial.<br>Trade added service &rarr; better payment terms.<br>Trade reduced scope &rarr; first right on next project.</div>
-              <div class="rc-quote">&ldquo;Every yes has a price. Collect it.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 13</div>
-              <div class="rc-title">The Ackerman System</div>
-              <div class="rc-rule">65% &rarr; 85% &rarr; 95% &rarr; ODD FINAL. SHRINKING STEPS SIGNAL YOUR CEILING.</div>
-              <div class="rc-body">Target $5,000 &rarr; Start at 65%:<br>Bid 1: $3,250 (65%)<br>Bid 2: $4,250 (85%)<br>Bid 3: $4,750 (95%)<br>Bid 4: $4,953 (ODD)<br><br>Between bids: Accusation Audit or Calibrated Question. Don&rsquo;t rush rounds.</div>
-              <div class="rc-quote">&ldquo;The odd final number is not a quirk. It signals: I did the math.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 14</div>
-              <div class="rc-title">Paraphrase &amp; Summary</div>
-              <div class="rc-rule">RESTATE &rarr; CONFIRM &rarr; ADVANCE. THE SUMMARY CREATES SOFT AGREEMENT.</div>
-              <div class="rc-body">1. They talk. You listen and label.<br>2. Paraphrase: &ldquo;So if I hear you right, the main concern is ___?&rdquo;<br>3. Confirmed &rarr; proceed. Corrected &rarr; gift: real concern revealed.<br>4. Summary: &ldquo;You need X &middot; constraint is Y &middot; the win looks like Z &mdash; is that right?&rdquo;<br>5. &ldquo;Yes&rdquo; = soft agreement &rarr; proceed to close.</div>
-              <div class="rc-quote">&ldquo;A perfect summary is worth more than a perfect argument.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 15</div>
-              <div class="rc-title">Validation</div>
-              <div class="rc-rule">&ldquo;THAT MAKES SENSE BECAUSE...&rdquo; &mdash; VALIDATE LOGIC WITHOUT SURRENDERING POSITION.</div>
-              <div class="rc-body">Wrong move: &ldquo;You&rsquo;re right, we&rsquo;ll do it your way.&rdquo; (gives up ground)<br><br>Formula: &ldquo;That makes sense because [their logic]. AND what I&rsquo;m working with is [your reality].&rdquo;<br><br>Keeps ground. Lowers defense. &ldquo;But&rdquo; cancels everything before it &mdash; use &ldquo;AND&rdquo; instead.</div>
-              <div class="rc-quote">&ldquo;Validate the logic. Disagree with the outcome.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Toolkit">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Toolkit</span></div>
-              <div class="rc-ch">Ch 16</div>
-              <div class="rc-title">Tone of Voice</div>
-              <div class="rc-rule">HOW YOU SAY IT IS 38% OF THE MESSAGE. VOICE IS A WEAPON.</div>
-              <div class="rc-body"><strong>Assertive</strong> &mdash; direct, clipped, fast. Setting a hard limit (use sparingly).<br><strong>Playful/Warm</strong> &mdash; light, smiling. Building rapport &mdash; most conversations.<br><strong>Late-Night FM</strong> &mdash; slow &middot; low &middot; deliberate. Naming price &middot; holding position &middot; hard news.<br><br>Pace: slow down while they speed up to anchor de-escalation.</div>
-              <div class="rc-quote">&ldquo;The late-night voice is a scalpel. Most people use a hammer.&rdquo;</div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- LEVEL 2: SCENARIOS -->
-        <div class="academy-level level-2" data-level="Scenarios">
-          <div class="academy-level-header">
-            <span class="academy-level-badge">Level 2</span>
-            <span class="academy-level-sub">Scenarios</span>
-            <div class="academy-level-line"></div>
-          </div>
-          <div class="academy-grid" id="grid-scenarios">
-
-            <div class="ref-card" data-cat="Scenarios">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Scenarios</span></div>
-              <div class="rc-ch">Ch 17</div>
-              <div class="rc-title">Salary Negotiation</div>
-              <div class="rc-rule">THEY ALREADY PICKED YOU. DON&rsquo;T GIVE YOUR NUMBER FIRST.</div>
-              <div class="rc-body">They ask range &rarr; ask for their range first: &ldquo;What&rsquo;s the range for this role?&rdquo;<br>They give $70K&ndash;$85K &rarr; your ask: top + 10% = ~$93K.<br>They counter $84K &rarr; Flinch. Silence. &ldquo;What else is flexible in the package?&rdquo;<br>Never accept same-day &rarr; &ldquo;Can I have until Thursday?&rdquo;</div>
-              <div class="rc-quote">&ldquo;The first number anchors the room. Don&rsquo;t throw it.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Scenarios">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Scenarios</span></div>
-              <div class="rc-ch">Ch 18</div>
-              <div class="rc-title">Buying a Car</div>
-              <div class="rc-rule">OWN ONLY ONE NUMBER: OUT-THE-DOOR (OTD).</div>
-              <div class="rc-body">&ldquo;What monthly payment?&rdquo; &rarr; &ldquo;I&rsquo;m focused on the out-the-door total.&rdquo;<br>&ldquo;We can stretch to 84 months&rdquo; &rarr; &ldquo;What&rsquo;s the OTD on a 48-month deal?&rdquo;<br>&ldquo;Your trade is worth $X&rdquo; &rarr; Get a Carmax quote first.<br>&ldquo;Come in and we&rsquo;ll work it out&rdquo; &rarr; Negotiate by email until OTD is set.</div>
-              <div class="rc-quote">&ldquo;Every time they say &lsquo;monthly payment,&rsquo; say &lsquo;out-the-door price.&rsquo;&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Scenarios">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Scenarios</span></div>
-              <div class="rc-ch">Ch 19</div>
-              <div class="rc-title">Renting an Apartment</div>
-              <div class="rc-rule">LANDLORDS WANT STABLE TENANTS MORE THAN TOP DOLLAR.</div>
-              <div class="rc-body">Bring: credit report (printed), proof of income, previous landlord refs, first + last upfront.<br>Ask for: lower monthly rent, reduced security deposit, stable rate with long lease, free parking/upgrades.<br><br>&ldquo;If I sign 14 months and pay first + last upfront &mdash; would you do $1,775?&rdquo;</div>
-              <div class="rc-quote">&ldquo;The best tenants have the most power. Prove you&rsquo;re one.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Scenarios">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Scenarios</span></div>
-              <div class="rc-ch">Ch 20</div>
-              <div class="rc-title">Real Estate Deals</div>
-              <div class="rc-rule">TERMS CLOSE DEALS. PRICE JUST GETS YOU IN THE ROOM.</div>
-              <div class="rc-body">Trade fast close (21-day) &rarr; lower price.<br>Trade no home sale contingency &rarr; seller-paid concessions.<br>Trade large earnest money &rarr; included appliances/repairs.<br>Trade pre-approval (strong lender) &rarr; priority over higher offers.<br><br>Label the constraint: &ldquo;Sounds like your seller has a timeline. If we close in 21 days, what&rsquo;s possible on price?&rdquo;</div>
-              <div class="rc-quote">&ldquo;Intel question: What matters most to your seller beyond price?&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Scenarios">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Scenarios</span></div>
-              <div class="rc-ch">Ch 21</div>
-              <div class="rc-title">Contractor / Service Quotes</div>
-              <div class="rc-rule">THEIR FIRST NUMBER IS AN OPENING. ONE QUESTION UNLOCKS 10&ndash;15%.</div>
-              <div class="rc-body">Quote received &rarr; &ldquo;Is that the best you can do?&rdquo; [say nothing] &mdash; often 10&ndash;15% off alone.<br>Bundle: &ldquo;If I add [other job], what&rsquo;s the total?&rdquo;<br>Reference: &ldquo;I&rsquo;ve used you before &mdash; can you do anything on that?&rdquo;<br>Compete: &ldquo;I have another quote at $Y. Can you match?&rdquo;</div>
-              <div class="rc-quote">&ldquo;Every quote has a discount built in. Use the question to unlock it.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Scenarios">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Scenarios</span></div>
-              <div class="rc-ch">Ch 22</div>
-              <div class="rc-title">Difficult Conversations with Family</div>
-              <div class="rc-rule">STAKES ARE IN RELATIONSHIPS, NOT DOLLARS. LABEL, MIRROR, PAUSE &mdash; IN THAT ORDER.</div>
-              <div class="rc-body">1. PAUSE &mdash; 3 breaths before you speak.<br>2. Label first: &ldquo;It sounds like this has been weighing on you.&rdquo;<br>3. SILENCE &mdash; let them respond. Mirror what they say.<br>4. Only then state your position: &ldquo;Here&rsquo;s what&rsquo;s going on for me...&rdquo;<br>5. Calibrated close: &ldquo;What would make this work for both of us?&rdquo;</div>
-              <div class="rc-quote">&ldquo;In family negotiations, being right costs more than you think.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Scenarios">
-              <div class="rc-badges"><span class="rc-level rc-l2">L2</span><span class="rc-cat">Scenarios</span></div>
-              <div class="rc-ch">Ch 23</div>
-              <div class="rc-title">Conflict at Work</div>
-              <div class="rc-rule">POSITIONAL BARGAINING DAMAGES RELATIONSHIPS. FIND THE INTEREST BEHIND THE POSITION.</div>
-              <div class="rc-body">&ldquo;I can&rsquo;t approve that&rdquo; &rarr; worried about precedent/risk.<br>&ldquo;That&rsquo;s not a priority&rdquo; &rarr; plate is already full.<br>&ldquo;Talk to me next quarter&rdquo; &rarr; timeline pressure from above.<br><br>&ldquo;What&rsquo;s your biggest concern about this?&rdquo; &rarr; Build your proposal around their answer.</div>
-              <div class="rc-quote">&ldquo;At work, win the interest, not the argument.&rdquo;</div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- LEVEL 3: ADVANCED -->
-        <div class="academy-level level-3" data-level="Advanced">
-          <div class="academy-level-header">
-            <span class="academy-level-badge">Level 3</span>
-            <span class="academy-level-sub">Advanced</span>
-            <div class="academy-level-line"></div>
-          </div>
-          <div class="academy-grid" id="grid-advanced">
-
-            <div class="ref-card" data-cat="Advanced">
-              <div class="rc-badges"><span class="rc-level rc-l3">L3</span><span class="rc-cat">Advanced</span></div>
-              <div class="rc-ch">Ch 24</div>
-              <div class="rc-title">Reframing</div>
-              <div class="rc-rule">WHOEVER DEFINES THE FRAME CONTROLS WHAT&rsquo;S POSSIBLE.</div>
-              <div class="rc-body">&ldquo;This is expensive&rdquo; &rarr; Frame: Investment &rarr; &ldquo;The real cost is not doing it.&rdquo;<br>&ldquo;We&rsquo;re stuck&rdquo; &rarr; Frame: New information &rarr; &ldquo;This tells us something useful.&rdquo;<br>&ldquo;You vs me&rdquo; &rarr; Frame: Shared problem &rarr; &ldquo;How do we solve this together?&rdquo;<br>&ldquo;One-time deal&rdquo; &rarr; Frame: Relationship opening &rarr; &ldquo;This is how we start.&rdquo;</div>
-              <div class="rc-quote">&ldquo;Control the frame, control the outcome.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Advanced">
-              <div class="rc-badges"><span class="rc-level rc-l3">L3</span><span class="rc-cat">Advanced</span></div>
-              <div class="rc-ch">Ch 25</div>
-              <div class="rc-title">The Black Swan</div>
-              <div class="rc-rule">EVERY DEAL HAS ONE HIDDEN PIECE THAT CHANGES EVERYTHING. FIND IT.</div>
-              <div class="rc-body">Signs you&rsquo;re missing it: deal stalls with no clear reason &middot; agreement in principle but no movement &middot; counterpart motivated but stuck &middot; &ldquo;It&rsquo;s not you, it&rsquo;s us&rdquo; energy.<br><br>Black Swan Question: &ldquo;Is there anything about this I should know that I probably haven&rsquo;t asked?&rdquo;</div>
-              <div class="rc-quote">&ldquo;The info that changes the deal is almost never the info they volunteered.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Advanced">
-              <div class="rc-badges"><span class="rc-level rc-l3">L3</span><span class="rc-cat">Advanced</span></div>
-              <div class="rc-ch">Ch 26</div>
-              <div class="rc-title">Deadline Dynamics</div>
-              <div class="rc-rule">REAL DEADLINES ARE RARE. PROBE EVERY ONE.</div>
-              <div class="rc-body">They name a deadline &rarr; &ldquo;What happens if we can&rsquo;t meet that?&rdquo;<br><br><strong>Real deadline:</strong> specific consequence named &rarr; respond honestly to timing.<br><strong>Artificial deadline:</strong> vague answer &rarr; negotiate the deadline itself.</div>
-              <div class="rc-quote">&ldquo;A deadline with no consequence is just a suggestion with urgency.&rdquo;</div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- LEVEL 3: MASTERY -->
-        <div class="academy-level level-3" data-level="Mastery">
-          <div class="academy-level-header">
-            <span class="academy-level-badge">Level 3</span>
-            <span class="academy-level-sub">Mastery</span>
-            <div class="academy-level-line"></div>
-          </div>
-          <div class="academy-grid" id="grid-mastery">
-
-            <div class="ref-card" data-cat="Mastery">
-              <div class="rc-badges"><span class="rc-level rc-l3">L3</span><span class="rc-cat">Mastery</span></div>
-              <div class="rc-ch">Ch 27</div>
-              <div class="rc-title">The Power of &ldquo;Fair&rdquo; &amp; Multiple Offers</div>
-              <div class="rc-rule">INVOKE FAIRNESS. PRESENT 3 OPTIONS &mdash; YOU WIN REGARDLESS OF WHICH THEY CHOOSE.</div>
-              <div class="rc-body">Option A: Full scope &middot; Full price &middot; Fastest result.<br>Option B: Core scope &middot; Payment plan &middot; Phased.<br>Option C: Minimum viable &middot; Lowest price &middot; Entry.<br><br>All three must be genuinely acceptable. Their choice reveals priority: price &middot; risk &middot; timeline.<br>Frame: &ldquo;I want this to feel right for both of us...&rdquo;</div>
-              <div class="rc-quote">&ldquo;Giving someone a choice is not giving up control. It&rsquo;s transferring the feeling of control.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Mastery">
-              <div class="rc-badges"><span class="rc-level rc-l3">L3</span><span class="rc-cat">Mastery</span></div>
-              <div class="rc-ch">Ch 28</div>
-              <div class="rc-title">Higher Authority &amp; Strategic Escalation</div>
-              <div class="rc-rule">&ldquo;I NEED TO CHECK WITH MY PARTNER&rdquo; IS A PRESSURE RELEASE VALVE. PLANT IT EARLY.</div>
-              <div class="rc-body">Pressure to decide now &rarr; &ldquo;I need to run this by my partner/board.&rdquo;<br>Big move, no leverage &rarr; &ldquo;That&rsquo;s outside what I can approve alone.&rdquo;<br>Need a soft no &rarr; &ldquo;My partner reviewed this &mdash; numbers don&rsquo;t work.&rdquo;<br>Reset dynamic &rarr; &ldquo;I&rsquo;d like to get counsel involved before we go further.&rdquo;<br><br>RULE: Plant higher authority EARLY so invoking it later feels expected, not like an escape.</div>
-              <div class="rc-quote">&ldquo;The pause created by &lsquo;I need to check&rsquo; is worth more than the decision made under pressure.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Mastery">
-              <div class="rc-badges"><span class="rc-level rc-l3">L3</span><span class="rc-cat">Mastery</span></div>
-              <div class="rc-ch">Ch 29</div>
-              <div class="rc-title">Late-Night Tactic &amp; Pattern Matching</div>
-              <div class="rc-rule">FATIGUE IS A WEAPON. PATTERN RECOGNITION IS YOUR DEFENSE.</div>
-              <div class="rc-body">&ldquo;Offer expires today&rdquo; &rarr; Fake deadline &rarr; &ldquo;What happens if we need more time?&rdquo;<br>Flinch at your number &rarr; Reaction test &rarr; Hold position. Say nothing.<br>New items late in session &rarr; Fatigue play &rarr; &ldquo;Let&rsquo;s see all items before we continue tomorrow.&rdquo;<br>&ldquo;That&rsquo;s our final offer&rdquo; &rarr; Rarely final &rarr; Flinch. Wait. Then calibrate.</div>
-              <div class="rc-quote">&ldquo;Never make a big decision when you&rsquo;re tired. The other side may be counting on it.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Mastery">
-              <div class="rc-badges"><span class="rc-level rc-l3">L3</span><span class="rc-cat">Mastery</span></div>
-              <div class="rc-ch">Ch 30</div>
-              <div class="rc-title">Storytelling as Leverage</div>
-              <div class="rc-rule">FACTS TELL, STORIES SELL. A STORY IS AN ARGUMENT THAT DOESN&rsquo;T FEEL LIKE ONE.</div>
-              <div class="rc-body">1. Setup (15s): &ldquo;I had a client in a similar situation...&rdquo;<br>2. Tension (20s): &ldquo;They were facing [the exact concern your counterpart has right now]...&rdquo;<br>3. Choice (10s): &ldquo;They had two options &mdash; do X or Y.&rdquo;<br>4. Outcome (20s): &ldquo;They chose X. Here&rsquo;s what happened...&rdquo; [real numbers, real details]<br>5. Land it: &ldquo;That&rsquo;s why I think [your recommendation] is the right move here.&rdquo;</div>
-              <div class="rc-quote">&ldquo;A story is an argument that doesn&rsquo;t feel like one.&rdquo;</div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- LEVEL 3: INTEGRATION -->
-        <div class="academy-level level-3" data-level="Integration">
-          <div class="academy-level-header">
-            <span class="academy-level-badge">Level 3</span>
-            <span class="academy-level-sub">Integration</span>
-            <div class="academy-level-line"></div>
-          </div>
-          <div class="academy-grid" id="grid-integration">
-
-            <div class="ref-card" data-cat="Integration">
-              <div class="rc-badges"><span class="rc-level rc-l3">L3</span><span class="rc-cat">Integration</span></div>
-              <div class="rc-ch">Ch 31</div>
-              <div class="rc-title">Building Your Practice Routine</div>
-              <div class="rc-rule">INSTINCT IS BUILT THROUGH REPS, NOT READING. ONE MICRO-NEGOTIATION PER DAY.</div>
-              <div class="rc-body">Week 1 &middot; Listening: Mirror every conversation partner at least once.<br>Week 2 &middot; Asking: Ask for something every day. &ldquo;No&rdquo; is fine &mdash; the ask is the rep.<br>Week 3 &middot; Silence: Pause 3 seconds after every significant statement. Count it.<br>Week 4 &middot; Integration: Run label + mirror + calibrated Q + summary in one live conversation.</div>
-              <div class="rc-quote">&ldquo;The negotiator who practices in low stakes is fearless in high stakes.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Integration">
-              <div class="rc-badges"><span class="rc-level rc-l3">L3</span><span class="rc-cat">Integration</span></div>
-              <div class="rc-ch">Ch 32</div>
-              <div class="rc-title">Teaching Others</div>
-              <div class="rc-rule">YOU DON&rsquo;T REALLY KNOW IT UNTIL YOU CAN TEACH IT. GAPS APPEAR IN THE QUESTIONS.</div>
-              <div class="rc-body">1. Pick a chapter.<br>2. Explain it in 3 sentences to someone who doesn&rsquo;t know it.<br>3a. Clear &rarr; go deeper. Teach the nuance.<br>3b. Gaps appear &rarr; note the questions. Re-read. Explain again.<br>4. Role-play the scenario. Swap roles. Give feedback.<br>5. Mastery = fluent explanation + instinctive use.</div>
-              <div class="rc-quote">&ldquo;If you can&rsquo;t explain it simply, you don&rsquo;t understand it well enough yet.&rdquo;</div>
-            </div>
-
-            <div class="ref-card" data-cat="Integration">
-              <div class="rc-badges"><span class="rc-level rc-l3">L3</span><span class="rc-cat">Integration</span></div>
-              <div class="rc-ch">Ch 33</div>
-              <div class="rc-title">Your Negotiation Philosophy</div>
-              <div class="rc-rule">NAME YOUR STYLE. LEAN INTO YOUR STRENGTHS. COVER YOUR BLINDSPOTS.</div>
-              <div class="rc-body">Reading emotions &rarr; Empathy-Led.<br>Knowing the numbers &rarr; Data-Driven.<br>Staying calm under fire &rarr; Composure First.<br>Asking great questions &rarr; Curiosity-Led.<br>Walking away easily &rarr; Abundance Mindset.<br><br>&ldquo;I win negotiations by _____________________________.&rdquo;</div>
-              <div class="rc-quote">&ldquo;You don&rsquo;t need to be the smartest in the room. Be the most prepared and most present.&rdquo;</div>
-            </div>
-
-          </div>
+        <!-- Academy Reference Unlock -->
+        <div style="background:linear-gradient(135deg,rgba(20,20,35,0.95) 0%,rgba(35,30,55,0.98) 100%);border-radius:12px;padding:18px 20px;margin-bottom:14px;border:1px solid rgba(192,192,220,0.15);text-align:center;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(192,210,230,0.6);margin-bottom:10px;">&#128218; 33-Chapter Reference Deck</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:12px;">Full tactical reference cards with every tool, script, and scenario.</div>
+          <a href="https://dancruzpro.gumroad.com/l/xbbrxc" target="_blank" rel="noopener"
+             style="display:inline-block;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;
+                    background:linear-gradient(135deg,#c8922a 0%,#f0c060 50%,#d4a853 100%);
+                    color:#0d0d1a;box-shadow:0 0 18px rgba(212,168,83,0.4);">
+            &#128213; Unlock with Field Manual — $49
+          </a>
         </div>
 
       </div>
@@ -3819,19 +3482,49 @@ renderToolsView();
     new MutationObserver(wireAll).observe(document.body,{childList:true,subtree:true});
 })();
 
-// ─── NOD Academy Filter ───
-function filterAcademy(cat, btn) {
-    document.querySelectorAll('.academy-filter').forEach(b => b.classList.remove('af-active'));
-    btn.classList.add('af-active');
-    document.querySelectorAll('.academy-level').forEach(level => {
-        const levelCat = level.dataset.level;
-        if (cat === 'all') {
-            level.style.display = '';
-        } else {
-            level.style.display = (levelCat === cat) ? '' : 'none';
-        }
-    });
+// ─── Settings (was Graphics tab) ───
+// ponytail: settings stored in-memory only, add localStorage if users ask for persistence
+const settings = { wheelMode:'spin', cardDensity:'medium', coinFX:true, sound:true, glow:true };
+const DENSITY_MAP = { bare:8, medium:15, advanced:99 };
+
+function setWheelMode(mode) {
+    settings.wheelMode = mode;
+    document.getElementById('wheelSpinMode').classList.toggle('active-setting', mode==='spin');
+    document.getElementById('wheelStaticMode').classList.toggle('active-setting', mode==='static');
+    document.getElementById('wheelModeHint').textContent = mode==='spin'
+        ? 'Spin mode: drag wheel or tap SPIN to randomize.'
+        : 'Static mode: tap sectors directly. No spinning.';
+    const spinBtn = document.getElementById('spinBtn');
+    if (spinBtn) spinBtn.style.display = mode==='spin' ? '' : 'none';
+    const slider = document.querySelector('.wheel-rotate-bar');
+    if (slider) slider.style.display = mode==='spin' ? '' : 'none';
 }
+
+function setCardDensity(level) {
+    settings.cardDensity = level;
+    ['Bare','Medium','Advanced'].forEach(l => {
+        const el = document.getElementById('density'+l);
+        if (el) el.classList.toggle('active-setting', level===l.toLowerCase());
+    });
+    const hints = { bare:'Bare bones: 8 core tools only. Fast sessions.', medium:'Medium: 15 tools across all categories.', advanced:'All tools: full deck of every tool.' };
+    document.getElementById('densityHint').textContent = hints[level];
+    // ponytail: filter deck on next render — doesn't rebuild mid-session
+    if (state.currentDeck && state.currentDeck.length > 0) {
+        state.currentDeck = state.currentDeck.slice(0, DENSITY_MAP[level]);
+        renderToolsView();
+    }
+}
+
+function toggleSetting(key, val) {
+    settings[key] = val;
+    if (key === 'sound' && !val) { try { SFX.ctx && SFX.ctx.suspend(); } catch(e){} }
+    if (key === 'sound' && val) { try { SFX.ctx && SFX.ctx.resume(); } catch(e){} }
+}
+
+// ponytail: active-setting class for settings buttons — inline style, no new CSS file
+const settingStyle = document.createElement('style');
+settingStyle.textContent = '.settings-btn{font-size:12px!important;}.settings-btn.active-setting{background:var(--accent)!important;color:#0d0d1a!important;border-color:var(--accent)!important;}';
+document.head.appendChild(settingStyle);
 </script>
 <!-- ponytail: issue #28 — QR code to open site on mobile -->
 <div style="text-align:center;padding:12px 0;">
