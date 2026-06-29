@@ -1295,6 +1295,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <button class="nav-tab" onclick="switchView('boss',this)" style="color:#ff3b3b;">&#128081; Boss</button>
         <button class="nav-tab" onclick="switchView('mediator',this)" style="color:#64b5f6;">&#9878;&#65039; Mediator</button>
         <button class="nav-tab" onclick="switchView('graphics',this)" style="color:#c9a96e;">&#128196; Graphics</button>
+        <button class="nav-tab" onclick="switchView('youtube',this)" style="color:#ff4444;">&#127916; YouTube</button>
     </div>
 
     <!-- ██ VIEW: Tools ██ -->
@@ -1504,6 +1505,29 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                 </div>
                 <p style="color:#888;font-size:11px;text-align:center;margin-top:8px;">NOD Academy Tactical Reference Graphics</p>
             </div>
+        </div>
+    </div>
+
+    <!-- ██ VIEW: YouTube ██ -->
+    <!-- ponytail: iframe embed, no API key — get uploads playlist ID from YT Studio → Customization → Basic info -->
+    <div class="view-container" id="view-youtube">
+        <div class="mode-wrap">
+            <div class="mode-header">
+                <h2>&#127916; NOD on YouTube</h2>
+                <p>Negotiation breakdowns, NOD News, MixMatch demos. Subscribe to <a href="https://www.youtube.com/@Negotiators" target="_blank" rel="noopener" style="color:var(--accent);">@Negotiators</a>.</p>
+            </div>
+            <div style="max-width:960px;margin:20px auto;padding:0 8px;">
+                <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.5);">
+                    <iframe src="https://www.youtube.com/embed/videoseries?listType=user_uploads&list=Negotiators&modestbranding=1&rel=0"
+                            style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                            title="NOD YouTube Channel"></iframe>
+                </div>
+            </div>
+            <p style="color:#888;font-size:11px;text-align:center;margin-top:8px;">
+                <a href="https://www.youtube.com/@Negotiators" target="_blank" rel="noopener" style="color:var(--accent);">Open in YouTube →</a>
+            </p>
         </div>
     </div>
 
