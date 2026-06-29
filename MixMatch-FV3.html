@@ -1509,24 +1509,26 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
     </div>
 
     <!-- ██ VIEW: YouTube ██ -->
-    <!-- ponytail: iframe embed, no API key — get uploads playlist ID from YT Studio → Customization → Basic info -->
+    <!-- ponytail: direct channel link, no embed — add iframe when you have >3 videos and the UC ID -->
     <div class="view-container" id="view-youtube">
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>&#127916; NOD on YouTube</h2>
-                <p>Negotiation breakdowns, NOD News, MixMatch demos. Subscribe to <a href="https://www.youtube.com/@Negotiators" target="_blank" rel="noopener" style="color:var(--accent);">@Negotiators</a>.</p>
+                <p>Negotiation breakdowns, NOD News, MixMatch demos.</p>
             </div>
-            <div style="max-width:960px;margin:20px auto;padding:0 8px;">
-                <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.5);">
-                    <iframe src="https://www.youtube.com/embed/videoseries?listType=user_uploads&list=Negotiators&modestbranding=1&rel=0"
-                            style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                            title="NOD YouTube Channel"></iframe>
-                </div>
+            <div style="text-align:center;margin:40px auto;">
+                <a href="https://www.youtube.com/@Negotiators" target="_blank" rel="noopener"
+                   style="display:inline-block;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:800;font-size:14px;letter-spacing:1px;
+                          background:linear-gradient(135deg,#ff0000 0%,#cc0000 100%);
+                          color:#fff;box-shadow:0 0 20px rgba(255,0,0,0.35),0 3px 10px rgba(0,0,0,0.5);
+                          border:1px solid rgba(255,80,80,0.4);transition:box-shadow 0.2s,transform 0.15s;"
+                   onmouseover="this.style.boxShadow='0 0 36px rgba(255,0,0,0.6)';this.style.transform='scale(1.03)'"
+                   onmouseout="this.style.boxShadow='0 0 20px rgba(255,0,0,0.35)';this.style.transform='scale(1)'">
+                    &#127916; Open @Negotiators on YouTube →
+                </a>
             </div>
-            <p style="color:#888;font-size:11px;text-align:center;margin-top:8px;">
-                <a href="https://www.youtube.com/@Negotiators" target="_blank" rel="noopener" style="color:var(--accent);">Open in YouTube →</a>
+            <p style="color:#888;font-size:11px;text-align:center;margin-top:12px;">
+                Subscribe for negotiation training, real estate deal breakdowns, and MixMatch demos.
             </p>
         </div>
     </div>
