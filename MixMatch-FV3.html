@@ -1635,6 +1635,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <button class="nav-tab" onclick="switchView('boss',this)" style="color:#ff3b3b;">&#128081; Boss</button>
         <button class="nav-tab" onclick="switchView('mediator',this)" style="color:#64b5f6;">&#9878;&#65039; Mediator</button>
         <button class="nav-tab" onclick="switchView('graphics',this)" style="color:#c9a96e;">&#9881;&#65039; Settings</button>
+        <button class="nav-tab" onclick="switchView('warrior',this)" style="color:#e0e0e0;">&#128481;&#65039; Warrior</button>
         <button class="nav-tab" onclick="switchView('youtube',this)" style="color:#ff4444;">&#127916; YouTube</button>
     </div>
 
@@ -1901,6 +1902,59 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         </div>
 
       </div>
+    </div>
+
+    <!-- ██ VIEW: Warrior (Intent) ██ -->
+    <!-- ponytail: green room — questions not answers, no JS state, pure reflection -->
+    <div class="view-container" id="view-warrior">
+        <div class="mode-wrap" style="max-width:640px;">
+            <div class="mode-header">
+                <h2 style="color:#e0e0e0;text-shadow:3px 3px 0 #000,0 0 30px rgba(255,255,255,0.15);">&#128481; WARRIOR MODE</h2>
+                <p>Before you enter the conversation — assemble yourself.</p>
+            </div>
+            <div style="background:rgba(0,0,0,0.4);border-radius:14px;padding:24px 20px;border:1px solid rgba(255,255,255,0.08);">
+
+                <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;text-align:center;">The Green Room</div>
+
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid var(--accent);">
+                        <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Outcome</div>
+                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">What outcome truly matters?</div>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #ff5ea8;">
+                        <div style="font-size:10px;color:#ff5ea8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Emotion</div>
+                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">What emotion am I bringing into this conversation?</div>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #66bb6a;">
+                        <div style="font-size:10px;color:#66bb6a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Motive</div>
+                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">Am I trying to prove something, or solve something?</div>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #64b5f6;">
+                        <div style="font-size:10px;color:#64b5f6;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Mode</div>
+                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">Which mode serves this situation best?</div>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #ff3b3b;">
+                        <div style="font-size:10px;color:#ff3b3b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Walkaway</div>
+                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">What am I willing to walk away from?</div>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #d4a853;">
+                        <div style="font-size:10px;color:#d4a853;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Impeccability</div>
+                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">What would an impeccable version of me do?</div>
+                    </div>
+                </div>
+
+                <div style="text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size:12px;color:rgba(255,255,255,0.35);font-style:italic;max-width:400px;margin:0 auto;">
+                        A warrior stops reacting and consciously chooses his assemblage point. Choose your frame before opening your mouth.
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ██ VIEW: YouTube ██ -->
@@ -2308,18 +2362,37 @@ function triggerModeTransition(mode){
         boss:['BOSS MODE','👔 COMMAND THE ROOM'],
         mediator:['MEDIATOR MODE','⚖️ HOLD THE PEACE'],
     };
+    // ponytail: warrior reminder — one sentence loading screen, Don Juan style
+    const warriorReminders = {
+        haggle:'Need nothing. Observe everything.',
+        friend:'Connection before persuasion.',
+        boss:'Clear is kind.',
+        mediator:'Slow the room until truth can speak.',
+    };
     const ov = document.getElementById('modeTransition');
     const t = titles[mode]; if(!t) return;
     // ponytail: skip overlay on mobile — takes too long, cards flash in underneath
     if(window.innerWidth < 768){ ov.classList.remove('active'); return; }
     document.getElementById('mtTitle').textContent = t[0];
     document.getElementById('mtSub').textContent = t[1];
+    // warrior reminder line
+    let wr = document.getElementById('mtWarrior');
+    if(!wr){ wr=document.createElement('div'); wr.id='mtWarrior'; wr.style.cssText='font-size:13px;color:var(--accent);font-style:italic;margin-top:18px;opacity:0.8;'; ov.querySelector('.mtc').appendChild(wr); }
+    wr.textContent = warriorReminders[mode] || '';
     ov.classList.remove('active'); void ov.offsetWidth; ov.classList.add('active');
     setTimeout(()=>ov.classList.remove('active'), 1300);
 }
 
 // ─── Mode Cards & Scenarios ───
 // ponytail: 90s arcade negotiation scenarios per mode
+// ponytail: warrior principles — Don Juan meets Chris Voss
+const WARRIOR_PRINCIPLES = {
+    haggle:{ principle:'Cunning', power:9, mindset:'"Everyone wants something. Find it."', wisdom:'Never fight price. Find what price represents.' },
+    friend:{ principle:'Kindness', power:10, mindset:'"People don\'t remember arguments. They remember how they felt."', wisdom:'Trust compounds faster than money.' },
+    boss:{ principle:'Ruthlessness', power:10, mindset:'"Kindness without boundaries becomes weakness."', wisdom:'Delay creates larger problems.' },
+    mediator:{ principle:'Patience', power:10, mindset:'"The first story is rarely the real story."', wisdom:'The calmer person usually controls the conversation.' },
+};
+
 const MODE_CARDS = {
     haggle: [
         // ponytail: no-rapport haggle — Ackerman, 3 ways of no, calibrated Q, labels, guilt trip, getting more
@@ -2522,7 +2595,17 @@ const MODE_CARDS = {
 function renderModeCards(mode){
     const grid = document.getElementById('grid-'+mode);
     const cards = MODE_CARDS[mode] || [];
-    grid.innerHTML = cards.map((c,i) => `
+    const wp = WARRIOR_PRINCIPLES[mode] || {};
+    const powerBars = wp.power ? '★'.repeat(wp.power) + '☆'.repeat(10-wp.power) : '';
+    const warriorHtml = wp.principle ? `
+        <div style="text-align:center;margin-bottom:16px;padding:14px 16px;background:rgba(0,0,0,0.3);border-radius:12px;border:1px solid rgba(255,255,255,0.06);">
+            <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;">Warrior Principle</div>
+            <div style="font-size:18px;font-weight:800;color:#fff;">${wp.principle}</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin:4px 0;font-style:italic;">${wp.mindset}</div>
+            <div style="font-size:11px;color:var(--accent);margin-top:4px;">${powerBars}</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;font-style:italic;border-top:1px solid rgba(255,255,255,0.06);padding-top:8px;">${wp.wisdom}</div>
+        </div>` : '';
+    grid.innerHTML = warriorHtml + cards.map((c,i) => `
         <div class="mode-card" onclick="showModeScenario('${mode}',${i})" style="animation-delay:${i*0.08}s;">
             <span class="mc-tag">${c.tag}</span>
             <div class="mc-name" style="font-size:15px;">${c.name}</div>
