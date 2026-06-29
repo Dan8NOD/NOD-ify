@@ -1425,14 +1425,30 @@
                     .stage-connector { width: 14px; }
                     .stage-connector .arrow { font-size: 14px; }
 
-                    /* Emotion wheel */
-                    .wheel-layout { flex-direction: column; gap: 4px; }
-                    .wheel-canvas-wrap { max-width: 100%; padding: 0 4px; }
-                    .wheel-rotate-bar { max-width: 100%; margin-top: 6px; }
+                    /* Emotion wheel — mobile layout overhaul */
+                    .wheel-container { gap: 6px; padding: 0; }
+                    .wheel-header h2 { font-size: 18px; }
+                    .wheel-header p { font-size: 11px; margin-bottom: 4px; }
+                    .wheel-layout { flex-direction: column; gap: 4px; margin: 0; }
+                    .wheel-canvas-wrap { max-width: 100%; width: 100%; padding: 0; }
+                    /* SPIN button above wheel on mobile */
+                    .wheel-spin-row { order: -1; margin-bottom: 8px; }
+                    /* Slider hidden on mobile — touch drag already rotates */
+                    .wheel-rotate-bar { display: none; }
+                    /* Secondary controls as compact row */
+                    .wheel-secondary-controls { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 4px 0; }
                     .wheel-label-primary { font-size: 22px; }
-                                        .wheel-label.active-label { font-size: 28px; }
-                                        .wheel-label-secondary, .wheel-label-tertiary { display: none; }
-                    .emotion-detail { padding: 14px 16px; margin: 8px 4px 0; }
+                    .wheel-label.active-label { font-size: 28px; }
+                    .wheel-label-secondary, .wheel-label-tertiary { display: none; }
+                    /* Winner banner — smaller on mobile */
+                    .wheel-winner { font-size: 14px !important; padding: 12px 16px !important; max-width: 95% !important; letter-spacing: 1px !important; }
+                    /* Spin history */
+                    .spin-history { margin: 4px 0; min-height: 24px; }
+                    .spin-history .sh-chip { font-size: 10px; padding: 2px 8px; }
+                    /* SPIN button full-width on mobile */
+                    .spin-btn-big { width: 100%; max-width: 340px; font-size: 16px !important; padding: 16px 20px !important; }
+                    /* Emotion detail as bottom-sheet style */
+                    .emotion-detail { margin: 8px 0 0 !important; border-radius: 16px 16px 0 0 !important; padding: 16px !important; }
                     .emotion-detail .ed-name { font-size: 18px; }
                     .emotion-detail .ed-int { font-size: 10px; }
 
@@ -1480,11 +1496,36 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
 
 /* ─── Extra-small screens (< 400px) ─── */
 @media (max-width: 399px) {
-    .wheel-canvas-wrap svg { max-height: 80vh; }
+    .wheel-canvas-wrap { padding: 0; }
+    .wheel-canvas-wrap svg { width: 100%; max-width: 100%; max-height: 75vw; }
     .emotion-detail .ed-name { font-size: 16px; }
     .emotion-detail .ed-int { font-size: 9px; padding: 2px 7px; }
-    .wheel-rotate-bar { padding: 6px 10px; }
-    .wheel-rotate-bar input[type="range"] { height: 32px; }
+    .spin-btn-big { font-size: 14px !important; }
+}
+
+/* ─── Sticky SPIN on very small screens ─── */
+@media (max-width: 479px) {
+    #view-wheel.active .wheel-spin-row {
+        position: sticky;
+        bottom: 12px;
+        z-index: 50;
+        background: transparent;
+        padding: 4px;
+        filter: drop-shadow(0 4px 20px rgba(0,0,0,0.6));
+    }
+}
+
+/* ─── Mobile drag hint ─── */
+.wheel-mobile-hint {
+    display: none;
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    margin: 2px 0 4px;
+    animation: fade-up 0.5s 1s both;
+}
+@media (max-width: 768px) {
+    .wheel-mobile-hint { display: block; }
 }
     </style>
 </head>
@@ -1617,13 +1658,25 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <div class="wheel-container">
             <div class="wheel-header">
                 <h2>&#127804; Wheel of Emotions</h2>
-                <p>6 primary · tap any sector for full breakdown</p>
+                <p>6 primary emotions · tap any sector for full breakdown</p>
             </div>
+            <!-- SPIN button FIRST so it's at top on mobile -->
+            <div class="wheel-spin-row" style="display:flex;justify-content:center;margin:6px 0;">
+                <button id="spinBtn" onclick="spinWheel()" class="spin-btn-big">&#127922; SPIN!</button>
+            </div>
+            <!-- Spin history -->
+            <div id="spinHistory" class="spin-history"></div>
+            <!-- Winner banner -->
+            <div id="wheelWinner" class="wheel-winner" style="display:none;"></div>
+            <!-- Wheel canvas -->
             <div class="wheel-layout">
                 <div class="wheel-canvas-wrap" id="wheelCanvas">
                     <div class="wheel-pointer"></div>
                 </div>
             </div>
+            <!-- Mobile drag hint -->
+            <p class="wheel-mobile-hint" id="wheelMobileHint">&#128072; Drag wheel or tap SPIN</p>
+            <!-- Slider (desktop only — hidden on mobile via CSS) -->
             <div class="wheel-rotate-bar">
                 <span class="rotate-icon">&#8634;</span>
                 <input type="range" id="wheelSlider"
@@ -1631,15 +1684,11 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                        oninput="sliderRotate(this.value)">
                 <span class="rotate-val" id="rotateVal">0&deg;</span>
             </div>
-            <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
-                <button class="btn btn-ghost btn-sm" onclick="toggleLegend()">&#128196; Show all words</button>
+            <!-- Secondary controls -->
+            <div class="wheel-secondary-controls" style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
+                <button class="btn btn-ghost btn-sm" onclick="toggleLegend()">&#128196; All words</button>
                 <button class="btn btn-ghost btn-sm" id="focusBtn" onclick="toggleFocus()">&#128065; Focus</button>
             </div>
-            <div id="spinHistory" class="spin-history"></div>
-            <div style="display:flex;justify-content:center;margin:8px 0;">
-                <button id="spinBtn" onclick="spinWheel()" class="spin-btn-big">&#127922; SPIN!</button>
-            </div>
-            <div id="wheelWinner" class="wheel-winner" style="display:none;"></div>
             <div class="focus-hint" id="focusHint">Tap any emotion to focus</div>
             <div class="wheel-legend" id="wheelLegend"></div>
             <div class="emotion-detail" id="emotionDetail"></div>
@@ -2882,6 +2931,8 @@ function sliderRotate(val){wheelRotation=parseFloat(val);updateWheelRotation();}
 function spinWheel(){
     const spinBtn=document.getElementById('spinBtn');
     if(spinBtn)spinBtn.disabled=true;
+    // Haptic feedback on spin start
+    if(navigator.vibrate) navigator.vibrate([30,20,30]);
     // Hide previous winner
     const banner=document.getElementById('wheelWinner');
     if(banner)banner.style.display='none';
@@ -2899,6 +2950,8 @@ function spinWheel(){
     setTimeout(()=>{
         if(g)g.style.transition='transform 0.6s cubic-bezier(0.34,1.56,0.64,1)';
         coinBurst(10);SFX.ching();
+        // Haptic feedback on land
+        if(navigator.vibrate) navigator.vibrate([80,30,120]);
         // Determine landed emotion
         const finalAngle=((total%360)+360)%360;
         const sectorSize=360/EMOTIONS.length;
