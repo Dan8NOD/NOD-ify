@@ -15,9 +15,9 @@
         :root {
             --bg: #1a1a2e;
             --table: #2d2440;
-            --felt: #1e5a3a;
-            --felt-dark: #14452c;
-            --felt-border: #16653d;
+            --felt: #0f0f18;
+            --felt-dark: #0a0a12;
+            --felt-border: #1f1f2e;
             --card-bg: #fefcf3;
             --card-shadow: rgba(0,0,0,0.4);
             --text: #2c2c2c;
@@ -1730,7 +1730,6 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
 
     <!-- ██ Nav Tabs ██ -->
     <div class="nav-tabs">
-        <button class="nav-tab active" onclick="switchView('tools',this)">&#127183; Tool Deck <span class="badge" id="toolCountBadge">23</span></button>
         <button class="nav-tab" onclick="switchView('stair',this)">&#127970; Change Stair</button>
         <button class="nav-tab" onclick="switchView('wheel',this)">&#127804; Emotion Wheel</button>
         <button class="nav-tab" onclick="switchView('haggle',this)" style="color:#ff5ea8;">&#128176; Haggle</button>
@@ -1819,18 +1818,6 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                 </div>
                 <button class="bk-label-next" onclick="bkNextLabel()">&#128260; Print next</button>
             </div>
-        </div>
-    </div>
-
-    <!-- ██ VIEW: Behavioral Change Stair ██ -->
-    <div class="view-container" id="view-stair">
-        <div class="stair-container">
-            <div class="stair-header">
-                <h2>&#127970; Machiavelli Behaviour Change</h2>
-                <p style="color:rgba(255,255,255,0.4);font-size:12px;">Bid around the table <span style="color:var(--accent);font-weight:600;">· Rapport flows across all stages</span></p>
-            </div>
-            <div class="rapport-bar">Rapport <span style="font-weight:300;font-size:11px;opacity:0.6;">&#8594; builds across every stage</span></div>
-            <div class="stair-grid" id="stairGrid"></div>
         </div>
     </div>
 
