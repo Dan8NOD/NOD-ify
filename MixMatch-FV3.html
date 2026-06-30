@@ -384,17 +384,17 @@
         .btn-ghost:hover { background: rgba(255,255,255,0.18); transform:translateY(-1px); }
         .btn-sm { padding:5px 12px; font-size:11px; border-radius:8px; }
         .timer-display {
-            display:flex; align-items:center; gap:10px; margin-left:auto;
-            background:rgba(0,0,0,0.3); padding:6px 14px 6px 12px;
-            border-radius:10px; border:1px solid rgba(255,255,255,0.1);
+            display:flex; align-items:center; gap:12px; margin-left:auto;
+            background:rgba(0,0,0,0.4); padding:8px 18px 8px 14px;
+            border-radius:12px; border:1px solid rgba(255,255,255,0.12);
         }
         .timer-display .time {
-            font-size:24px; font-weight:700; color:#fff;
-            font-variant-numeric:tabular-nums; min-width:70px; text-align:center;
+            font-size:34px; font-weight:800; color:#fff;
+            font-variant-numeric:tabular-nums; min-width:90px; text-align:center;
+            letter-spacing:1px; line-height:1;
         }
-        .timer-display .time.warning { color: var(--orange); }
         .timer-display .time.danger { color: var(--red); animation: pulse-danger 1s infinite; }
-        .timer-display .timer-label { color:rgba(255,255,255,0.4); font-size:10px; text-transform:uppercase; letter-spacing:1px; }
+        .timer-display .timer-label { color:rgba(255,255,255,0.5); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; font-weight:600; }
         .timer-display input {
             width:42px; padding:3px 6px; border-radius:6px;
             border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.3);
@@ -1563,7 +1563,7 @@
                     .toolbar .btn { font-size: 11px; padding: 8px 12px; min-height: 40px; }
                     .toolbar .btn-sm { padding: 7px 10px; font-size: 10px; min-height: 36px; }
                     .timer-display { margin-left: 0; padding: 5px 10px; gap: 6px; flex-wrap: wrap; }
-                    .timer-display .time { font-size: 20px; min-width: 55px; }
+                    .timer-display .time { font-size: 28px; min-width: 75px; }
                     .timer-display input { width: 36px; font-size: 11px; }
                     .stats-bar { gap: 8px; font-size: 10px; }
                     .stat-item strong { font-size: 12px; }
@@ -3098,7 +3098,7 @@ function updateTimerDisplay(ms){
     const s=Math.max(0,Math.floor(ms/1000));
     const m=Math.floor(s/60); const sec=s%60;
     el.textContent=`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-    el.className='time'+(sec<=30?' danger':s<=120?' warning':'');
+    el.className='time'+(ms<=180000?' danger':'');
 }
 
 function onCardClick(name){
