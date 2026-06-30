@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="NOD-ify">
-    <title>NOD-ify — MixMatch FV9</title>
+    <title>NOD-ify — MixMatch FV9.1</title>
     <!-- ponytail: issue #30 — GA4 placeholder, replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <style>
@@ -404,6 +404,27 @@
         }
         .stat-item { color:rgba(255,255,255,0.45); font-size:11px; display:flex; align-items:center; gap:3px; }
         .stat-item strong { color:#fff; font-size:13px; }
+
+        /* ponytail: Domino's-style staircase progress bar — 4 segments, red = reached */
+        .stair-progress {
+            width:100%; max-width:1100px; display:flex; gap:3px; margin:6px 0 4px;
+            position:relative; z-index:10;
+        }
+        .stair-progress .seg {
+            flex:1; height:28px; border-radius:6px;
+            background:rgba(255,255,255,0.06);
+            display:flex; align-items:center; justify-content:center;
+            font-size:9px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+            color:rgba(255,255,255,0.25); transition:all .4s ease;
+            overflow:hidden; white-space:nowrap;
+        }
+        .stair-progress .seg.lit {
+            background:linear-gradient(135deg,#e63946 0%,#c1121f 100%);
+            color:#fff; box-shadow:0 0 12px rgba(230,57,70,0.5);
+        }
+        @media(max-width:600px){
+            .stair-progress .seg { font-size:7px; height:24px; }
+        }
         .category-filters {
             display:flex; gap:5px; flex-wrap:wrap;
             padding:0 0 6px; width:100%; max-width:1100px;
@@ -1608,7 +1629,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
             <div class="logo-icon">N</div>
             <div>
                 <h1>NOD-ify</h1>
-                <span>MixMatch · FV9</span>
+                <span>MixMatch · FV9.1</span>
             </div>
         </div>
         <div class="header-controls">
@@ -1645,6 +1666,12 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
 
     <!-- ██ VIEW: Tools ██ -->
     <div class="view-container active" id="view-tools">
+        <div class="stair-progress" id="stairProgress">
+            <div class="seg" data-stage="0">1 · Get Info</div>
+            <div class="seg" data-stage="1">2 · Empathy</div>
+            <div class="seg" data-stage="2">3 · Trust</div>
+            <div class="seg" data-stage="3">4 · Collab</div>
+        </div>
         <div class="stats-bar" id="statsBar">
             <div class="stat-item">Available: <strong id="statAvailable">0</strong></div>
             <div class="stat-item">Used: <strong id="statUsed">0</strong></div>
@@ -2728,6 +2755,20 @@ function renderStats(){
     document.getElementById('statAvailable').textContent=state.sessionActive?state.currentDeck.length:total;
     document.getElementById('statUsed').textContent=state.usedTools.length;
     document.getElementById('statRound').textContent=state.round;
+    renderStairProgress();
+}
+
+// ponytail: light up staircase segments based on used tools' categories
+function renderStairProgress(){
+    const usedCats = new Set(state.usedTools.map(t=>t.cat));
+    const stages = ['Information','Rapport','Rapport','Closure'];
+    const reached = new Set();
+    stages.forEach((cat,i)=>{ if(usedCats.has(cat)) reached.add(i); });
+    // ponytail: also light if stairMode explicitly set
+    if(state.stairMode !== null) reached.add(state.stairMode);
+    document.querySelectorAll('#stairProgress .seg').forEach((seg,i)=>{
+        seg.classList.toggle('lit', reached.has(i));
+    });
 }
 
 function renderLog(){
