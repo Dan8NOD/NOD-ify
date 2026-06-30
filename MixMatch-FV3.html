@@ -2759,12 +2759,15 @@ function renderStats(){
 }
 
 // ponytail: light up staircase segments based on used tools' categories
+// stage 0=INFO(Information), 1=EMPATHY(Rapport+Emotion), 2=TRUST(Strategy), 3=COLLAB(Closure)
 function renderStairProgress(){
     const usedCats = new Set(state.usedTools.map(t=>t.cat));
-    const stages = ['Information','Rapport','Rapport','Closure'];
+    const stageCats = ['Information',['Rapport','Emotion'],'Strategy','Closure'];
     const reached = new Set();
-    stages.forEach((cat,i)=>{ if(usedCats.has(cat)) reached.add(i); });
-    // ponytail: also light if stairMode explicitly set
+    stageCats.forEach((cats,i)=>{
+        const arr = Array.isArray(cats)?cats:[cats];
+        if(arr.some(c=>usedCats.has(c))) reached.add(i);
+    });
     if(state.stairMode !== null) reached.add(state.stairMode);
     document.querySelectorAll('#stairProgress .seg').forEach((seg,i)=>{
         seg.classList.toggle('lit', reached.has(i));
