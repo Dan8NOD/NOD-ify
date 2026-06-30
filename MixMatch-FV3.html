@@ -3611,10 +3611,11 @@ function shareSession(){
     const completed = state.usedTools.filter(t=>!state.skippedTools.includes(t));
     const tools = [...new Set(completed.map(t=>t.name))];
     const text = `⚔️ NOD-ify Session\n${tools.length} tools practiced\n${tools.join(' → ')}\n\nTrain free: https://negotiatorsondemand.com`;
-    navigator.clipboard.writeText(text).then(()=>{
-        const btn = document.getElementById('shareBtn');
-        if(btn){ const o=btn.textContent; btn.textContent='✅ Copied!'; setTimeout(()=>btn.textContent=o,2000); }
-    }).catch(()=>{});
+    // ponytail: navigator.share = native sheet, fallback = clipboard
+    if(navigator.share){ navigator.share({title:'NOD-ify Session',text}); }
+    else { navigator.clipboard.writeText(text).then(()=>{
+        const btn=document.getElementById('shareBtn'); if(btn){const o=btn.textContent;btn.textContent='✅ Copied!';setTimeout(()=>btn.textContent=o,2000);}
+    }).catch(()=>{}); }
 }
 
 // ─── Settings (was Graphics tab) ───
