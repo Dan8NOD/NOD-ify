@@ -1672,6 +1672,82 @@ background:radial-gradient(circle at 35% 35%, #ffd740, #d4a853);
 box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
 .coin-burst::after{content:'$';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#1a1a2e;}
 
+/* ─── Warrior Mode: Castle Wall Background ─── */
+/* 90s pixel-art castle battlements using CSS only */
+.warrior-castle-bg {
+    position: relative;
+}
+.warrior-castle-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    z-index: 0;
+    /* Stone wall: staggered grey brick pattern */
+    background-color: #1a1614;
+    background-image:
+        /* Mortar lines horizontal */
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 18px,
+            rgba(0,0,0,0.55) 18px,
+            rgba(0,0,0,0.55) 20px
+        ),
+        /* Mortar lines vertical — offset every other row */
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 36px,
+            rgba(0,0,0,0.4) 36px,
+            rgba(0,0,0,0.4) 38px
+        ),
+        /* Stone color variation — give bricks a carved feel */
+        repeating-linear-gradient(
+            180deg,
+            rgba(90,78,70,0.25) 0px,
+            rgba(70,60,54,0.18) 9px,
+            rgba(90,78,70,0.25) 18px
+        );
+    pointer-events: none;
+}
+/* Crenellation (battlements) silhouette at the top */
+.warrior-castle-bg::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 16px;
+    border-radius: 14px 14px 0 0;
+    z-index: 1;
+    pointer-events: none;
+    /* Pixel-art crenellations: alternating solid/gap */
+    background: repeating-linear-gradient(
+        90deg,
+        rgba(50,42,38,0.9) 0px,
+        rgba(50,42,38,0.9) 14px,
+        transparent 14px,
+        transparent 28px
+    );
+}
+.warrior-castle-bg > div {
+    position: relative;
+    z-index: 2;
+}
+/* Green Room check items */
+.gr-check-item.checked {
+    opacity: 0.65;
+    background: rgba(212,168,83,0.05) !important;
+}
+.gr-check-item.checked .gr-circle {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.gr-check-item:active { transform: scale(0.98); }
+@media (max-width: 600px) {
+    .gr-check-item { padding: 12px 12px !important; }
+    .gr-check-item div[style*="font-size:14px"] { font-size: 13px !important; }
+}
+
 /* ─── Extra-small screens (< 400px) ─── */
 @media (max-width: 399px) {
     .wheel-canvas-wrap { padding: 0; }
@@ -1745,7 +1821,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <button class="nav-tab" onclick="switchView('friend',this)" style="color:#66bb6a;">&#129309; Friend</button>
         <button class="nav-tab" onclick="switchView('boss',this)" style="color:#ff3b3b;">&#128081; Boss</button>
         <button class="nav-tab" onclick="switchView('mediator',this)" style="color:#64b5f6;">&#9878;&#65039; Mediator</button>
-        <button class="nav-tab" onclick="switchView('warrior',this)" style="color:#e0e0e0;">&#128481;&#65039; Warrior</button>
+        <button class="nav-tab" onclick="switchView('warrior',this)" style="color:#e0e0e0;">&#128481;&#65039;&#128737;&#65039; Warrior</button>
         <button class="nav-tab" onclick="switchView('youtube',this)" style="color:#ff4444;">&#127916; YouTube</button>
         <button class="nav-tab" onclick="switchView('graphics',this)" style="color:#c9a96e;">&#9881;&#65039; Settings</button>
     </div>
@@ -2018,49 +2094,89 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
     <div class="view-container" id="view-warrior">
         <div class="mode-wrap" style="max-width:640px;">
             <div class="mode-header">
-                <h2 style="color:#e0e0e0;text-shadow:3px 3px 0 #000,0 0 30px rgba(255,255,255,0.15);">&#128481; WARRIOR MODE</h2>
-                <p>Before you enter the conversation — assemble yourself.</p>
+                <h2 style="color:#e0e0e0;text-shadow:3px 3px 0 #000,0 0 30px rgba(255,255,255,0.15);">&#128481;&#65039; WARRIOR MODE &#128737;&#65039;</h2>
+                <p>Before you enter the conversation — prepare your mind.</p>
             </div>
-            <div style="background:rgba(0,0,0,0.4);border-radius:14px;padding:24px 20px;border:1px solid rgba(255,255,255,0.08);">
+            <div class="warrior-castle-bg" style="border-radius:14px;overflow:hidden;">
+                <div style="background:rgba(0,0,0,0.55);padding:24px 20px;border:1px solid rgba(255,255,255,0.10);border-radius:14px;">
 
-                <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;text-align:center;">The Green Room</div>
-
-                <div style="display:flex;flex-direction:column;gap:16px;">
-                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid var(--accent);">
-                        <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Outcome</div>
-                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">What outcome truly matters?</div>
+                    <div style="text-align:center;margin-bottom:6px;">
+                        <div style="font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:800;">&#9876;&#65039; The Green Room</div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;line-height:1.5;">Your pre-conversation mental checklist. Tap each question when you&rsquo;ve answered it honestly.</div>
                     </div>
 
-                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #ff5ea8;">
-                        <div style="font-size:10px;color:#ff5ea8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Emotion</div>
-                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">What emotion am I bringing into this conversation?</div>
+                    <!-- Progress bar -->
+                    <div style="width:100%;height:4px;background:rgba(255,255,255,0.07);border-radius:2px;margin:14px 0;">
+                        <div id="grProgress" style="height:4px;background:var(--accent);border-radius:2px;width:0%;transition:width 0.4s;box-shadow:0 0 8px var(--accent-glow);"></div>
                     </div>
 
-                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #66bb6a;">
-                        <div style="font-size:10px;color:#66bb6a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Motive</div>
-                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">Am I trying to prove something, or solve something?</div>
+                    <div style="display:flex;flex-direction:column;gap:10px;" id="greenRoomChecks">
+
+                        <div class="gr-check-item" onclick="grCheck(this)" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid var(--accent);cursor:pointer;transition:all 0.25s;display:flex;align-items:flex-start;gap:12px;-webkit-tap-highlight-color:transparent;">
+                            <div class="gr-circle" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--accent);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.25s;"></div>
+                            <div>
+                                <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-weight:700;">Outcome</div>
+                                <div style="font-size:14px;color:rgba(255,255,255,0.8);">What result do I actually want from this conversation?</div>
+                            </div>
+                        </div>
+
+                        <div class="gr-check-item" onclick="grCheck(this)" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #ff5ea8;cursor:pointer;transition:all 0.25s;display:flex;align-items:flex-start;gap:12px;-webkit-tap-highlight-color:transparent;">
+                            <div class="gr-circle" style="width:22px;height:22px;border-radius:50%;border:2px solid #ff5ea8;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.25s;"></div>
+                            <div>
+                                <div style="font-size:10px;color:#ff5ea8;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-weight:700;">Emotion</div>
+                                <div style="font-size:14px;color:rgba(255,255,255,0.8);">What emotion am I carrying in — and is it helping or hurting me?</div>
+                            </div>
+                        </div>
+
+                        <div class="gr-check-item" onclick="grCheck(this)" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #66bb6a;cursor:pointer;transition:all 0.25s;display:flex;align-items:flex-start;gap:12px;-webkit-tap-highlight-color:transparent;">
+                            <div class="gr-circle" style="width:22px;height:22px;border-radius:50%;border:2px solid #66bb6a;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.25s;"></div>
+                            <div>
+                                <div style="font-size:10px;color:#66bb6a;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-weight:700;">Motive</div>
+                                <div style="font-size:14px;color:rgba(255,255,255,0.8);">Am I here to prove something — or to solve something?</div>
+                            </div>
+                        </div>
+
+                        <div class="gr-check-item" onclick="grCheck(this)" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #64b5f6;cursor:pointer;transition:all 0.25s;display:flex;align-items:flex-start;gap:12px;-webkit-tap-highlight-color:transparent;">
+                            <div class="gr-circle" style="width:22px;height:22px;border-radius:50%;border:2px solid #64b5f6;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.25s;"></div>
+                            <div>
+                                <div style="font-size:10px;color:#64b5f6;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-weight:700;">Frame</div>
+                                <div style="font-size:14px;color:rgba(255,255,255,0.8);">How do I want them to see me and this conversation?</div>
+                            </div>
+                        </div>
+
+                        <div class="gr-check-item" onclick="grCheck(this)" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #ff3b3b;cursor:pointer;transition:all 0.25s;display:flex;align-items:flex-start;gap:12px;-webkit-tap-highlight-color:transparent;">
+                            <div class="gr-circle" style="width:22px;height:22px;border-radius:50%;border:2px solid #ff3b3b;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.25s;"></div>
+                            <div>
+                                <div style="font-size:10px;color:#ff3b3b;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-weight:700;">Walk-Away</div>
+                                <div style="font-size:14px;color:rgba(255,255,255,0.8);">What is my walk-away — and am I truly okay with using it?</div>
+                            </div>
+                        </div>
+
+                        <div class="gr-check-item" onclick="grCheck(this)" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #d4a853;cursor:pointer;transition:all 0.25s;display:flex;align-items:flex-start;gap:12px;-webkit-tap-highlight-color:transparent;">
+                            <div class="gr-circle" style="width:22px;height:22px;border-radius:50%;border:2px solid #d4a853;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.25s;"></div>
+                            <div>
+                                <div style="font-size:10px;color:#d4a853;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-weight:700;">Best Self</div>
+                                <div style="font-size:14px;color:rgba(255,255,255,0.8);">What would the best version of me do right now?</div>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #64b5f6;">
-                        <div style="font-size:10px;color:#64b5f6;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Mode</div>
-                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">Which mode serves this situation best?</div>
+                    <!-- Completion state -->
+                    <div id="grComplete" style="display:none;text-align:center;margin-top:16px;padding:14px;background:rgba(212,168,83,0.08);border-radius:10px;border:1px solid rgba(212,168,83,0.25);animation:card-pop 0.4s both;">
+                        <div style="font-size:18px;margin-bottom:4px;">&#128737;&#65039; Ready.</div>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.6);">You have your frame. Now go.</div>
                     </div>
 
-                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #ff3b3b;">
-                        <div style="font-size:10px;color:#ff3b3b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Walkaway</div>
-                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">What am I willing to walk away from?</div>
+                    <div style="text-align:center;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                        <div style="font-size:12px;color:rgba(255,255,255,0.3);font-style:italic;max-width:380px;line-height:1.6;">
+                            The most powerful move in any conversation happens before it starts. Decide your frame — your goal, your tone, your limits — before you open your mouth.
+                        </div>
+                    </div>
+                    <div style="text-align:center;margin-top:10px;">
+                        <button onclick="grReset()" class="btn btn-ghost btn-sm" style="font-size:11px;opacity:0.5;">&#8634; Reset checklist</button>
                     </div>
 
-                    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;border-left:3px solid #d4a853;">
-                        <div style="font-size:10px;color:#d4a853;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Impeccability</div>
-                        <div style="font-size:14px;color:rgba(255,255,255,0.8);font-style:italic;">What would an impeccable version of me do?</div>
-                    </div>
-                </div>
-
-                <div style="text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);">
-                    <div style="font-size:12px;color:rgba(255,255,255,0.35);font-style:italic;max-width:400px;margin:0 auto;">
-                        A warrior stops reacting and consciously chooses his assemblage point. Choose your frame before opening your mouth.
-                    </div>
                 </div>
             </div>
         </div>
@@ -3891,6 +4007,47 @@ function toggleSetting(key, val) {
 const settingStyle = document.createElement('style');
 settingStyle.textContent = '.settings-btn{font-size:12px!important;}.settings-btn.active-setting{background:var(--accent)!important;color:#0d0d1a!important;border-color:var(--accent)!important;}';
 document.head.appendChild(settingStyle);
+
+// ─── Green Room checklist ───
+function grCheck(el) {
+    el.classList.toggle('checked');
+    const circle = el.querySelector('.gr-circle');
+    if (el.classList.contains('checked')) {
+        circle.textContent = '✓';
+        circle.style.background = 'var(--accent)';
+        if (navigator.vibrate) navigator.vibrate(30);
+    } else {
+        circle.textContent = '';
+        circle.style.background = '';
+    }
+    const items = document.querySelectorAll('#greenRoomChecks .gr-check-item');
+    const done = document.querySelectorAll('#greenRoomChecks .gr-check-item.checked').length;
+    const bar = document.getElementById('grProgress');
+    if (bar) bar.style.width = Math.round((done / items.length) * 100) + '%';
+    const complete = document.getElementById('grComplete');
+    if (complete) complete.style.display = (done === items.length) ? 'block' : 'none';
+}
+function grReset() {
+    document.querySelectorAll('#greenRoomChecks .gr-check-item').forEach(el => {
+        el.classList.remove('checked');
+        const c = el.querySelector('.gr-circle');
+        if (c) { c.textContent = ''; c.style.background = ''; }
+    });
+    const bar = document.getElementById('grProgress');
+    if (bar) bar.style.width = '0%';
+    const complete = document.getElementById('grComplete');
+    if (complete) complete.style.display = 'none';
+}
+
+// ─── Academy filter ───
+function filterAcademy(cat, btn) {
+    document.querySelectorAll('.academy-filter').forEach(b => b.classList.remove('af-active'));
+    btn.classList.add('af-active');
+    document.querySelectorAll('.academy-level').forEach(level => {
+        if (cat === 'all') { level.style.display = ''; }
+        else { level.style.display = (level.dataset.level === cat) ? '' : 'none'; }
+    });
+}
 </script>
 <!-- ponytail: issue #28 — QR code to open site on mobile -->
 <div style="text-align:center;padding:12px 0;">
