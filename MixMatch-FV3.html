@@ -1672,6 +1672,18 @@ background:radial-gradient(circle at 35% 35%, #ffd740, #d4a853);
 box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
 .coin-burst::after{content:'$';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#1a1a2e;}
 
+/* ─── Mode deck info pill ─── */
+.mode-deck-info {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    margin: 4px 0 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.mode-deck-info span { color: var(--accent); font-size: 13px; }
+
 /* ─── Warrior Mode: Castle Wall Background ─── */
 /* 90s pixel-art castle battlements using CSS only */
 .warrior-castle-bg {
@@ -1963,14 +1975,16 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>💰 HAGGLE MODE</h2>
-                <p>4 scenarios · flinch, anchor, fairness frame. Tap a card for the script.</p>
+                <p>4 scenarios · flinch, anchor, fairness frame. Deal one card at a time.</p>
             </div>
             <div class="mode-toolbar">
-                <button class="btn" onclick="renderModeCards('haggle')">⇄ SHUFFLE</button>
-                <button class="btn" onclick="document.querySelectorAll('.mode-scenario').forEach(s=>s.classList.remove('open'))">✕ CLEAR</button>
+                <button class="btn" onclick="modeShuffle('haggle')">🔀 SHUFFLE &amp; DEAL</button>
+                <button class="btn" onclick="modeDraw('haggle')">➡ NEXT</button>
+                <button class="btn" onclick="modeClear('haggle')">✕ CLEAR</button>
             </div>
+            <div class="mode-deck-info" id="deck-info-haggle" style="display:none;"></div>
             <div class="mode-scenario" id="scenario-haggle"></div>
-            <div class="mode-grid" id="grid-haggle"></div>
+            <div class="mode-grid" id="grid-haggle" style="display:none;"></div>
         </div>
     </div>
 
@@ -1979,14 +1993,16 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>🤝 FRIEND MODE</h2>
-                <p>6 scenarios · liking, reciprocity, unity, social proof. Tap a card for the script.</p>
+                <p>6 scenarios · liking, reciprocity, unity, social proof. Deal one card at a time.</p>
             </div>
             <div class="mode-toolbar">
-                <button class="btn" onclick="renderModeCards('friend')">⇄ SHUFFLE</button>
-                <button class="btn" onclick="document.querySelectorAll('.mode-scenario').forEach(s=>s.classList.remove('open'))">✕ CLEAR</button>
+                <button class="btn" onclick="modeShuffle('friend')">🔀 SHUFFLE &amp; DEAL</button>
+                <button class="btn" onclick="modeDraw('friend')">➡ NEXT</button>
+                <button class="btn" onclick="modeClear('friend')">✕ CLEAR</button>
             </div>
+            <div class="mode-deck-info" id="deck-info-friend" style="display:none;"></div>
             <div class="mode-scenario" id="scenario-friend"></div>
-            <div class="mode-grid" id="grid-friend"></div>
+            <div class="mode-grid" id="grid-friend" style="display:none;"></div>
         </div>
     </div>
 
@@ -1995,14 +2011,16 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>👔 BOSS MODE</h2>
-                <p>3 scenarios · managing up — BATNA, label, reframe, accusation audit. Tap a card for the script.</p>
+                <p>3 scenarios · managing up — BATNA, label, reframe, accusation audit. Deal one card at a time.</p>
             </div>
             <div class="mode-toolbar">
-                <button class="btn" onclick="renderModeCards('boss')">⇄ SHUFFLE</button>
-                <button class="btn" onclick="document.querySelectorAll('.mode-scenario').forEach(s=>s.classList.remove('open'))">✕ CLEAR</button>
+                <button class="btn" onclick="modeShuffle('boss')">🔀 SHUFFLE &amp; DEAL</button>
+                <button class="btn" onclick="modeDraw('boss')">➡ NEXT</button>
+                <button class="btn" onclick="modeClear('boss')">✕ CLEAR</button>
             </div>
+            <div class="mode-deck-info" id="deck-info-boss" style="display:none;"></div>
             <div class="mode-scenario" id="scenario-boss"></div>
-            <div class="mode-grid" id="grid-boss"></div>
+            <div class="mode-grid" id="grid-boss" style="display:none;"></div>
         </div>
     </div>
 
@@ -2012,14 +2030,16 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <div class="mode-wrap">
             <div class="mode-header">
                 <h2>⚖️ MEDIATOR MODE</h2>
-                <p>6 scenarios · de-escalate, label, reframe, calibrated Q. Tap a card for the script.</p>
+                <p>6 scenarios · de-escalate, label, reframe, calibrated Q. Deal one card at a time.</p>
             </div>
             <div class="mode-toolbar">
-                <button class="btn" onclick="renderModeCards('mediator')">⇄ SHUFFLE</button>
-                <button class="btn" onclick="document.querySelectorAll('.mode-scenario').forEach(s=>s.classList.remove('open'))">✕ CLEAR</button>
+                <button class="btn" onclick="modeShuffle('mediator')">🔀 SHUFFLE &amp; DEAL</button>
+                <button class="btn" onclick="modeDraw('mediator')">➡ NEXT</button>
+                <button class="btn" onclick="modeClear('mediator')">✕ CLEAR</button>
             </div>
+            <div class="mode-deck-info" id="deck-info-mediator" style="display:none;"></div>
             <div class="mode-scenario" id="scenario-mediator"></div>
-            <div class="mode-grid" id="grid-mediator"></div>
+            <div class="mode-grid" id="grid-mediator" style="display:none;"></div>
         </div>
     </div>
 
@@ -2173,9 +2193,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                             The most powerful move in any conversation happens before it starts. Decide your frame — your goal, your tone, your limits — before you open your mouth.
                         </div>
                     </div>
-                    <div style="text-align:center;margin-top:10px;">
-                        <button onclick="grReset()" class="btn btn-ghost btn-sm" style="font-size:11px;opacity:0.5;">&#8634; Reset checklist</button>
-                    </div>
+                    <div style="text-align:center;margin-top:10px;"></div>
 
                 </div>
             </div>
@@ -4007,6 +4025,82 @@ function toggleSetting(key, val) {
 const settingStyle = document.createElement('style');
 settingStyle.textContent = '.settings-btn{font-size:12px!important;}.settings-btn.active-setting{background:var(--accent)!important;color:#0d0d1a!important;border-color:var(--accent)!important;}';
 document.head.appendChild(settingStyle);
+
+// ─── Mode deck state (haggle / friend / boss / mediator) ───
+const modeDecks = { haggle: [], friend: [], boss: [], mediator: [] };
+const modeDeckIdx = { haggle: -1, friend: -1, boss: -1, mediator: -1 };
+
+function modeShuffle(mode) {
+    SFX.click(); coinBurst(5);
+    const cards = (MODE_CARDS[mode] || []).slice();
+    shuffleArray(cards);
+    modeDecks[mode] = cards;
+    modeDeckIdx[mode] = -1;
+    modeDraw(mode);
+}
+
+function modeDraw(mode) {
+    const deck = modeDecks[mode];
+    if (!deck.length) { modeShuffle(mode); return; }
+    modeDeckIdx[mode] = (modeDeckIdx[mode] + 1) % deck.length;
+    const idx = modeDeckIdx[mode];
+    const remaining = deck.length - idx;
+
+    // Update deck counter pill
+    const info = document.getElementById('deck-info-' + mode);
+    if (info) {
+        info.style.display = 'block';
+        info.innerHTML = `Card <span>${idx + 1}</span> of <span>${deck.length}</span> &nbsp;·&nbsp; <span>${remaining - 1}</span> remaining`;
+    }
+
+    // Show scenario panel with this card
+    showModeScenarioFromCard(mode, deck[idx]);
+
+    // If we've gone through all cards, announce and reset index so next draw loops
+    if (remaining === 1) {
+        setTimeout(() => {
+            const info2 = document.getElementById('deck-info-' + mode);
+            if (info2) info2.innerHTML = `✓ Deck complete — hit <strong>SHUFFLE</strong> for a new deal.`;
+        }, 400);
+    }
+}
+
+function modeClear(mode) {
+    const box = document.getElementById('scenario-' + mode);
+    if (box) box.classList.remove('open');
+    const info = document.getElementById('deck-info-' + mode);
+    if (info) info.style.display = 'none';
+    modeDecks[mode] = [];
+    modeDeckIdx[mode] = -1;
+}
+
+function showModeScenarioFromCard(mode, c) {
+    SFX.click(); coinBurst(4);
+    const box = document.getElementById('scenario-' + mode);
+    if (!c || !box) return;
+    const modeColors = {haggle:'#ff5ea8',friend:'#66bb6a',boss:'#ff3b3b',mediator:'#64b5f6'};
+    const color = modeColors[mode] || '#d4a853';
+    const scriptHtml = c.script ? c.script.map(s =>
+        `<div class="ms-script"><span class="say">${s.who}:</span> ${s.line}</div>`
+    ).join('') : `<div class="ms-script">${c.hint||''}</div>`;
+    const toolsHtml = c.tools ? `
+        <div class="ms-section-label">🏆 RELEVANT TOOLS</div>
+        <div class="ms-tools">${c.tools.map(t => `<span class="ms-tool">${t}</span>`).join('')}</div>
+    ` : '';
+    box.innerHTML = `
+        <span class="ms-badge" style="background:${color}20;color:${color};border:1px solid ${color}40;">${c.tag}</span>
+        <div class="ms-title">${c.name}</div>
+        <div class="ms-tagline">${c.desc}</div>
+        <div class="ms-section-label">🎯 TACTIC: ${c.label}</div>
+        <div class="ms-approach">${c.approach}</div>
+        <div class="ms-section-label">📝 SCRIPT</div>
+        ${scriptHtml}
+        ${toolsHtml}
+        <button class="ms-close" onclick="modeClear('${mode}')">✕ Close</button>
+    `;
+    box.classList.remove('open'); void box.offsetWidth; box.classList.add('open');
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 
 // ─── Green Room checklist ───
 function grCheck(el) {
