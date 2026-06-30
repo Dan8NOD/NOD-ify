@@ -407,23 +407,45 @@
 
         /* ponytail: Domino's-style staircase progress bar — 4 segments, red = reached */
         .stair-progress {
-            width:100%; max-width:1100px; display:flex; gap:3px; margin:6px 0 4px;
+            width:100%; max-width:1100px; display:flex; gap:2px; margin:8px 0 6px;
             position:relative; z-index:10;
         }
         .stair-progress .seg {
-            flex:1; height:28px; border-radius:6px;
-            background:rgba(255,255,255,0.06);
-            display:flex; align-items:center; justify-content:center;
-            font-size:9px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
-            color:rgba(255,255,255,0.25); transition:all .4s ease;
-            overflow:hidden; white-space:nowrap;
+            flex:1; height:40px; border-radius:10px;
+            background:rgba(255,255,255,0.04);
+            border:1px solid rgba(255,255,255,0.06);
+            display:flex; align-items:center; justify-content:center; gap:5px;
+            font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase;
+            color:rgba(255,255,255,0.18); transition:all .5s ease;
+            overflow:hidden; white-space:nowrap; position:relative;
         }
-        .stair-progress .seg.lit {
-            background:linear-gradient(135deg,#e63946 0%,#c1121f 100%);
-            color:#fff; box-shadow:0 0 12px rgba(230,57,70,0.5);
+        .stair-progress .seg .seg-icon { font-size:16px; opacity:0.3; }
+        .stair-progress .seg.lit .seg-icon,
+        .stair-progress .seg.current .seg-icon { opacity:1; }
+        .stair-progress .seg.done {
+            background:linear-gradient(135deg,#8b0000 0%,#c1121f 100%);
+            border-color:#c1121f; color:#fff;
+            box-shadow:0 0 8px rgba(193,18,31,0.3);
+        }
+        .stair-progress .seg.current {
+            background:linear-gradient(135deg,#e63946 0%,#ff4444 100%);
+            border-color:#ff4444; color:#fff;
+            box-shadow:0 0 20px rgba(230,57,70,0.7);
+            animation:stair-pulse 1.4s ease-in-out infinite;
+        }
+        @keyframes stair-pulse {
+            0%,100%{box-shadow:0 0 14px rgba(230,57,70,0.5); transform:scale(1);}
+            50%{box-shadow:0 0 28px rgba(230,57,70,0.9); transform:scale(1.02);}
+        }
+        .stair-progress .seg.lit { /* fallback for old segments */ }
+        .stair-progress .seg-arrow {
+            display:flex; align-items:center; flex-shrink:0;
+            color:rgba(255,255,255,0.12); font-size:11px; padding:0 1px;
         }
         @media(max-width:600px){
-            .stair-progress .seg { font-size:7px; height:24px; }
+            .stair-progress .seg { height:32px; font-size:8px; gap:3px; border-radius:8px; }
+            .stair-progress .seg .seg-icon { font-size:12px; }
+            .stair-progress .seg-arrow { font-size:8px; }
         }
         .category-filters {
             display:flex; gap:5px; flex-wrap:wrap;
@@ -1667,10 +1689,13 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
     <!-- ██ VIEW: Tools ██ -->
     <div class="view-container active" id="view-tools">
         <div class="stair-progress" id="stairProgress">
-            <div class="seg" data-stage="0">1 · Get Info</div>
-            <div class="seg" data-stage="1">2 · Empathy</div>
-            <div class="seg" data-stage="2">3 · Trust</div>
-            <div class="seg" data-stage="3">4 · Collab</div>
+            <div class="seg" data-stage="0"><span class="seg-icon">🔍</span>Get Info</div>
+            <div class="seg-arrow">▸</div>
+            <div class="seg" data-stage="1"><span class="seg-icon">💛</span>Empathy</div>
+            <div class="seg-arrow">▸</div>
+            <div class="seg" data-stage="2"><span class="seg-icon">🤝</span>Trust</div>
+            <div class="seg-arrow">▸</div>
+            <div class="seg" data-stage="3"><span class="seg-icon">✅</span>Collab</div>
         </div>
         <div class="stats-bar" id="statsBar">
             <div class="stat-item">Available: <strong id="statAvailable">0</strong></div>
@@ -2763,14 +2788,16 @@ function renderStats(){
 function renderStairProgress(){
     const usedCats = new Set(state.usedTools.map(t=>t.cat));
     const stageCats = ['Information',['Rapport','Emotion'],'Strategy','Closure'];
-    const reached = new Set();
+    let highest = -1;
     stageCats.forEach((cats,i)=>{
         const arr = Array.isArray(cats)?cats:[cats];
-        if(arr.some(c=>usedCats.has(c))) reached.add(i);
+        if(arr.some(c=>usedCats.has(c))) highest = i;
     });
-    if(state.stairMode !== null) reached.add(state.stairMode);
-    document.querySelectorAll('#stairProgress .seg').forEach((seg,i)=>{
-        seg.classList.toggle('lit', reached.has(i));
+    if(state.stairMode !== null) highest = Math.max(highest, state.stairMode);
+    document.querySelectorAll('#stairProgress > .seg').forEach((seg,i)=>{
+        seg.classList.toggle('done', i < highest);
+        seg.classList.toggle('current', i === highest);
+        seg.classList.toggle('lit', i <= highest); // fallback compat
     });
 }
 
