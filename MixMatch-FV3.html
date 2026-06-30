@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="NOD-ify">
     <title>NOD-ify — MixMatch FV9</title>
     <!-- ponytail: issue #30 — GA4 placeholder, replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
@@ -1656,6 +1659,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                     <button class="btn btn-ghost btn-sm" onclick="resetSession()">↺ Reset</button>
                     <button class="btn btn-ghost btn-sm" onclick="shuffleTools()">🔀 Shuffle</button>
                     <button class="btn btn-ghost btn-sm" id="cardsToggleBtn" onclick="toggleCardsArea()">➖ Cards</button>
+                    <button class="btn btn-ghost btn-sm" id="shareBtn" onclick="shareSession()" style="display:none;">📤 Share</button>
                     <button class="bk-btn-glow" id="bkBtn" onclick="toggleMode('bk')">🥊 BK OFF</button>
             <div class="timer-display">
                 <span class="timer-label">Timer</span>
@@ -2816,6 +2820,7 @@ function skipTool(){
 
 function stopSession(){
     if(!state.sessionActive) return;
+    saveSession();
     showSessionSummary();
     cleanupSession();
 }
@@ -2829,6 +2834,7 @@ function cleanupSession(){
 function endSession(){
     if(!state.sessionActive) return;
     if(state.timer) clearInterval(state.timer);
+    saveSession();
     state.sessionActive=false; state.timer=null;
     document.getElementById('startBtn').classList.remove('glow-active');
     document.getElementById('nextBtn').classList.remove('glow-active');
@@ -2869,10 +2875,12 @@ function showSessionSummary(){
     document.getElementById('stopBtn').style.display='none';
     document.getElementById('skipBtn').style.display='none';
     document.getElementById('nextBtn').disabled=true;
+    const sb=document.getElementById('shareBtn'); if(sb) sb.style.display='';
 }
 
 function resetSession(){
     if(state.timer) clearInterval(state.timer);
+    clearSavedSession();
     state.sessionActive=false; state.timer=null; state.currentDeck=[];
     state.usedTools=[]; state.skippedTools=[]; state.currentTool=null;
     state.round=0; state.sessionStartTime=null; state.endTime=null;
@@ -3545,6 +3553,16 @@ function shuffleArray(arr){
 // ═══════════════════════════════════════════════════════════════════════
 renderToolsView();
 
+// ponytail: restore last session hint
+(function(){
+    const s = loadSession();
+    if(s && s.used && s.used.length){
+        document.getElementById('ctName').textContent='📋 Last Session';
+        document.getElementById('ctDesc').innerHTML=`${s.used.length} tools practiced · Round ${s.round+1}<br><span style="font-size:11px;color:rgba(255,255,255,0.3);">${s.used.join(' → ')}</span>`;
+        document.getElementById('currentBanner').classList.add('show');
+    }
+})();
+
 // ponytail FV7.2: haptic + ripple on ALL buttons — mobile feel
 (function(){
     function triggerHaptic(){ if(navigator.vibrate) navigator.vibrate(8); }
@@ -3564,6 +3582,40 @@ renderToolsView();
     wireAll();
     new MutationObserver(wireAll).observe(document.body,{childList:true,subtree:true});
 })();
+
+// ─── Session Persistence (localStorage) ───
+// ponytail: save used tools + round on stop/end, restore on load
+function saveSession(){
+    if(!state.usedTools.length) return;
+    try {
+        localStorage.setItem('nodify_session', JSON.stringify({
+            used: state.usedTools.map(t=>t.name),
+            skipped: state.skippedTools.map(t=>t.name),
+            round: state.round,
+            date: state.sessionStartTime,
+        }));
+    } catch(e){}
+}
+function loadSession(){
+    try {
+        const s = JSON.parse(localStorage.getItem('nodify_session'));
+        if(!s || !s.used) return null;
+        return s;
+    } catch(e){ return null; }
+}
+function clearSavedSession(){ try{ localStorage.removeItem('nodify_session'); }catch(e){} }
+
+// ─── Share Session ───
+// ponytail: clipboard copy, no backend, no URL params
+function shareSession(){
+    const completed = state.usedTools.filter(t=>!state.skippedTools.includes(t));
+    const tools = [...new Set(completed.map(t=>t.name))];
+    const text = `⚔️ NOD-ify Session\n${tools.length} tools practiced\n${tools.join(' → ')}\n\nTrain free: https://negotiatorsondemand.com`;
+    navigator.clipboard.writeText(text).then(()=>{
+        const btn = document.getElementById('shareBtn');
+        if(btn){ const o=btn.textContent; btn.textContent='✅ Copied!'; setTimeout(()=>btn.textContent=o,2000); }
+    }).catch(()=>{});
+}
 
 // ─── Settings (was Graphics tab) ───
 // ponytail: settings stored in-memory only, add localStorage if users ask for persistence
