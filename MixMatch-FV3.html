@@ -721,11 +721,12 @@
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    padding: 4px 0;
+                    padding: 8px 0;
+                    gap: 8px;
                 }
-                .wheel-header { text-align:center; margin-bottom: 10px; }
-                .wheel-header h2 { color:#fff; font-size:20px; font-weight:700; margin-bottom:2px; }
-                .wheel-header p { color:rgba(255,255,255,0.45); font-size:12px; }
+                .wheel-header { text-align:center; margin-bottom: 4px; }
+                .wheel-header h2 { color:#fff; font-size:22px; font-weight:700; margin-bottom:2px; }
+                .wheel-header p { color:rgba(255,255,255,0.5); font-size:13px; }
 
                 .wheel-layout {
                     display: flex;
@@ -739,11 +740,11 @@
                 .wheel-canvas-wrap {
                     position: relative;
                     flex: 1;
-                    max-width: 480px;
+                    max-width: 500px;
                     touch-action: none;
                 }
                 @media (min-width: 769px) {
-                    .wheel-canvas-wrap { max-width: 600px; }
+                    .wheel-canvas-wrap { max-width: 580px; }
                     .wheel-label-primary { font-size: 28px; }
                     .wheel-label.active-label { font-size: 36px; }
                     .wheel-label-secondary, .wheel-label-tertiary { display: none; }
@@ -786,8 +787,8 @@
 
                 /* ── Big SPIN button ── */
                 .spin-btn-big {
-                    padding: 14px 40px;
-                    font-size: 20px;
+                    padding: 16px 48px;
+                    font-size: 22px;
                     font-weight: 900;
                     font-family: 'Press Start 2P', monospace;
                     border-radius: 50px;
@@ -802,6 +803,8 @@
                     animation: spin-btn-pulse 2s ease-in-out infinite;
                     position: relative;
                     overflow: hidden;
+                    min-height: 48px;
+                    touch-action: manipulation;
                 }
                 .spin-btn-big:hover {
                     transform: translateY(-3px);
@@ -825,20 +828,23 @@
                 /* ── Winner banner ── */
                 .wheel-winner {
                     text-align: center;
-                    padding: 16px 28px;
-                    margin: 10px auto;
-                    max-width: 420px;
-                    background: rgba(0,0,0,0.5);
+                    padding: 20px 32px;
+                    margin: 12px auto;
+                    max-width: 460px;
+                    background: rgba(0,0,0,0.6);
                     border-radius: 16px;
                     border: 2px solid var(--accent);
                     color: #fff;
-                    font-size: 22px;
+                    font-size: 26px;
                     font-weight: 900;
                     font-family: 'Press Start 2P', monospace;
                     letter-spacing: 2px;
                     animation: winner-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
                     box-shadow: 0 0 40px var(--accent-glow), 0 0 80px rgba(212,168,83,0.2);
                     text-shadow: 0 0 20px var(--accent-glow);
+                }
+                @media(max-width:600px){
+                    .wheel-winner { font-size: 18px; padding: 14px 16px; max-width: 100%; }
                 }
                 @keyframes winner-pop {
                     0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
@@ -848,15 +854,16 @@
 
                 /* ── Spin history strip ── */
                 .spin-history {
-                    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
-                    min-height: 28px; margin: 6px 0;
+                    display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+                    min-height: 32px; margin: 8px 0;
                 }
                 .spin-history .sh-chip {
-                    padding: 3px 12px; border-radius: 14px;
-                    font-size: 11px; font-weight: 700; color: #fff;
+                    padding: 5px 14px; border-radius: 16px;
+                    font-size: 12px; font-weight: 700; color: #fff;
                     letter-spacing: 0.5px;
-                    opacity: 0.85;
+                    opacity: 0.9;
                     animation: card-pop 0.3s both;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
                 }
 
                 /* ─── NOD Academy Reference Cards ─── */
@@ -1828,7 +1835,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
         <div class="wheel-container">
             <div class="wheel-header">
                 <h2>&#127804; Wheel of Emotions</h2>
-                <p>6 primary emotions · tap any sector for full breakdown</p>
+                <p>16 emotions · tap any sector for full breakdown · spin for random</p>
             </div>
             <!-- SPIN button FIRST so it's at top on mobile -->
             <div class="wheel-spin-row" style="display:flex;justify-content:center;margin:6px 0;">
@@ -3337,10 +3344,10 @@ function spinWheel(){
         if(banner){
             banner.style.display='block';
             banner.style.color=won.color;
-            banner.innerHTML=`&#127922; ${won.name}! &#127922;`;
+            banner.innerHTML=`&#127922; ${won.name}! &#127922;<br><button class="btn btn-ghost btn-sm" style="margin-top:10px;font-family:Inter,sans-serif;" onclick="spinWheel()">&#8635; Spin Again</button>`;
             banner.style.borderColor=won.color;
             banner.style.boxShadow=`0 0 40px ${won.color}55, 0 0 80px ${won.color}22`;
-            setTimeout(()=>{banner.style.display='none';},4000);
+            setTimeout(()=>{banner.style.display='none';},6000);
         }
         // Update spin history (last 5)
         const hist=document.getElementById('spinHistory');
