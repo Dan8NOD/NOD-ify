@@ -349,8 +349,8 @@
             display: inline-block; margin-bottom: 5px;
             font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
         }
-        .tool-card .card-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 5px; line-height: 1.3; }
-        .tool-card .card-desc { font-size: 11px; line-height: 1.5; color: var(--text-dim); flex: 1; }
+        .tool-card .card-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 5px; line-height: 1.3; text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
+        .tool-card .card-desc { font-size: 11px; line-height: 1.5; color: rgba(255,255,255,0.75); flex: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
         .tool-card .card-count {
             font-size: 10px; color: var(--text-dim); margin-top: 6px;
             display: flex; align-items: center; gap: 3px;
@@ -1142,9 +1142,11 @@
 
                 .wheel-emotion-slice {
                     cursor: pointer;
-                    transition: filter 0.3s;
+                    transition: filter 0.3s, transform 0.15s;
+                    transform-origin: 250px 250px;
                 }
                 .wheel-emotion-slice:hover { filter: brightness(1.25); }
+                .wheel-emotion-slice:active { filter: brightness(1.6) drop-shadow(0 0 12px rgba(255,255,255,0.6)); transform: scale(1.03); }
                 .wheel-emotion-slice.active-slice {
                     filter: brightness(1.5) drop-shadow(0 0 18px rgba(255,255,255,0.5));
                     animation: slice-pulse 1.5s ease-in-out infinite;
@@ -1172,7 +1174,7 @@
                 .wheel-label {
                     fill: #fff; text-anchor: middle; dominant-baseline: central;
                     pointer-events: none; font-weight: 600;
-                    paint-order: stroke; stroke: rgba(0,0,0,0.35); stroke-width: 0.6px;
+                    paint-order: stroke; stroke: rgba(0,0,0,0.5); stroke-width: 0.8px;
                 }
                 .wheel-label-primary {
                     font-size: 24px; font-weight: 900; letter-spacing: 1px;
@@ -3388,6 +3390,7 @@ function toggleLegend(){
 }
 
 function selectEmotion(idx){
+    navigator.vibrate&&navigator.vibrate(15);SFX.coin();
     const em=EMOTIONS[idx];
     state.lastUsedEmotion=em.name;
     // Auto-spin: center this emotion under the pointer (top, 0deg)
