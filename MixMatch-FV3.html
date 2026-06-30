@@ -350,7 +350,7 @@
             font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
         }
         .tool-card .card-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 5px; line-height: 1.3; text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
-        .tool-card .card-desc { font-size: 11px; line-height: 1.5; color: rgba(255,255,255,0.75); flex: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .tool-card .card-desc { font-size: 11px; line-height: 1.5; color: #c9c9d1; flex: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
         .tool-card .card-count {
             font-size: 10px; color: var(--text-dim); margin-top: 6px;
             display: flex; align-items: center; gap: 3px;
@@ -421,7 +421,9 @@
             font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase;
             color:rgba(255,255,255,0.18); transition:all .5s ease;
             overflow:hidden; white-space:nowrap; position:relative;
+            cursor:pointer; touch-action:manipulation;
         }
+        .stair-progress .seg:active { transform:scale(0.97); }
         .stair-progress .seg .seg-count {
             position:absolute; top:3px; right:6px; font-size:9px; font-weight:700; opacity:.6;
         }
@@ -1730,7 +1732,6 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
 
     <!-- ██ Nav Tabs ██ -->
     <div class="nav-tabs">
-        <button class="nav-tab" onclick="switchView('stair',this)">&#127970; Change Stair</button>
         <button class="nav-tab" onclick="switchView('wheel',this)">&#127804; Emotion Wheel</button>
         <button class="nav-tab" onclick="switchView('haggle',this)" style="color:#ff5ea8;">&#128176; Haggle</button>
         <button class="nav-tab" onclick="switchView('friend',this)" style="color:#66bb6a;">&#129309; Friend</button>
@@ -1744,13 +1745,13 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
     <!-- ██ VIEW: Tools ██ -->
     <div class="view-container active" id="view-tools">
         <div class="stair-progress" id="stairProgress">
-            <div class="seg" data-stage="0"><span class="seg-icon">🔍</span>Get Info<span class="seg-count">1</span></div>
+            <div class="seg" data-stage="0" onclick="filterByStage(0)"><span class="seg-icon">🔍</span>Get Info<span class="seg-count">1</span></div>
             <div class="seg-arrow">▸</div>
-            <div class="seg" data-stage="1"><span class="seg-icon">💛</span>Empathy<span class="seg-count">2</span></div>
+            <div class="seg" data-stage="1" onclick="filterByStage(1)"><span class="seg-icon">💛</span>Empathy<span class="seg-count">2</span></div>
             <div class="seg-arrow">▸</div>
-            <div class="seg" data-stage="2"><span class="seg-icon">🤝</span>Trust<span class="seg-count">3</span></div>
+            <div class="seg" data-stage="2" onclick="filterByStage(2)"><span class="seg-icon">🤝</span>Trust<span class="seg-count">3</span></div>
             <div class="seg-arrow">▸</div>
-            <div class="seg" data-stage="3"><span class="seg-icon">✅</span>Collab<span class="seg-count">4</span></div>
+            <div class="seg" data-stage="3" onclick="filterByStage(3)"><span class="seg-icon">✅</span>Collab<span class="seg-count">4</span></div>
         </div>
         <div class="stats-bar" id="statsBar">
             <div class="stat-item">Available: <strong id="statAvailable">0</strong></div>
@@ -3160,7 +3161,20 @@ function renderStair(){
     }, 80);
 }
 
-const STAIR_STAGE_CATS = ['Information','Rapport','Rapport','Closure']; // ponytail: stage 0=INFO tools, 1=EMPATHY/Rapport, 2=TRUST/Rapport, 3=COLLAB/Closure
+const STAIR_STAGE_CATS = ['Information',['Rapport','Emotion'],'Strategy','Closure']; // ponytail: stage 0=INFO, 1=EMPATHY, 2=TRUST, 3=COLLAB
+
+// ponytail: tap progress segment → filter tools by that stage's categories
+function filterByStage(i){
+    SFX.click();
+    const cats = STAIR_STAGE_CATS[i];
+    const arr = Array.isArray(cats)?cats:[cats];
+    // ponytail: if multiple cats, filter to first one (cat-pill single-select)
+    state.activeFilter = arr[0];
+    state.stairMode = i;
+    renderCategoryFilters();
+    renderCards();
+    navigator.vibrate&&navigator.vibrate(8);
+}
 
 function toggleStage(i){
     SFX.click();
