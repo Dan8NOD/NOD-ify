@@ -419,32 +419,83 @@
             color:rgba(255,255,255,0.18); transition:all .5s ease;
             overflow:hidden; white-space:nowrap; position:relative;
         }
+        .stair-progress .seg .seg-count {
+            position:absolute; top:3px; right:6px; font-size:9px; font-weight:700; opacity:.6;
+        }
+        .stair-progress .seg.done .seg-count,
+        .stair-progress .seg.current .seg-count { color:#ffcc66; }
         .stair-progress .seg .seg-icon { font-size:16px; opacity:0.3; }
         .stair-progress .seg.lit .seg-icon,
         .stair-progress .seg.current .seg-icon { opacity:1; }
         .stair-progress .seg.done {
-            background:linear-gradient(135deg,#8b0000 0%,#c1121f 100%);
+            background:linear-gradient(90deg,#ffd700,#ff8c00,#c1121f,#8b0000,#c1121f,#ff8c00,#ffd700);
+            background-size:200% 100%;
+            animation:flame-sweep 1.8s linear infinite;
             border-color:#c1121f; color:#fff;
             box-shadow:0 0 8px rgba(193,18,31,0.3);
         }
         .stair-progress .seg.current {
-            background:linear-gradient(135deg,#e63946 0%,#ff4444 100%);
+            background:linear-gradient(90deg,#fff59d,#ffd700,#ff8c00,#e63946,#ff8c00,#ffd700,#fff59d);
+            background-size:200% 100%;
+            animation:flame-sweep-current 1.2s linear infinite, stair-pulse 1.4s ease-in-out infinite;
             border-color:#ff4444; color:#fff;
             box-shadow:0 0 20px rgba(230,57,70,0.7);
-            animation:stair-pulse 1.4s ease-in-out infinite;
+        }
+        @keyframes flame-sweep {
+            0%{background-position:200% 0;}
+            100%{background-position:0 0;}
+        }
+        @keyframes flame-sweep-current {
+            0%{background-position:200% 0;}
+            100%{background-position:0 0;}
         }
         @keyframes stair-pulse {
             0%,100%{box-shadow:0 0 14px rgba(230,57,70,0.5); transform:scale(1);}
             50%{box-shadow:0 0 28px rgba(230,57,70,0.9); transform:scale(1.02);}
+        }
+        .stair-progress .seg-arrow.lit {
+            color:#ffd700;
+            text-shadow:0 0 6px rgba(255,215,0,.6);
+            animation:arrow-pulse 1.8s ease-in-out infinite;
+        }
+        @keyframes arrow-pulse {
+            0%,100%{opacity:.6;}
+            50%{opacity:1;}
+        }
+        .stair-progress .seg-arrow.lit::after {
+            content:'●'; position:absolute; color:#ffd700; font-size:6px; opacity:.9;
+            animation:dot-travel 1.2s linear infinite;
+        }
+        @keyframes dot-travel {
+            0%{transform:translateX(-4px); opacity:.3;}
+            50%{transform:translateX(4px); opacity:1;}
+            100%{transform:translateX(-4px); opacity:.3;}
+        }
+        .stair-progress::after {
+            content:''; position:absolute; bottom:-4px; left:0; height:2px;
+            background:linear-gradient(to right,#ffd700,#ff8c00,#c1121f);
+            width:var(--stair-fill,0%); transition:width .4s ease; z-index:-1;
+            box-shadow:0 0 6px rgba(255,215,0,.5);
         }
         .stair-progress .seg.lit { /* fallback for old segments */ }
         .stair-progress .seg-arrow {
             display:flex; align-items:center; flex-shrink:0;
             color:rgba(255,255,255,0.12); font-size:11px; padding:0 1px;
         }
+        
+        .stair-progress .seg.activate {
+            animation: seg-bounce .6s cubic-bezier(.34,1.56,.64,1);
+        }
+        @keyframes seg-bounce {
+            0%{transform:scale(.92);}
+            40%{transform:scale(1.1);}
+            100%{transform:scale(1);}
+        }
         @media(max-width:600px){
             .stair-progress .seg { height:32px; font-size:8px; gap:3px; border-radius:8px; }
             .stair-progress .seg .seg-icon { font-size:12px; }
+            .stair-progress .seg .seg-count { display:none; }
+            .stair-progress .seg-arrow.lit::after { display:none; }
             .stair-progress .seg-arrow { font-size:8px; }
         }
         .category-filters {
@@ -1689,13 +1740,13 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
     <!-- ██ VIEW: Tools ██ -->
     <div class="view-container active" id="view-tools">
         <div class="stair-progress" id="stairProgress">
-            <div class="seg" data-stage="0"><span class="seg-icon">🔍</span>Get Info</div>
+            <div class="seg" data-stage="0"><span class="seg-icon">🔍</span>Get Info<span class="seg-count">1</span></div>
             <div class="seg-arrow">▸</div>
-            <div class="seg" data-stage="1"><span class="seg-icon">💛</span>Empathy</div>
+            <div class="seg" data-stage="1"><span class="seg-icon">💛</span>Empathy<span class="seg-count">2</span></div>
             <div class="seg-arrow">▸</div>
-            <div class="seg" data-stage="2"><span class="seg-icon">🤝</span>Trust</div>
+            <div class="seg" data-stage="2"><span class="seg-icon">🤝</span>Trust<span class="seg-count">3</span></div>
             <div class="seg-arrow">▸</div>
-            <div class="seg" data-stage="3"><span class="seg-icon">✅</span>Collab</div>
+            <div class="seg" data-stage="3"><span class="seg-icon">✅</span>Collab<span class="seg-count">4</span></div>
         </div>
         <div class="stats-bar" id="statsBar">
             <div class="stat-item">Available: <strong id="statAvailable">0</strong></div>
@@ -2783,6 +2834,26 @@ function renderStats(){
     renderStairProgress();
 }
 
+
+function burst(seg){
+    const rect = seg.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    for(let i=0; i<9; i++){
+        const p = document.createElement('div');
+        p.style.cssText = 'position:fixed;left:'+cx+'px;top:'+cy+'px;width:6px;height:6px;border-radius:50%;background:#ffd700;z-index:9999;pointer-events:none;';
+        document.body.appendChild(p);
+        const ang = (i/9)*Math.PI*2 + (Math.random()-.5)*.6;
+        const dist = 34 + Math.random()*18;
+        const tx = Math.cos(ang)*dist;
+        const ty = Math.sin(ang)*dist;
+        p.animate([
+            {transform:'translate(0,0)', opacity:1},
+            {transform:'translate('+tx+'px,'+ty+'px)', opacity:0}
+        ], {duration:520+Math.random()*90, easing:'ease-out'}).onfinish = ()=>p.remove();
+    }
+}
+
 // ponytail: light up staircase segments based on used tools' categories
 // stage 0=INFO(Information), 1=EMPATHY(Rapport+Emotion), 2=TRUST(Strategy), 3=COLLAB(Closure)
 function renderStairProgress(){
@@ -2794,11 +2865,39 @@ function renderStairProgress(){
         if(arr.some(c=>usedCats.has(c))) highest = i;
     });
     if(state.stairMode !== null) highest = Math.max(highest, state.stairMode);
+    // ponytail: simple stateful guard — only first-time activation triggers particles/bounce
+    if(!window.__stairPrev) window.__stairPrev = -1;
+    const prev = window.__stairPrev;
+    const isMobile = window.innerWidth <= 600;
+
     document.querySelectorAll('#stairProgress > .seg').forEach((seg,i)=>{
+        const wasLit = i <= prev;
+        const isLit = i <= highest;
         seg.classList.toggle('done', i < highest);
         seg.classList.toggle('current', i === highest);
-        seg.classList.toggle('lit', i <= highest); // fallback compat
+        seg.classList.toggle('lit', isLit);
+
+        // bounce + particles on first-light transition
+        if(!wasLit && isLit){
+            seg.classList.add('activate');
+            setTimeout(()=>seg.classList.remove('activate'), 600);
+            if(!isMobile) burst(seg);
+        }
     });
+
+    // underline fill (0/25/50/75/100)
+    const fill = highest >= 0 ? ((highest+1)/4)*100 : 0;
+    document.getElementById('stairProgress').style.setProperty('--stair-fill', fill+'%');
+
+    // arrows: gold+dot if BOTH sides lit
+    const arrows = document.querySelectorAll('#stairProgress > .seg-arrow');
+    arrows.forEach((arr,i)=>{
+        const leftLit  = document.querySelectorAll('#stairProgress > .seg')[i].classList.contains('lit');
+        const rightLit = document.querySelectorAll('#stairProgress > .seg')[i+1].classList.contains('lit');
+        arr.classList.toggle('lit', leftLit && rightLit);
+    });
+
+    window.__stairPrev = highest;
 }
 
 function renderLog(){
