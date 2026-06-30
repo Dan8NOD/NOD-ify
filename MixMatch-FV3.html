@@ -1622,6 +1622,7 @@ box-shadow:0 0 8px rgba(212,168,83,.8),0 0 20px rgba(212,168,83,.3);}
                onmouseout="this.style.boxShadow='0 0 12px rgba(212,168,83,0.25)';this.style.borderColor='rgba(212,168,83,0.5)'">
               📅 Book a Session
             </a>
+            <button class="btn-icon" onclick="shareApp()" title="Share NOD-ify" style="font-size:14px;">📤</button>
             <button class="btn-icon" onclick="toggleSessionLog()" id="slBtn" title="Session log">&#128203;</button>
             <button class="btn-icon" onclick="toggleInfo()" id="infoBtn" title="About">?</button>
             <button class="btn-icon" onclick="showAddToolModal()" title="Add custom tool">+</button>
@@ -3582,6 +3583,13 @@ renderToolsView();
     wireAll();
     new MutationObserver(wireAll).observe(document.body,{childList:true,subtree:true});
 })();
+
+// ponytail: share app — native sheet, clipboard fallback
+function shareApp(){
+    const text='⚔️ Train negotiation free — 23 FBI-tested tools, emotion wheel, scenario modes. No signup.\nhttps://negotiatorsondemand.com';
+    if(navigator.share){navigator.share({title:'NOD-ify',text});}
+    else{navigator.clipboard.writeText(text).then(()=>{const b=event.target;b.textContent='✅';setTimeout(()=>b.textContent='📤',1500);}).catch(()=>{});}
+}
 
 // ─── Session Persistence (localStorage) ───
 // ponytail: save used tools + round on stop/end, restore on load
